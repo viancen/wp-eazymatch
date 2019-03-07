@@ -1,0 +1,41 @@
+.emol-form-div {
+    border: 1px #ccc solid;
+    padding: 10px;
+    width: 650px;
+}
+
+.emol-form-div .submit {
+    margin-left: 155px;
+    margin-top: 10px;
+}
+
+.emol-form-div .label {
+    display: block;
+    float: left;
+    width: 150px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.emol-form-div .form-row {
+    padding: 5px 0;
+    clear: both;
+    width: 700px;
+}
+
+.emol-form-div label.error {
+    width: 250px;
+    display: block;
+    float: left;
+    color: red !important;
+    padding-left: 10px;
+}
+
+.emol-form-div input[type=text], select, textarea {
+    width: 250px;
+    float: left;
+}
+
+.emol-form-div textarea {
+    height: 50px;
+}
