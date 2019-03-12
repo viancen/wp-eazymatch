@@ -11,27 +11,34 @@ class WP_EazyMatch_Updater {
 	private $accessToken; // GitHub private repo token
 
 	function __construct( $pluginFile, $gitHubUsername, $gitHubProjectName, $accessToken = '' ) {
-		add_filter( "pre_set_site_transient_update_plugins", array( $this, "setTransitent" ) );
-		add_filter( "plugins_api", array( $this, "setPluginInfo" ), 10, 3 );
-		add_filter( "upgrader_post_install", array( $this, "postInstall" ), 10, 3 );
+
+		add_filter( "pre_set_site_transient_update_plugins", array( $this, "EMOL_setTransitent" ) );
+		add_filter( "plugins_api", array( $this, "EMOL_setPluginInfo" ), 10, 3 );
+		add_filter( "upgrader_post_install", array( $this, "EMOL_postInstall" ), 10, 3 );
 
 		$this->pluginFile  = $pluginFile;
+
+
 		$this->username    = $gitHubUsername;
 		$this->repo        = $gitHubProjectName;
 		$this->accessToken = $accessToken;
+
 	}
 
 	// Get information regarding our plugin from WordPress
-	private function initPluginData() {
+	private function EMOL_initPluginData() {
 		// code here
 		$this->slug       = plugin_basename( $this->pluginFile );
 		$this->pluginData = get_plugin_data( $this->pluginFile );
+
+
 	}
 
 	// Get information regarding our plugin from GitHub
-	private function getRepoReleaseInfo() {
+	private function EMOL_getRepoReleaseInfo() {
 		// code here
 		// Only do this once
+
 		if ( ! empty( $this->githubAPIResult ) ) {
 			return;
 		}
@@ -58,18 +65,19 @@ class WP_EazyMatch_Updater {
 	}
 
 	// Push in plugin version information to get the update notification
-	public function setTransitent( $transient ) {
+	public function EMOL_setTransitent( $transient ) {
 		// code here
 		// If we have checked the plugin data before, don't re-check
 		if ( empty( $transient->checked ) ) {
 			return $transient;
 		}
 		// Get plugin & GitHub release information
-		$this->initPluginData();
-		$this->getRepoReleaseInfo();
+		$this->EMOL_initPluginData();
+		$this->EMOL_getRepoReleaseInfo();
 
 		// Check the versions if we need to do an update
 		$doUpdate = version_compare( $this->githubAPIResult->tag_name, $transient->checked[ $this->slug ] );
+
 		// Update the transient to include our updated plugin data
 		if ( $doUpdate == 1 ) {
 			$package = $this->githubAPIResult->zipball_url;
@@ -80,6 +88,7 @@ class WP_EazyMatch_Updater {
 			}
 
 			$obj                                = new stdClass();
+
 			$obj->slug                          = $this->slug;
 			$obj->new_version                   = $this->githubAPIResult->tag_name;
 			$obj->url                           = $this->pluginData["PluginURI"];
@@ -91,11 +100,11 @@ class WP_EazyMatch_Updater {
 	}
 
 	// Push in plugin version information to display in the details lightbox
-	public function setPluginInfo( $false, $action, $response ) {
+	public function EMOL_setPluginInfo( $false, $action, $response ) {
 		// code ehre
 		// Get plugin & GitHub release information
-		$this->initPluginData();
-		$this->getRepoReleaseInfo();
+		$this->EMOL_initPluginData();
+		$this->EMOL_getRepoReleaseInfo();
 		// If nothing is found, do nothing
 		if ( empty( $response->slug ) || $response->slug != $this->slug ) {
 			return false;
@@ -109,10 +118,10 @@ class WP_EazyMatch_Updater {
 		$response->author       = $this->pluginData["AuthorName"];
 		$response->homepage     = $this->pluginData["PluginURI"];
 
-// This is our release download zip file
+		// This is our release download zip file
 		$downloadLink = $this->githubAPIResult->zipball_url;
 
-// Include the access token for private GitHub repos
+		// Include the access token for private GitHub repos
 		if ( ! empty( $this->accessToken ) ) {
 			$downloadLink = add_query_arg(
 				array( "access_token" => $this->accessToken ),
@@ -157,10 +166,10 @@ class WP_EazyMatch_Updater {
 	}
 
 	// Perform additional actions to successfully install our plugin
-	public function postInstall( $true, $hook_extra, $result ) {
+	public function EMOL_postInstall( $true, $hook_extra, $result ) {
 		// code here
 		// Get plugin information
-		$this->initPluginData();
+		$this->EMOL_initPluginData();
 		// Remember if our plugin was previously activated
 		$wasActivated = is_plugin_active( $this->slug );
 		// Since we are hosted in GitHub, our plugin folder would have a dirname of

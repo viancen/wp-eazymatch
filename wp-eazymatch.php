@@ -3,6 +3,7 @@
 Plugin Name: EazyMatch
 Plugin URI: https://www.eazymatch-online.nl
 Description: De EazyMatch Wordpress plugin. Bij twijfel over de instellingen mail naar support@eazymatch.nl
+Name: EazyMatch
 Version: 5.1.0
 Author: EazyMatch
 Author URI: https://www.eazymatch-online.nl
@@ -53,6 +54,7 @@ $emol_Core = 'https://api.eazymatch.cloud';
 
 //check permalink structure
 global $trailingData;
+
 $trailingData        = '';
 $permalink_structure = get_option( 'permalink_structure' );
 if ( substr( $permalink_structure, - 1, 1 ) == '/' ) {
@@ -171,8 +173,13 @@ add_filter( 'wpseo_title', 'emol_custom_title' );
 
 // add some extra functionality when in admin mode
 if ( is_admin() ) {
+
+	require plugin_dir_path( __FILE__ ) . 'lib/class-wp-eazymatch-autoupdate.php';
+	new WP_EazyMatch_Updater( __FILE__, 'viancen', "wp-eazymatch" );
+
 	// include the admin functions
 	include( EMOL_DIR . '/admin.php' );
+
 }
 
 //important update for canocnial tags on website that use a shortcode for the jobs

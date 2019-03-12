@@ -6,8 +6,6 @@ if ( ! defined( 'EMOL_DIR' ) ) {
 
 // add the update checker
 
-require plugin_dir_path( __FILE__ ) . 'lib/class-wp-eazymatch-autoupdate.php';
-new WP_EazyMatch_Updater( __FILE__, 'viancen', "wp-eazymatch" );
 
 /*
 global $MyUpdateChecker;
