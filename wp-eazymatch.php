@@ -7,7 +7,6 @@ Name: EazyMatch
 Version: 5.1.0
 Author: EazyMatch
 Author URI: https://www.eazymatch-online.nl
-License: GPL2
 */
 
 #php
