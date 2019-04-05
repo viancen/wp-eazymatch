@@ -26,7 +26,7 @@ class emol_require {
 			wp_enqueue_script( 'jquery-ui-sortable' );
 
 			wp_deregister_script( 'emol-admin' );
-			wp_register_script( 'emol-admin', ( plugins_url( 'eazymatch' ) . '/assets/scripts/admin.js' ), 'jquery' );
+			wp_register_script( 'emol-admin', ( plugins_url( 'wp-eazymatch' ) . '/assets/scripts/admin.js' ), 'jquery' );
 			wp_enqueue_script( 'emol-admin' );
 
 			//wp_localize_script( 'emol-ajax-request', 'EmolAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
@@ -115,11 +115,11 @@ class emol_require {
 				$jqskin = get_option( 'emol_jquery_ui_skin' ) ? get_option( 'emol_jquery_ui_skin' ) : 'base';
 
 				wp_deregister_script( 'jquery-ui' );
-				wp_register_script( 'jquery-ui', ( plugins_url( 'eazymatch' ) . '/assets/jquery-ui/jquery-ui.min.js' ), array( 'jquery' ) );
+				wp_register_script( 'jquery-ui', ( plugins_url( 'wp-eazymatch' ) . '/assets/jquery-ui/jquery-ui.min.js' ), array( 'jquery' ) );
 				wp_enqueue_script( 'jquery-ui' );
 
 				wp_deregister_style( 'jquery-ui' );
-				wp_register_style( 'jquery-ui', ( plugins_url( 'eazymatch' ) . '/assets/jquery-ui/themes/' . $jqskin . '/jquery-ui.min.css' ), false );
+				wp_register_style( 'jquery-ui', ( plugins_url( 'wp-eazymatch' ) . '/assets/jquery-ui/themes/' . $jqskin . '/jquery-ui.min.css' ), false );
 				wp_enqueue_style( 'jquery-ui' );
 
 			}
@@ -142,7 +142,7 @@ class emol_require {
 
 		function load_emol_js_validation() {
 			wp_deregister_script( 'validation' );
-			wp_register_script( 'validation', plugins_url( 'eazymatch' ) . '/assets/jquery-validate/jquery.validate.min.js', 'jquery' );
+			wp_register_script( 'validation', plugins_url( 'wp-eazymatch' ) . '/assets/jquery-validate/jquery.validate.min.js', 'jquery' );
 			wp_enqueue_script( 'validation' );
 		}
 
@@ -159,7 +159,7 @@ class emol_require {
 		// if style.css exists the user has defined his own stylesheets
 		function load_emol_css_basic() {
 			wp_deregister_style( 'emol-css' );
-			wp_register_style( 'emol-css', ( plugins_url( 'eazymatch' ) . '/assets/css/style.default.css' ), false );
+			wp_register_style( 'emol-css', ( plugins_url( 'wp-eazymatch' ) . '/assets/css/style.default.css' ), false );
 			wp_enqueue_style( 'emol-css' );
 		}
 
@@ -192,7 +192,7 @@ class emol_require {
 
 		function load_emol_js_basic() {
 			wp_deregister_script( 'emol-js' );
-			wp_register_script( 'emol-js', ( plugins_url( 'eazymatch' ) . '/assets/scripts/emol.js' ), 'jquery' );
+			wp_register_script( 'emol-js', ( plugins_url( 'wp-eazymatch' ) . '/assets/scripts/emol.js' ), 'jquery' );
 			wp_enqueue_script( 'emol-js' );
 		}
 
