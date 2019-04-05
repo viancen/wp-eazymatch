@@ -222,7 +222,7 @@ function eazymatch_plugin_sharing() {
                     <td bgcolor="white">
                         <a href="https://ads.indeed.com/?hl=nl" target="_new">
                             <img
-                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/eazymatch/assets/img/indeed-logo.png"
+                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/wp-eazymatch/assets/img/indeed-logo.png"
                                     style="width:100px;border: solid 1px #ccc;"/>
                         </a>
                         <br/>
@@ -241,7 +241,7 @@ function eazymatch_plugin_sharing() {
                     <td bgcolor="white">
                         <a href="https://ads.indeed.com/?hl=nl" target="_new">
                             <img
-                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/eazymatch/assets/img/jooble-logo.gif"
+                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/wp-eazymatch/assets/img/jooble-logo.gif"
                                     style="width:100px;border: solid 1px #ccc;"/>
                         </a>
                         <br/>
@@ -273,7 +273,7 @@ function eazymatch_plugin_sharing() {
                     <td bgcolor="white">
                         <a href="http://www.simplyhired.com" target="_new">
                             <img
-                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/eazymatch/assets/img/simplyhired-logo-orange.png"
+                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/wp-eazymatch/assets/img/simplyhired-logo-orange.png"
                                     style="width:100px;border: solid 1px #ccc;"/>
                         </a>
                         <br/>
@@ -292,7 +292,7 @@ function eazymatch_plugin_sharing() {
                     <td bgcolor="white">
                         <a href="https://www.adzuna.com" target="_new">
                             <img
-                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/eazymatch/assets/img/logo-adzuna.png"
+                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/wp-eazymatch/assets/img/logo-adzuna.png"
                                     style="width:100px;border: solid 1px #ccc;"/>
                         </a>
                         <br/>
@@ -310,7 +310,7 @@ function eazymatch_plugin_sharing() {
                     <td bgcolor="white">
                         <a href="http://vacatures.trovit.nl/" target="_new">
                             <img
-                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/eazymatch/assets/img/trovit-logo.png"
+                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/wp-eazymatch/assets/img/trovit-logo.png"
                                     style="width:100px;"/>
                         </a>
                         <br/>
@@ -361,18 +361,18 @@ function eazymatch_plugin_sharing() {
                     <td>
                         <a href="http://www.facebook.com/help/?page=818" target="_new">
                             <img
-                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/eazymatch/assets/img/facebook-logo.png"
+                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/wp-eazymatch/assets/img/facebook-logo.png"
                                     style="width:100px;"/>
                         </a> &nbsp;
                         <a href="http://blog.linkedin.com/2008/11/14/share-and-discuss-news-within-linkedin-groups/"
                            target="_new">
                             <img
-                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/eazymatch/assets/img/linkedin-logo.png"
+                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/wp-eazymatch/assets/img/linkedin-logo.png"
                                     style="width:100px;"/>
                         </a>&nbsp;
                         <a href="http://www.twitterfeed.com" target="_new">
                             <img
-                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/eazymatch/assets/img/twitter-logo.png"
+                                    src="<?php echo bloginfo( 'url' ) ?>/wp-content/plugins/wp-eazymatch/assets/img/twitter-logo.png"
                                     style="width:100px;border: solid 1px #ccc;"/>
                         </a>
                     </td>

@@ -70,7 +70,7 @@ class emol_shortcode_cv {
                     </div>';
 					} elseif ( $picVisible == 1 ) {
 						$img = '<div class="emol-cv-result-picture">
-                        <a href="' . $cv_url . '"><img src="' . get_bloginfo( 'wpurl' ) . '/wp-content/plugins/eazymatch/assets/img/blank-icon.png" alt="" /></a></div>';
+                        <a href="' . $cv_url . '"><img src="' . get_bloginfo( 'wpurl' ) . '/wp-content/plugins/wp-eazymatch/assets/img/blank-icon.png" alt="" /></a></div>';
 					}
 
 

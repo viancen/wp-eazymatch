@@ -464,7 +464,7 @@ function emol_parse_html_jobresult( $job, $class = '' ) {
 	if ( $job['Company']['Logo']['content'] > '' && $picVisible == 1 ) {
 		$img = '<div class="emol-job-result-logo"><img src="data:image/png;base64,' . $job['Company']['Logo']['content'] . '" /></div>';
 	} elseif ( $picVisible == 1 ) {
-		$img = '<div class="emol-job-result-logo"><img src="' . get_bloginfo( 'wpurl' ) . '/wp-content/plugins/eazymatch/assets/img/blank-icon.png" alt="" /></div>';
+		$img = '<div class="emol-job-result-logo"><img src="' . get_bloginfo( 'wpurl' ) . '/wp-content/plugins/wp-eazymatch/assets/img/blank-icon.png" alt="" /></div>';
 	}
 
 	$page = get_option( 'emol_job_page' );

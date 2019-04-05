@@ -307,7 +307,7 @@ class emol_page_cv_search extends emol_pagedummy {
 				if ( isset( $cv['Person']['Picture'] ) && $cv['Person']['Picture']['content'] > '' && $picVisible == 1 ) {
 					$img = '<div class="emol-cv-result-picture"><img src="data:image/png;base64,' . $cv['Person']['Picture']['content'] . '" /></div>';
 				} elseif ( $picVisible ) {
-					$img = '<div class="emol-cv-result-picture"><img src="' . get_bloginfo( 'wpurl' ) . '/wp-content/plugins/eazymatch/assets/img/blank-icon.png" alt="" /></div>';
+					$img = '<div class="emol-cv-result-picture"><img src="' . get_bloginfo( 'wpurl' ) . '/wp-content/plugins/wp-eazymatch/assets/img/blank-icon.png" alt="" /></div>';
 				}
 
 				$searchHtml .= $img;

@@ -353,7 +353,7 @@ class emol_page_company_account_edit extends emol_pagedummy {
 		if ( isset( $comp['Logo']['content'] ) ) {
 			$img = '<img src="data:image/png;base64,' . $comp['Logo']['content'] . '" width="100"  />';
 		} else {
-			$img = '<img src="' . get_bloginfo( 'wpurl' ) . '/wp-content/plugins/eazymatch/icon/blank-icon.png" alt="" />';
+			$img = '<img src="' . get_bloginfo( 'wpurl' ) . '/wp-content/plugins/wp-eazymatch/icon/blank-icon.png" alt="" />';
 		}
 
 		$accountHtml .= '
