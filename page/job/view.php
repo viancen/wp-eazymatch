@@ -89,7 +89,7 @@ class emol_page_job_view extends emol_page {
 			}
 		}
 
-		$jobHtml = '<div id="emol-job-container ' . $class . '">';
+		$jobHtml = '<div id="emol-job-container" class="emol-job-details-page ' . $class . '">';
 		$jobHtml .= '<h2 class="emol-job-heading">' . $this->job['name'] . '</h2>';
 
 		$jobHtml     .= '<div id="emol-job-body">';
