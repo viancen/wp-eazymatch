@@ -82,14 +82,18 @@ class emol_page_job_view extends emol_page {
 			$this->job['shortcode'] = 'V' . sprintf( "%05d", $this->job['id'] );
 		}
 
-		$class = '';
+		$class  = '';
+		$class2 = '';
 		if ( ! empty( $this->job['Statusses'] ) ) {
 			foreach ( $this->job['Statusses'] as $aroStat ) {
-				$class .= ' emol-job-status-' . $aroStat['jobstatus_id'];
+				$class  .= ' emol-job-status-' . $aroStat['jobstatus_id'];
+				$class2 .= ' emol-job-status-sub-' . $aroStat['jobstatus_id'];
 			}
 		}
 
 		$jobHtml = '<div id="emol-job-container" class="emol-job-details-page ' . $class . '">';
+
+		$jobHtml .= '<div class="' . $class2 . '"></div>';
 
 		$jobHtml .= '<h2 class="emol-job-heading">' . $this->job['name'] . '</h2>';
 
