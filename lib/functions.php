@@ -562,7 +562,8 @@ function emol_custom_title( $title ) {
 
 	if ( isset( $emol_job_id ) && strlen( $emol_job_id ) > 2 ) {
 
-		$emol_job_id = array_pop( explode( '-', get_query_var( 'emol_job_id' ) ) );
+		$arref       = explode( '-', get_query_var( 'emol_job_id' ) );
+		$emol_job_id = array_pop( $arref );
 
 		if ( ! is_numeric( $emol_job_id ) ) {
 			emol_301( get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . '/all/' );
@@ -856,6 +857,12 @@ function rel_canonical_with_custom_tag_override() {
 		$link = user_trailingslashit( trailingslashit( $canonical_url ) );
 	} else {
 		$link = get_permalink( $id );
+	}
+	if ( ! isset( $_SERVER['REQUEST_HOST'] ) ) {
+		$_SERVER['REQUEST_HOST'] = '';
+	}
+	if ( ! isset( $_SERVER['REQUEST_URI'] ) ) {
+		$_SERVER['REQUEST_URI'] = '';
 	}
 	$link = get_site_url() . $_SERVER['REQUEST_HOST'] . $_SERVER['REQUEST_URI'];
 	echo "<link rel='canonical' href='" . esc_url( $link ) . "' />\n";

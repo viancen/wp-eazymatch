@@ -4,13 +4,13 @@ Plugin Name: EazyMatch
 Plugin URI: https://www.eazymatch-online.nl
 Description: De EazyMatch Wordpress plugin. Bij twijfel over de instellingen mail naar support@eazymatch.nl
 Name: EazyMatch
-Version: 5.1.3
+Version: 5.1.5
 Author: EazyMatch
 Author URI: https://www.eazymatch-online.nl
 */
 
 #php
-$globalVersion = '5.1.3';
+$globalVersion = '5.1.5';
 define( 'EMOL_VERSION', $globalVersion );
 
 //eazymatch directory on server
@@ -44,7 +44,7 @@ function emol_boot_session() {
 	}
 }
 
-
+//addwp _cldoadded
 add_action( 'wp_loaded', 'emol_boot_session' );
 
 //Core location
@@ -59,6 +59,15 @@ $permalink_structure = get_option( 'permalink_structure' );
 if ( substr( $permalink_structure, - 1, 1 ) == '/' ) {
 	$trailingData = '/';
 	//maybe later we will add things as .html here...
+}
+
+// add some extra functionality when in admin mode
+if ( is_admin() ) {
+	require plugin_dir_path( __FILE__ ) . 'lib/class-wp-eazymatch-autoupdate.php';
+	new WP_EazyMatch_Updater( __FILE__, 'viancen', "wp-eazymatch" );
+
+	// include the admin functions
+	include( EMOL_DIR . '/admin.php' );
 }
 
 //include language file
@@ -170,16 +179,6 @@ add_action( 'widgets_init', 'emol_widget_init' );
 add_action( 'wp_title', 'emol_custom_title' );
 add_filter( 'wpseo_title', 'emol_custom_title' );
 
-// add some extra functionality when in admin mode
-if ( is_admin() ) {
-
-	require plugin_dir_path( __FILE__ ) . 'lib/class-wp-eazymatch-autoupdate.php';
-	new WP_EazyMatch_Updater( __FILE__, 'viancen', "wp-eazymatch" );
-
-	// include the admin functions
-	include( EMOL_DIR . '/admin.php' );
-
-}
 
 //important update for canocnial tags on website that use a shortcode for the jobs
 $emol_page_type = get_option( 'emol_job_page' );

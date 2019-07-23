@@ -10,6 +10,7 @@ class WP_EazyMatch_Updater {
 	private $githubAPIResult; // holds data from GitHub
 	private $accessToken; // GitHub private repo token
 
+	//__C
 	function __construct( $pluginFile, $gitHubUsername, $gitHubProjectName, $accessToken = '' ) {
 
 		add_filter( "pre_set_site_transient_update_plugins", array( $this, "EMOL_setTransitent" ) );
@@ -17,7 +18,6 @@ class WP_EazyMatch_Updater {
 		add_filter( "upgrader_post_install", array( $this, "EMOL_postInstall" ), 10, 3 );
 
 		$this->pluginFile  = $pluginFile;
-
 
 		$this->username    = $gitHubUsername;
 		$this->repo        = $gitHubProjectName;
@@ -30,7 +30,6 @@ class WP_EazyMatch_Updater {
 		// code here
 		$this->slug       = plugin_basename( $this->pluginFile );
 		$this->pluginData = get_plugin_data( $this->pluginFile );
-
 
 	}
 
