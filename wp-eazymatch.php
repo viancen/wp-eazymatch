@@ -4,13 +4,13 @@ Plugin Name: EazyMatch
 Plugin URI: https://www.eazymatch-online.nl
 Description: De EazyMatch Wordpress plugin. Bij twijfel over de instellingen mail naar support@eazymatch.nl
 Name: EazyMatch
-Version: 5.1.5
+Version: 5.1.6
 Author: EazyMatch
 Author URI: https://www.eazymatch-online.nl
 */
 
 #php
-$globalVersion = '5.1.5';
+$globalVersion = '5.1.6';
 define( 'EMOL_VERSION', $globalVersion );
 
 //eazymatch directory on server
@@ -59,15 +59,6 @@ $permalink_structure = get_option( 'permalink_structure' );
 if ( substr( $permalink_structure, - 1, 1 ) == '/' ) {
 	$trailingData = '/';
 	//maybe later we will add things as .html here...
-}
-
-// add some extra functionality when in admin mode
-if ( is_admin() ) {
-	require plugin_dir_path( __FILE__ ) . 'lib/class-wp-eazymatch-autoupdate.php';
-	new WP_EazyMatch_Updater( __FILE__, 'viancen', "wp-eazymatch" );
-
-	// include the admin functions
-	include( EMOL_DIR . '/admin.php' );
 }
 
 //include language file
@@ -189,4 +180,14 @@ if ( $emol_page_type && (string) $emol_page_type != '' ) {
 	}
 	// replace the default WordPress canonical URL function with your own
 	add_action( 'wp_head', 'rel_canonical_with_custom_tag_override' );
+}
+
+
+// add some extra functionality when in admin mode
+if ( is_admin() ) {
+	require plugin_dir_path( __FILE__ ) . 'lib/class-wp-eazymatch-autoupdate.php';
+	new WP_EazyMatch_Updater( __FILE__, 'viancen', "wp-eazymatch" );
+
+	// include the admin functions
+	include( EMOL_DIR . '/admin.php' );
 }
