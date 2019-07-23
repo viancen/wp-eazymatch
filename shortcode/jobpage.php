@@ -11,9 +11,11 @@ class emol_shortcode_jobpage {
 
 
 	function getContent() {
+
 		global $emol_side;
 		global $trailingData;
 		global $emol_api;
+
 		$emol_side = 'applicant';
 		$emol_api  = eazymatch_connect();
 

@@ -40,7 +40,13 @@ class emol_shortcode_job {
 				$this->job['shortcode'] = 'V' . sprintf( "%05d", $this->job['id'] );
 			}
 
-			$jobHtml = '<div id="emol-job-container">';
+			$class = '';
+			if ( ! empty( $this->job['Statusses'] ) ) {
+				foreach ( $this->job['Statusses'] as $aroStat ) {
+					$class .= ' emol-job-status-' . $aroStat['jobstatus_id'];
+				}
+			}
+			$jobHtml = '<div id="emol-job-container ' . $class . '">';
 			$jobHtml .= '<h2 class="emol-job-heading">' . $this->job['name'] . '</h2>';
 
 			$jobHtml .= '<div id="emol-job-body">';

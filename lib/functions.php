@@ -458,6 +458,11 @@ function emol_parse_html_jobresult( $job, $class = '' ) {
 		$competence_section .= '</div>';
 	}
 
+	if ( ! empty( $job['Statusses'] ) ) {
+		foreach ( $job['Statusses'] as $aroStat ) {
+			$class .= ' emol-job-status-' . $aroStat['jobstatus_id'];
+		}
+	}
 	$text = '<div class="emol-job-result-item ' . $class . '">';
 
 	$img = '';
