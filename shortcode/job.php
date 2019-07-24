@@ -27,11 +27,9 @@ class emol_shortcode_job {
 			emol_301( get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . '/all/' );
 		} else {
 
-
 			$this->job            = $emol_job['job'];
 			$this->jobTexts       = $emol_job['jobTexts'];
 			$this->jobCompetences = $emol_job['jobCompetences'];
-
 
 			$emol_side = 'applicant';
 
@@ -53,24 +51,15 @@ class emol_shortcode_job {
 			$jobHtml .= '<h2 class="emol-job-heading">' . $this->job['name'] . '</h2>';
 
 			$jobHtml .= '<div id="emol-job-body">';
+			if ( isset( $this->job['Company']['Logo'] ) && $this->job['Company']['Logo']['content'] > '' && get_option( 'emol_job_search_logo' ) == 1 ) {
+				$jobHtml .= '<div class="emol-job-picture"><img src="data:image/png;base64,' . $this->job['Company']['Logo']['content'] . '" /></div>';
+			}
 			//if($this->job['description'] != '') $jobHtml .= '<div id="emol-job-description">'.$this->job['description'].'</div>';
 			$jobHtml .= '<table>';
-
-			$img = '';
-			if ( isset( $this->job['Company']['Logo'] ) && $this->job['Company']['Logo']['content'] > '' && get_option( 'emol_job_search_logo' ) == 1 ) {
-				$img = '<div class="emol-job-picture"><img src="data:image/png;base64,' . $this->job['Company']['Logo']['content'] . '" /></div>';
-			}
-
 
 			//code of job
 			$jobHtml .= '<tr><td class="emol-job-body-col1">' . EMOL_JOB_CODE . '</td>';
 			$jobHtml .= '<td class="emol-job-body-col2">' . $this->job['shortcode'] . '</td></tr>';
-
-			if ( $img != '' ) {
-				$jobHtml .= '<tr><td class="emol-job-body-col1">' . EMOL_JOB_PICTURE . '</td>';
-				$jobHtml .= '<td class="emol-job-body-col2">' . $img . '</td></tr>';
-
-			}
 
 			if ( isset( $this->job['Address']['Region']['name'] ) && $this->job['Address']['Region']['name'] != '' ) {
 				$addRegion = '';
