@@ -271,21 +271,21 @@ function eazymatch_plugin_job() {
                             <h2><?php echo EMOL_ADMIN_SETTINGS . ' - ' . EMOL_ADMIN_JOB ?></h2></td>
                     </tr>
                     <tr>
-                        <td><?php _e( EMOL_ADMIN_JOBDISPLAY_URL, 'Emol-3.0-identifier' ); ?> </td>
+                        <td><?php _e( EMOL_ADMIN_JOBDISPLAY_URL, 'Emol-3.0-identifier' ); ?> <Br> (<strong>default, eazymatch will create a "dummy" page for you</strong>)</td>
                         <td><input type="text" name="emol_job_url"
                                    value="<?php echo $eazymatchOptions['emol_job_url']; ?>" size="40"></td>
                         <td>
                         </td>
                     </tr>
                     <tr>
-                        <td><?php _e( EMOL_ADMIN_JOBDISPLAY_PAGE, 'Emol-3.0-identifier' ); ?> </td>
+                        <td><?php _e( EMOL_ADMIN_JOBDISPLAY_PAGE, 'Emol-3.0-identifier' ); ?> <Br>(<strong>only use this when your wordpress config is compatible</strong>)</td>
                         <td><input type="text" name="emol_job_page"
                                    value="<?php echo $eazymatchOptions['emol_job_page']; ?>" size="40"></td>
                         <td>
                         </td>
                     </tr>
                     <tr>
-                        <td><?php _e( EMOL_ADMIN_JOBSEARCH_URL, 'Emol-3.0-identifier' ); ?> </td>
+                        <td><?php _e( EMOL_ADMIN_JOBSEARCH_URL, 'Emol-3.0-identifier' ); ?>  <Br>&nbsp;</td>
                         <td><input type="text" name="emol_job_search_url"
                                    value="<?php echo $eazymatchOptions['emol_job_search_url']; ?>" size="40"></td>
                         <td>

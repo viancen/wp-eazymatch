@@ -38,6 +38,7 @@ class emol_shortcode_job {
 				$this->job['shortcode'] = 'V' . sprintf( "%05d", $this->job['id'] );
 			}
 
+			$class = '';
 			$class2 = '';
 			if ( ! empty( $this->job['Statusses'] ) ) {
 				foreach ( $this->job['Statusses'] as $aroStat ) {
