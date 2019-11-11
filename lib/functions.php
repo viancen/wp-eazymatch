@@ -2,6 +2,80 @@
 if ( ! defined( 'EMOL_DIR' ) ) {
 	die( 'no direct access' );
 }
+
+function get_emol_dummy_post_object() {
+	/**
+	 * What we are going to do here, is create a fake post.  A post
+	 * that doesn't actually exist. We're gonna fill it up with
+	 * whatever values you want.  The content of the post will be
+	 * the output from your plugin.
+	 */
+
+
+	/**
+	 * Create a fake post.
+	 */
+	$post = new stdClass();
+	/**
+	 * Page type is post page huh
+	 */
+	$post->post_type   = 'page';
+	$post->post_parent = '';
+	/**
+	 * Static means a page, not a post.
+	 */
+	$post->post_status = 'static';
+
+	/**
+	 * Turning off comments for the post.
+	 */
+	$post->comment_status = 'closed';
+
+	/**
+	 * The filter="raw" step is important. Other examples I found for creating fake post objects didn’t include this step. I encountered numerous problems without this. The reason being the core get_post() function. This function is used everywhere in WordPress. If you look at this you’ll notice in the following code:
+	 *
+	 */
+	$post->filter = 'raw'; // important!
+
+	/**
+	 * The author ID for the post.  Usually 1 is the sys admin.  Your
+	 * plugin can find out the real author ID without any trouble.
+	 */
+	$post->post_author  = 1;
+	$post->post_title   = '-';
+	$post->post_content = '';
+	$post->post_name    = '-';
+
+	$rand       = rand( 1, 999999 );
+	$post->guid = 'emol-rand-' . $rand;
+
+
+	/**
+	 * Fake post ID to prevent WP from trying to show comments for
+	 * a post that doesn't really exist.
+	 */
+	$post->ID = null;
+
+	/**
+	 * Let people ping the post?  Probably doesn't matter since
+	 * comments are turned off, so not sure if WP would even
+	 * show the pings.
+	 */
+	$post->ping_status   = 'open';
+	$post->comment_count = 0;
+	$post->public        = true;
+
+	/**
+	 * You can pretty much fill these up with anything you want.  The
+	 * current date is fine.  It's a fake post right?  Maybe the date
+	 * the plugin was activated?
+	 */
+	$post->post_date     = current_time( 'mysql' );
+	$post->post_date_gmt = current_time( 'mysql', 1 );
+
+	return $post;
+}
+
 /**
  * Creates a seo friendly string
  *

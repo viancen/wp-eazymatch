@@ -3,7 +3,8 @@
 /**
  * abstract page class for emol pages inside the wordrpess plugin
  */
-abstract class emol_page {
+
+class emol_page {
 	/**
 	 * The slug for the fake post.  This is the URL for your plugin, like:
 	 * http://site.com/about-me or http://site.com/?page_id=about-me
@@ -26,6 +27,7 @@ abstract class emol_page {
 	 * Allow pings?
 	 * @var string
 	 */
+
 	var $ping_status = 'open';
 
 	/**
@@ -40,6 +42,7 @@ abstract class emol_page {
 	 * Class constructor
 	 */
 	function __construct( $slug, $requestVars = '' ) {
+
 		$this->emolApi = emol_connectManager::getInstance()->getConnection();
 
 		$this->page_slug    = $slug . '/' . $requestVars;
@@ -96,34 +99,19 @@ abstract class emol_page {
 	 */
 	function createPost() {
 
-		/**
-		 * What we are going to do here, is create a fake post.  A post
-		 * that doesn't actually exist. We're gonna fill it up with
-		 * whatever values you want.  The content of the post will be
-		 * the output from your plugin.
-		 */
 
-		/**
-		 * Create a fake post.
-		 */
-		$post = new stdClass;
-
-		/**
-		 * The author ID for the post.  Usually 1 is the sys admin.  Your
-		 * plugin can find out the real author ID without any trouble.
-		 */
-		$post->post_author = 1;
+		$post = get_emol_dummy_post_object();
 
 		/**
 		 * The safe name for the post.  This is the post slug.
 		 */
 		$post->post_name = $this->page_slug;
 
+
 		/**
 		 * Not sure if this is even important.  But gonna fill it up anyway.
 		 */
 		$post->guid = get_bloginfo( 'wpurl' ) . '/' . $this->page_slug;
-
 
 		/**
 		 * The title of the page.
@@ -137,41 +125,6 @@ abstract class emol_page {
 		 */
 		$post->post_content = $this->getContent();
 
-		/**
-		 * Fake post ID to prevent WP from trying to show comments for
-		 * a post that doesn't really exist.
-		 */
-		$post->ID = null;
-
-		/**
-		 * Static means a page, not a post.
-		 */
-		$post->post_status = 'static';
-
-		/**
-		 * Turning off comments for the post.
-		 */
-		$post->comment_status = 'closed';
-
-		/**
-		 * Let people ping the post?  Probably doesn't matter since
-		 * comments are turned off, so not sure if WP would even
-		 * show the pings.
-		 */
-		$post->ping_status = $this->ping_status;
-
-		$post->comment_count = 0;
-
-		$post->public = true;
-
-		/**
-		 * You can pretty much fill these up with anything you want.  The
-		 * current date is fine.  It's a fake post right?  Maybe the date
-		 * the plugin was activated?
-		 */
-		$post->post_date     = current_time( 'mysql' );
-		$post->post_date_gmt = current_time( 'mysql', 1 );
-
 		return ( $post );
 	}
 
@@ -181,9 +134,7 @@ abstract class emol_page {
 		return $viewManager->load( $viewName, $data );
 	}
 
-	abstract protected function preparePost();
+	//protected function preparePost();
 
-	abstract public function getContent();
+	//public function getContent();
 }
-
-?>

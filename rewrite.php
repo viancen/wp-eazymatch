@@ -56,10 +56,9 @@ function emol_parse_query( $wp_query ) {
 	//if we have a page (but not the job_page option) this one handles just the shortcode for a jobpage
 	if ( isset( $allVars['emolpage'] ) && $allVars['emolpage'] != '' && $allVars['emolpage'] != get_option( 'emol_job_page' ) ) {
 
-		$EmolPage = get_query_var( 'emolpage', false ); //the emol page
+		$EmolPage     = get_query_var( 'emolpage', false ); //the emol page
 		$EmolFunction = get_query_var( 'emolaction', false ); //id or handle data
 		$EmolParams   = get_query_var( 'emolparameters', false ); //mostly sef string
-
 
 		$wp_query->is_single  = false;
 		$wp_query->is_page    = true;
@@ -120,7 +119,7 @@ function emol_parse_query( $wp_query ) {
 				$emol_side = 'company';
 				$dummyPage = 'emol_page_company_react';
 				break;
-				
+
 			case get_option( 'emol_company_account_url' ):
 				$emol_side = 'company';
 				$dummyPage = 'emol_page_company_account_edit';
@@ -133,6 +132,7 @@ function emol_parse_query( $wp_query ) {
 		}
 
 		if ( isset( $dummyPage ) ) {
+
 			$emolDummyPage = new $dummyPage( $EmolPage, $emolSlug );
 		}
 	}

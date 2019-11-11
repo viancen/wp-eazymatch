@@ -1,16 +1,16 @@
 <?php
 /*
 Plugin Name: EazyMatch
-Plugin URI: https://www.eazymatch-online.nl
+Plugin URI: https://github.com/viancen/wp-eazymatch
 Description: De EazyMatch Wordpress plugin. Bij twijfel over de instellingen mail naar support@eazymatch.nl
 Name: EazyMatch
-Version: 5.2.1
+Version: 5.2.2
 Author: EazyMatch
 Author URI: https://www.eazymatch-online.nl
 */
 
 #php
-$globalVersion = '5.2.1';
+$globalVersion = '5.2.2';
 define( 'EMOL_VERSION', $globalVersion );
 
 //eazymatch directory on server
