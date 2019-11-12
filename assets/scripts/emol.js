@@ -11,6 +11,7 @@ var EazyWP = {
                     emolSearchCv();
                 }
             });
+
         }
 
         if ($("#emol-share-btns").length) {
@@ -83,7 +84,6 @@ var EazyWP = {
             var hasError = false;
             jQuery('#emol-form-wrapper .required').each(function (a, b) {
 
-
                 if (jQuery(b).attr('id') == 'emol-avg-check') {
                     if (!jQuery(b).is(':checked')) {
                         var $errEl = '<div class="emol-error-label" id="eazymatch-error-' + jQuery(b).attr('id') + '">Dit veld is niet of incorrect ingevuld</div>';
@@ -102,13 +102,25 @@ var EazyWP = {
                 if (hasError) {
                     return false;
                 } else {
-                    jQuery('.emol-form-submit').attr('disabled', 'disabled');
-                    jQuery('.emol-form-submit').html('Een Moment Geduld...');
 
-                    jQuery.featherlight($('#eazymatch-wait-modal'), {
-                        closeOnEsc: false,
-                        closeIcon: '',
+                    jQuery('.emol-form-submit').attr('disabled', 'disabled');
+
+                    jQuery('#eazymatch-wait-modal').dialog({
+                        show: {
+                            effect: "blind",
+                            duration: 500
+                        },
+                        hide: {
+                            effect: "blind",
+                            duration: 100
+                        },
+                        buttons: [],
+                        closeOnEscape: false,
+                        draggable: false,
+                        modal: true,
+                        width: 500
                     });
+
                     jQuery('#emol-apply-form').submit();
                 }
             });

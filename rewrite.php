@@ -8,6 +8,7 @@ function eazymatch_add_var( $public_query_vars ) {
 
 	$public_query_vars[] = 'emol_job_id';
 	$public_query_vars[] = 'emol_apply_id';
+	$public_query_vars[] = 'emol_query';
 	$public_query_vars[] = 'emolpage';
 	$public_query_vars[] = 'emolaction';
 	$public_query_vars[] = 'emolparameters'; //for seo texts or /apply or whatever.
@@ -27,6 +28,7 @@ function eazymatch_do_rewrite() {
 
 	#new skool
 	add_rewrite_rule( get_option( 'emol_job_page' ) . '/([^/]+)/?$', 'index.php?pagename=' . get_option( 'emol_job_page' ) . '&emol_job_id=$matches[1]', 'top' );
+	add_rewrite_rule( get_option( 'emol_job_search_page' ) . '/([^/]+)/?$', 'index.php?pagename=' . get_option( 'emol_job_search_page' ) . '&emol_query=$matches[1]', 'top' );
 	add_rewrite_rule( get_option( 'emol_apply_page' ) . '/([^/]+)/?$', 'index.php?pagename=' . get_option( 'emol_apply_page' ) . '&emol_job_id=$matches[1]', 'top' );
 
 	#old skool
@@ -59,7 +61,7 @@ function emol_parse_query( $wp_query ) {
 	$allVars = $wp_query->query_vars;
 
 	//if we have a page (but not the job_page option) this one handles just the shortcode for a jobpage
-	$ar = array( get_option( 'emol_job_page' ), get_option( 'emol_apply_page' ) );
+	$ar = array( get_option( 'emol_job_page' ), get_option( 'emol_job_search_page' ), get_option( 'emol_apply_page' ) );
 
 	if ( isset( $allVars['emolpage'] ) && $allVars['emolpage'] != '' && ! in_array( $allVars['emolpage'], $ar ) ) {
 
@@ -125,6 +127,7 @@ function emol_parse_query( $wp_query ) {
 				$emol_side = 'applicant';
 				$dummyPage = 'emol_page_job_search';
 				break;
+
 
 			case get_option( 'emol_cv_url' ):
 				$emol_side = 'company';

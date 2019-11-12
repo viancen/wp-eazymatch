@@ -168,9 +168,12 @@ class emol_shortcode_searchjobs {
 			}
 
 			//$allUrl = str_replace('//','/',$setUrl.'/'.get_option( 'emol_job_search_url' ));
+
+			$base =  get_option( 'emol_job_search_page' ) ? get_option( 'emol_job_search_page' ) : get_option( 'emol_job_search_url' ) . '/all/';
+
 			$text .= '
             <div class="emol-submit-wrapper">
-                <span class="emol-reset-button"><a href="' . get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . '/all/" class="emol-altbutton emol-button-reset">' . $reset . '</a></span>
+                <span class="emol-reset-button"><a href="' . get_bloginfo( 'wpurl' ) . '/' . $base . '" class="emol-altbutton emol-button-reset">' . $reset . '</a></span>
                 <button onclick="emolSearch(\'/' . $setUrl . '/\');" class="emol-button emol-button-search">' . $searchLabel . '</button>
             </div>';
 

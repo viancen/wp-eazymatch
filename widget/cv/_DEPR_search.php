@@ -157,11 +157,12 @@ class emol_widget_cv_search extends emol_widget {
 			if ( isset( $lists->lists ) ) {
 				echo $lists->lists;
 			}
+			$base =  get_option( 'emol_job_search_page' ) ? get_option( 'emol_job_search_page' ) : get_option( 'emol_job_search_url' ) . '/all';
 
 			?>
             <div class="emol-submit-wrapper">
                 <span class="emol-reset-button">
-                    <a href="<?php echo get_option( 'emol_job_search_url' ) ?>/all<?php echo $trailingData ?>"
+                    <a href="<?php echo $base ?>/<?php echo $trailingData ?>"
                        class="emol-altbutton emol-button-reset"><?php echo $reset ?></a>
                 </span>
                 <button onclick="emolSearchCv();"

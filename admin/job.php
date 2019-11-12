@@ -341,7 +341,7 @@ function eazymatch_plugin_job() {
                         </td>
                     </tr>
                     <tr>
-                        <td><?php _e( EMOL_ADMIN_JOBSEARCH_PAGE, 'Emol-3.0-identifier' ); ?><Br>(<strong>Pagina met shortcode [eazymatch view="jobsearch"]</strong>)</td>
+                        <td><?php _e( EMOL_ADMIN_JOBSEARCH_PAGE, 'Emol-3.0-identifier' ); ?><Br>(<strong>Pagina met shortcode [eazymatch view="jobpage"]</strong>)</td>
                         <td>
                             <select type="text" class="eazycv-admin-select" name="emol_job_search_page" style="width:100%;">
                                 <option value=""></option>

@@ -45,8 +45,10 @@ class emol_shortcode_job {
 
 		if ( ! isset( $emol_job['job'] ) ) {
 
+			$base =  get_option( 'emol_job_search_page' ) ? get_option( 'emol_job_search_page' ) : get_option( 'emol_job_search_url' ) . '/all/';
+
 			//$jobHtml = (get_option( 'emol_job_offline' )) ? get_option( 'emol_job_offline' ) : 'This page does not exist anymore';
-			emol_301( get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . '/all/' );
+			emol_301( get_bloginfo( 'wpurl' ) . '/' . $base );
 		} else {
 
 			$this->job            = $emol_job['job'];

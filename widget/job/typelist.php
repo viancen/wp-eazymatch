@@ -102,12 +102,12 @@ class emol_widget_job_typelist extends emol_widget {
 				echo '</li>';
 			}
 			echo '</ul>';
-
+			$base =  get_option( 'emol_job_search_page' ) ? get_option( 'emol_job_search_page' ) : get_option( 'emol_job_search_url' ) . '/all/';
 
 			echo '
                 <div id="emol_typejobs_findmore">
                     <div class="emol-submit-wrapper">
-                        <a href="/' . get_option( 'emol_job_search_url' ) . '/all/" class="emol-button emol-button-showalljobs">' . EMOL_JOBSEARCH_MORE . '</a>
+                        <a href="/' . $base . '/" class="emol-button emol-button-showalljobs">' . EMOL_JOBSEARCH_MORE . '</a>
                     </div>
                 </div>';
 

@@ -148,13 +148,6 @@ class emol_require {
 
 		add_action( 'wp_enqueue_scripts', 'load_emol_js_validation' );
 
-		function load_emol_js_feather() {
-			wp_deregister_script( 'emolfeather' );
-			wp_register_script( 'emolfeather', plugins_url( 'wp-eazymatch' ) . '/assets/scripts/emol-featherlight.js', 'jquery' );
-			wp_enqueue_script( 'emolfeather' );
-		}
-
-		add_action( 'wp_enqueue_scripts', 'load_emol_js_feather' );
 
 		self::registerInclude( 'validation' );
 	}

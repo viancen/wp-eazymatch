@@ -77,9 +77,16 @@ class emol_widget_search extends emol_widget {
 
 		if ( $emol_side == 'company' ) {
 			$setUrl = get_option( 'emol_cv_search_url' );
+
 		} else {
-			$setUrl = get_option( 'emol_job_search_url' );
+			$setUrl = get_option( 'emol_job_search_page' );
+			if (empty( $setUrl ) ) {
+				$setUrl = get_option( 'emol_job_search_url' );
+			} else {
+				$setUrl = '/'.$setUrl;
+            }
 		}
+		$reset_rul = $setUrl;
 
 		if ( count( $competenceList ) > 0 ) {
 			if ( $checkBoxSearch == 1 ) {
@@ -95,11 +102,15 @@ class emol_widget_search extends emol_widget {
 
 		//check multi slugs
 		$completeBase = explode( '/', get_bloginfo( 'wpurl' ) );
+
+
 		if ( count( $completeBase ) > 3 ) {
 			$setUrl = array_pop( $completeBase ) . '/' . $setUrl;
 		}
 
-		echo '<form onsubmit="emolSearch(\'' . $setUrl . '\'); return false;">';
+
+			echo '<form onsubmit="emolSearch(\'' . $setUrl . '\'); return false;">';
+
 
 		echo '<div class="emol-free-search">
             <label for="emol-free-search-input">' . EMOL_WIDGET_FREE_SEARCH . '</label>
@@ -178,8 +189,8 @@ class emol_widget_search extends emol_widget {
 		//$allUrl = str_replace('//','/',$setUrl.'/'.get_option( 'emol_job_search_url' ));
 		echo '
             <div class="emol-submit-wrapper">
-                <span class="emol-reset-button"><a href="' . get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . '/all/" class="emol-altbutton emol-button-reset">' . $reset . '</a></span>
-                <button onclick="emolSearch(\'/' . $setUrl . '/\');" class="emol-button emol-button-search">' . $searchLabel . '</button>
+                <span class="emol-reset-button"><a href="' .$reset_rul.'" class="emol-altbutton emol-button-reset">' . $reset . '</a></span>
+                <button type="submit" class="emol-button emol-button-search">' . $searchLabel . '</button>
             </div>';
 
 		echo "</form>";
