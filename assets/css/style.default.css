@@ -569,7 +569,7 @@ a.emol-button,
     background-color: #ffa0a0;
     color: red;
 }
-.eazymatch-modal,
+#eazymatch-wait-modal,
 #emol-job-page-description {
     display: none;
 }

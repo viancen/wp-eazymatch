@@ -102,7 +102,10 @@ var EazyWP = {
                 if (hasError) {
                     return false;
                 } else {
-                    $.featherlight($('#eazymatch-wait-modal'), {
+                    jQuery('.emol-form-submit').attr('disabled', 'disabled');
+                    jQuery('.emol-form-submit').html('Een Moment Geduld...');
+
+                    jQuery.featherlight($('#eazymatch-wait-modal'), {
                         closeOnEsc: false,
                         closeIcon: '',
                     });

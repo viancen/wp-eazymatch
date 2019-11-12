@@ -130,70 +130,11 @@ class emol_page_applicant_apply extends emol_page {
 		 * plugin function calls, and put the output into this var.
 		 */
 
-		$this->captcha = new emol_captcha();
-
-		if ( emol_post_exists( 'EMOL_apply' ) ) {
-
-			$secure = false;
-			if ( emol_post_exists( 'emol_captcha_code' ) ) {
-				if ( $this->captcha->isValid() || emol_session::isValidId( 'applicant_id' ) ) {
-					$secure = true;
-				}
-			}
-
-			if ( emol_post_exists( 'g-recaptcha-response' ) ) {
-
-				$data_google = array(
-					'secret'   => get_option( 'emol_frm_google_captcha_secret' ),
-					'response' => emol_post( 'g-recaptcha-response' ),
-					'remoteip' => $_SERVER['REMOTE_ADDR']
-				);
-				$options     = array(
-					'http' => array(
-						'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-						'method'  => 'POST',
-						'content' => http_build_query( $data_google ),
-					),
-					"ssl"  => array(
-						"verify_peer"      => false,
-						"verify_peer_name" => false,
-					)
-				);
-				$context     = stream_context_create( $options );
-
-				$result = file_get_contents( 'https://www.google.com/recaptcha/api/siteverify', false, $context );
-
-				$result = json_decode( $result, true );
-				if ( $result['success'] == true ) {
-					$secure = true;
-				}
-			}
-
-			if ( $secure == true ) {
-				$this->doApply();
-			} else {
-				$_POST['captcha-error'] = 1;
-				$post->post_content     = $this->getContent( $_POST );
-			}
-
-		} else {
-
-			$post->post_content = $this->getContent();
-
-		}
+        $post->post_content = $this->getContent();
 
 
 		return ( $post );
 	}
-
-
-	/**
-	 * when someone has hit the button
-	 */
-	function doApply() {
-		$result = emol_post_application();
-	}
-
 
 	/**
 	 * creates the fake content
@@ -202,8 +143,9 @@ class emol_page_applicant_apply extends emol_page {
 
 		// remove auto line breaks
 		remove_filter( 'the_content', 'wpautop' );
-		$suUrl = emol_get_apply_form( $this->job );
-		wp_redirect( $suUrl );
+		return emol_get_apply_form($this->job);
+
+		//wp_redirect( $suUrl );
 	}
 
 	/**
