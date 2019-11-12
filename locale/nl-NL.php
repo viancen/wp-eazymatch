@@ -279,10 +279,12 @@ define( 'EMOL_ADMIN_FORM_COMPANY', "Bedrijven formulier" );
 
 define( 'EMOL_ADMIN_JOBDISPLAY_URL', "Vacature weergave url" );
 define( 'EMOL_ADMIN_JOBDISPLAY_PAGE', "Vacature weergave pagina" );
+define( 'EMOL_ADMIN_JOBSEARCH_PAGE', "Job zoek page" );
 define( 'EMOL_ADMIN_JOBSEARCH_URL', "Vacature zoek url" );
 define( 'EMOL_ADMIN_APPLY_EMAIL', "Solliciteer via e-mail" );
 define( 'EMOL_ADMIN_APPLY_EMAIL_TEXT', "Tekst button e-mail sollicitatie" );
 define( 'EMOL_ADMIN_JOB_TEXTS', "Tekstblokken" );
+define( 'EMOL_ADMIN_APPLY_PAGE', "Sollicitatie pagina" );
 
 define( 'EMOL_ADMIN_JOBSEARCH_LOGOS', "Logo's bedrijven zichtbaar?" );
 define( 'EMOL_ADMIN_JOBSEARCH_DESCR', "Korte omschrijving in zoekresultaat?" );

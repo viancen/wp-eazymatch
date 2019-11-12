@@ -482,6 +482,7 @@ function emol_tree_to_list( $a, $prefix = ' ', $level = 0, $parent_id = 0, $tree
 }
 
 function emol_301( $newUrl ) {
+
 	Header( "HTTP/1.1 301 Moved Permanently" );
 	Header( "Location: " . $newUrl );
 	exit();
@@ -553,11 +554,18 @@ function emol_parse_html_jobresult( $job, $class = '' ) {
 		$job_url = get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_url' ) . '/' . $job['id'] . '/' . eazymatch_friendly_seo_string( $job['name'] ) . $trailingData;
 	}
 
-	$apply_url = get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_apply_url' ) . '/' . $job['id'] . '/' . eazymatch_friendly_seo_string( $job['name'] ) . $trailingData;
+	$pagex = get_option( 'emol_apply_page' );
+	if ( $pagex && (string) $pagex != '' ) {
+		$apply_url = get_bloginfo( 'wpurl' ) . '/' . $pagex . '/' . eazymatch_friendly_seo_string( $job['name'] ) . '-' . $job['id'] . $trailingData;
+	} else {
+		$pagex = get_option( 'emol_apply_url' );
+		$apply_url = get_bloginfo( 'wpurl' ) . '/' . $pagex . '/' . $job['id'] . '/' . eazymatch_friendly_seo_string( $job['name'] ) . $trailingData;
+	}
 
 	$text .= $img;
 	$text .= '<div class="eazymatch_job_title"><a href="' . $job_url . '">' . $job['name'] . '</a> </div>';
 	$text .= $competence_section;
+
 	if ( $descVisible == 1 ) {
 		$text .= '<div class="eazymatch_job_body"> ' . emol_firstWords( clear_newline( strip_tags( nl2br( $job['description'] ) ) ) ) . '... </div>';
 	}
@@ -633,6 +641,313 @@ function emol_get_job_url( $jobdata ) {
 	return $job_url;
 }
 
+function emol_get_apply_form( $jobData ) {
+
+	$api = eazymatch_connect();
+
+	$data = array();
+
+	//fillup default array of presets
+	$data['birthdate']  = '';
+	$data['firstname']  = '';
+	$data['lastname']   = '';
+	$data['middlename'] = '';
+
+	$data['city']             = '';
+	$data['ssn']              = '';
+	$data['nationality_id']   = '';
+	$data['street']           = '';
+	$data['country_id']       = '';
+	$data['maritalstatus_id'] = '';
+
+	$data['availablehours']    = '';
+	$data['description']       = '';
+	$data['title']             = '';
+	$data['housenumber']       = '';
+	$data['phonenumber']       = '';
+	$data['phonenumber2']      = '';
+	$data['managercompany_id'] = '';
+	$data['schoolingtype_id']  = '';
+	$data['zipcode']           = '';
+	$data['email']             = '';
+	$data['extension']         = '';
+	$data['competence']        = array();
+
+	//fill up default data
+	if ( isset( $defaultData ) && count( $defaultData ) > 0 && isset( $defaultData['birthdate-year'] ) && isset( $defaultData['birthdate-month'] ) && isset( $defaultData['birthdate-day'] ) ) {
+		$data              = $defaultData;
+		$data['birthdate'] = $defaultData['birthdate-year'] . '-' . $defaultData['birthdate-month'] . '-' . $defaultData['birthdate-day'];
+	}
+
+	// prepare client resources
+	// emol_require::validation();
+	// emol_require::jqueryUi();
+
+	if ( isset( $data['linkedInrequest'] ) ) {
+		$linkedInrequest = $data['linkedInrequest'];
+	} else {
+		$linkedInrequest = ( get_query_var( 'emolrequestid' ) );
+	}
+
+
+	$inImage = 'connect-to-linkedin.png';
+	if ( strlen( $linkedInrequest ) == 128 ) {
+
+		$appApi = $api->get( 'applicant' );
+		$dataIn = $appApi->getLinkedInProfile( $linkedInrequest );
+
+
+		if ( ! empty( $dataIn['date-of-birth'] ) ) {
+			$data['birthdate'] = $dataIn['date-of-birth']['year'] . '-' . $dataIn['date-of-birth']['month'] . '-' . $dataIn['date-of-birth']['day'];
+		}
+
+		//normalize data
+		$data['title']       = @$dataIn['headline'];
+		$data['email']       = @$dataIn['email-address'];
+		$data['phonenumber'] = @$dataIn['phone-numbers']['phone-number']['phone-number'];
+		$data['description'] = @$dataIn['summary'];
+		$data['city']        = @$dataIn['location']['name'];
+		$dataIn['last-name'] = explode( ' ', $dataIn['last-name'] );
+		$data['lastname']    = array_pop( $dataIn['last-name'] );
+		$data['firstname']   = $dataIn['first-name'];
+		$data['middlename']  = implode( ' ', $dataIn['last-name'] );
+		//$data['birthdate'] = $dataIn['birthdate-year'].'-'.$dataIn['birthdate-month'].'-'.$dataIn['birthdate-day'];
+		$inImage = 'connected-to-linkedin.png';
+	}
+
+	$firstDescription = '';
+	if ( isset( $jobData['description'] ) && trim( $jobData['description'] != '' ) ) {
+		$firstDescription = '<p id="emol-apply-job-summary">' . EMOL_APPLY_HEADER . ' <strong>' . $jobData['name'] . '</strong>.</p>';
+	}
+
+	//the apply form
+	include( EMOL_DIR . '/lib/emol/loginwidget.php' );
+
+	$mailto = get_option( 'emol_email' );
+
+	$applyHtml = $firstDescription . $loginWidget . '
+        <div id="emol-form-apply" class="emol-form-div emol-form-table">
+        <form method="post" id="emol-apply-form" enctype="multipart/form-data" action="' . get_bloginfo( 'wpurl' ) . '/em-submit-subscription">
+        <input type="hidden" name="job_id" value="' . $jobData['id'] . '" />
+        <input type="hidden" name="EMOL_apply" value="1" />
+        <input type="hidden" name="linkedInrequest" value="' . $linkedInrequest . '" />';
+
+	$urlVars = explode( '/', $_SERVER['REQUEST_URI'] );
+
+	//url applying
+	$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+	//$url = $url . '/';
+
+	if ( in_array( 'success', $urlVars ) ) {
+		$applyHtml .= '<tr><td colspan="2">' . stripslashes( get_option( 'emol_apply_success' ) ) . '</td></tr>';
+	} elseif ( isset( $urlVars[2] ) && $urlVars[2] == 'unsuccess' ) {
+		$applyHtml .= '<tr><td colspan="2">' . EMOL_APPLY_FAIL_MSG . '</td></tr>';
+	} else {
+		$applyHtml .= '<tr><td colspan="2" class="emol-apply-mandatory">' . EMOL_APPLY_MANDATORY . '</td></tr>';
+		$applyHtml .= '<div id="emol-form-wrapper">';
+		include( EMOL_DIR . '/lib/emol/applyform.php' );
+		$applyHtml .= '</div>';
+	}
+
+	//finish up html
+	$applyHtml .= '</div>';
+
+	//return some html
+	return str_replace( PHP_EOL, ' ', $applyHtml );
+}
+
+function emol_post_application() {
+
+	$emolApi = eazymatch_connect();
+	//captcha didnt check out....
+	//initiate webservice method
+	$ws     = $emolApi->get( 'applicant' );
+	$wsTool = $emolApi->get( 'tool' );
+
+	//fetch birthdate parts
+	$birthdate = null;
+	$yeartest  = emol_post( 'birthdate-year' );
+	if ( ! empty( $yeartest ) ) {
+		$birthdate = emol_post( 'birthdate-year' ) . '-' . emol_post( 'birthdate-month' ) . '-' . emol_post( 'birthdate-day' );
+	}
+
+	if ( ! emol_session::isValidId( 'applicant_id' ) ) {
+
+		//create a array the way EazyMatch likes it
+		$subscription = new emol_ApplicantMutation();
+
+		//set the person
+		$subscription->setPerson(
+			null,
+			emol_post( 'firstname' ),
+			emol_post( 'middlename' ),
+			emol_post( 'lastname' ),
+			$birthdate,
+			emol_post( 'email' ),
+			emol_post( 'password' ),
+			emol_post( 'gender' ),
+			emol_post( 'ssn' ),
+			emol_post( 'nationality_id' ),
+			emol_post( 'managercompany_id' )
+		);
+
+
+		//set the Applicant
+		$subscription->setApplicant(
+			null,
+			date( 'Ymd' ),
+			date( 'Ymd' ),
+			null,
+			emol_post( 'title' ),
+			emol_post( 'healthcarereference' ),
+			emol_post( 'linkedInrequest' ),
+			emol_post( 'contactvia' ),
+			emol_post( 'maritalstatus_id' ),
+			emol_post( 'searchlocation' ),
+			emol_post( 'salary' ),
+			emol_post( 'availablehours' )
+		);
+
+		//set addresses
+		if ( isset( $_POST['street'] ) && $_POST['street'] != '' ) {
+
+			$subscription->addAddress(
+				null,
+				null,
+				emol_post( 'country_id' ),
+				null,
+				emol_post( 'street' ),
+				emol_post( 'housenumber' ),
+				emol_post( 'extension' ),
+				emol_post( 'zipcode' ),
+				emol_post( 'city' )
+			);
+
+		} elseif ( isset( $_POST['zipcode'] ) && $_POST['zipcode'] != '' ) {
+
+			$addrPiece = $emolApi->getAddressByZipcode( emol_post( 'zipcode' ) );
+
+			$addrPiece['province_id'] = ( isset( $addrPiece['province_id'] ) ? $addrPiece['province_id'] : null );
+			$addrPiece['country_id']  = ( isset( $addrPiece['country_id'] ) ? $addrPiece['country_id'] : null );
+			$addrPiece['region_id']   = ( isset( $addrPiece['region_id'] ) ? $addrPiece['region_id'] : null );
+			$addrPiece['street']      = ( isset( $addrPiece['street'] ) ? $addrPiece['street'] : null );
+			$addrPiece['zipcode']     = ( isset( $addrPiece['zipcode'] ) ? $addrPiece['zipcode'] : null );
+			$addrPiece['city']        = ( isset( $addrPiece['city'] ) ? $addrPiece['city'] : null );
+
+			$subscription->addAddress(
+				null,
+				$addrPiece['province_id'],
+				$addrPiece['country_id'],
+				$addrPiece['region_id'],
+				$addrPiece['street'],
+				emol_post( 'housenumber' ),
+				emol_post( 'extension' ),
+				$addrPiece['zipcode'],
+				$addrPiece['city']
+			);
+
+		}
+
+		/**email**/
+		$subscription->addEmailaddresses( null, null, emol_post( 'email' ) );
+		/**phonenumber**/
+		if ( get_option( 'emol_frm_app_phone' ) !== '' ) {
+			$subscription->addPhonenumber( null, null, emol_post( 'phonenumber' ) );
+		}
+
+		if ( get_option( 'emol_frm_app_phone2' ) !== '' ) {
+			$subscription->addPhonenumber( null, null, emol_post( 'phonenumber2' ) );
+		}
+
+
+		if ( get_option( 'emol_frm_app_schoolingtype_id' ) !== '' ) {
+			$emol_frm_app_schoolingtype_id = emol_post( 'schoolingtype_id' );
+
+			if ( is_numeric( $emol_frm_app_schoolingtype_id ) ) {
+				$subscription->addSchooling( $emol_frm_app_schoolingtype_id );
+			}
+		}
+
+		//CV
+		if ( isset( $_FILES['cv'] ) && isset( $_FILES['cv']['tmp_name'] ) && $_FILES['cv']['tmp_name'] != '' ) {
+			//set the CV document
+			$doc            = array();
+			$doc['name']    = $_FILES['cv']['name'];
+			$doc['content'] = base64_encode( file_get_contents( $_FILES['cv']['tmp_name'] ) );
+			$doc['type']    = $_FILES['cv']['type'];
+
+			$subscription->setCV( $doc['name'], $doc['type'], $doc['content'] );
+		}
+
+		//photo
+		if ( isset( $_FILES['picture'] ) && isset( $_FILES['picture']['tmp_name'] ) && $_FILES['picture']['tmp_name'] != '' ) {
+			//set the CV document
+			$doc            = array();
+			$doc['name']    = $_FILES['picture']['name'];
+			$doc['content'] = base64_encode( file_get_contents( $_FILES['picture']['tmp_name'] ) );
+			$doc['type']    = $_FILES['picture']['type'];
+
+
+			$subscription->setPicture( $doc['name'], $doc['type'], $doc['content'] );
+		}
+
+		//competences
+		$competenceElements = get_option( 'emol_frm_app_competence', array() );
+		foreach ( $competenceElements as $competence ) {
+			if ( emol_post_exists( 'competence' . $competence['competence_id'] ) ) {
+				foreach ( emol_post( 'competence' . $competence['competence_id'] ) as $cpt ) {
+					$subscription->addCompetence( $cpt );
+				}
+			}
+		}
+
+		//job / mediation / match
+		if ( emol_post( 'job_id' ) == '' ) {
+			emol_post_set( 'job_id', null );
+		}
+
+		$url = $_SERVER['HTTP_HOST'];
+
+		$contentMessage = nl2br( emol_post( 'motivation' ) );
+		$contentMessage .= '<br /><br />(' . $url . ')';
+
+		$subscription->setApplication(
+			emol_post( 'job_id' ), $contentMessage, $url
+		);
+
+		//create the workable postable array
+		$postData = $subscription->createSubscription();
+
+		//option to directly go in the sys instead of webaanmeldingen
+		$postData['processDirectly'] = get_option( 'emol_apply_process_directly' );
+
+		//save the subscription to EazyMatch, this will send an notification to emol user and an email to the subscriber
+		$ws->subscription( $postData );
+
+
+		//naar eigen url of naar globale
+		$redirectUrl = get_option( 'emol_apply_url_success_redirect' );
+		if ( ! empty( $redirectUrl ) ) {
+			return ( $redirectUrl );
+		} else {
+			return ( get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_apply_url' ) . '/' . emol_post( 'job_id' ) . '/success/' );
+		}
+	} else {
+		/**
+		 * apply to job, the true in the end is for triggering mail event
+		 * EazyMatch will create a mediation between the job and applicant with the motivation.
+		 * It also will register a correspondence moment and will send an e-mail to the emol user ( notification )
+		 **/
+		$success = $ws->applyToJob( emol_post( 'job_id' ), emol_session::get( 'applicant_id' ), nl2br( emol_post( 'motivation' ) ), true );
+		if ( $success == true ) {
+			return ( get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_apply_url' ) . '/' . $this->jobId . '/success/' );
+		} else {
+			return ( get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_apply_url' ) . '/' . $this->jobId . '/unsuccess/' );
+		}
+	}
+}
+
+
 function emol_custom_title( $title ) {
 
 	global $emol_job;
@@ -668,6 +983,44 @@ function emol_custom_title( $title ) {
 	}
 
 	return $title;
+}
+
+/* Get Parameters from $_POST and $_GET (WordPress)
+    $param = string name of specific parameter requested (default to null, get all parameters
+    $null_return = what you want returned if the parameter is not set (null, false, array() etc
+
+    returns $params (string or array depending upon $param) of either parameter value or all parameters by key and value
+
+    Note:   POST overrules GET (if both are set with a value and GET overrules POST if POST is not set or has a non-truthful value
+            All parameters are trimmed and sql escaped
+*/
+
+function emol_wordpress_get_params( $param = null, $null_return = null ) {
+	if ( $param ) {
+		$value = ( ! empty( $_POST[ $param ] ) ? trim( esc_sql( $_POST[ $param ] ) ) : ( ! empty( $_GET[ $param ] ) ? trim( esc_sql( $_GET[ $param ] ) ) : $null_return ) );
+
+		return $value;
+	} else {
+
+		$params = array();
+		foreach ( $_POST as $key => $param ) {
+			if ( is_array( $_POST[ $key ] ) ) {
+				foreach ( $_POST[ $key ] as $sKey => $sVals ) {
+					$params[ trim( esc_sql( $key ) ) ][] = ( ! empty( $_POST[ $key ][ $sKey ] ) ? trim( esc_sql( $_POST[ $key ][ $sKey ] ) ) : $null_return );
+				}
+			} else {
+				$params[ trim( esc_sql( $key ) ) ] = ( ! empty( $_POST[ $key ] ) ? trim( esc_sql( $_POST[ $key ] ) ) : $null_return );
+			}
+		}
+		foreach ( $_GET as $key => $param ) {
+			$key = trim( esc_sql( $key ) );
+			if ( ! isset( $params[ $key ] ) ) { // if there is no key or it's a null value
+				$params[ trim( esc_sql( $key ) ) ] = ( ! empty( $_GET[ $key ] ) ? trim( esc_sql( $_GET[ $key ] ) ) : $null_return );
+			}
+		}
+
+		return $params;
+	}
 }
 
 function emol_post( $keyName, $default = '' ) {

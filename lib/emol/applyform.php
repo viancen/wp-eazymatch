@@ -7,13 +7,15 @@ if ( ! emol_session::isValidId( 'applicant_id' ) ) {
 
 	//create the form
 	$applyHtml .= '
+		<div id="eazymatch-wait-modal" class="eazymatch-modal">Eén moment geduld, uw sollicitatie wordt verwerkt.</div>
+
         <div class="emol-label-wrapper" id="emol-connect-widget">
-        <img src="https://linkedin.eazymatch.cloud/default-login.png" class="emol-login-logo" onclick="emolLoginPopup();" />
-        <img src="https://linkedin.eazymatch.cloud/' . $inImage . '" class="emol-linkedin-logo" onclick="emol_connect_linkedin(\'' . $url . '\',\'' . $api->instanceName . '\');" />
+        <a href="javascript:;" class="emol-login-logo emol-button" onclick="emolLoginPopup();">Login met EazyMatch account</a> <span class="emol-app-log-form">|</span> 
+        <a class="emol-linkedin-logo emol-button" onclick="emol_connect_linkedin(\'' . $url . '\',\'' . $api->instanceName . '\');" href="javascript:;">Solliciteer met LinkedIN</a>
         </div>
         ';
 
-	//GENDER
+	//
 	$gen1      = ( isset( $data['gender'] ) && $data['gender'] = 'm' ) ? 'selected="selected"' : '';
 	$gen2      = ( isset( $data['gender'] ) && $data['gender'] = 'f' ) ? 'selected="selected"' : '';
 	$frmGender = '
@@ -46,7 +48,7 @@ if ( ! emol_session::isValidId( 'applicant_id' ) ) {
             <label for="emol-firstname">' . EMOL_FIRSTNAME . ' ' . $asterix . '</label>
             </div>
             <div class="emol-input-wrapper">
-            <input type="text" class="emol-text-input ' . $req . '" placeholder="' . EMOL_FIRSTNAME . '" name="firstname" id="emol-firstname" value="' . $data['firstname'] . '" />
+            <input type="text"  class="emol-text-input ' . $req . '" placeholder="' . EMOL_FIRSTNAME . '" name="firstname" id="emol-firstname" value="' . $data['firstname'] . '" />
             </div>
             </div>
 
@@ -681,7 +683,7 @@ if ( ! emol_session::isValidId( 'applicant_id' ) ) {
 			$asterix = ' <strong class="emol-required-asterix">*</strong>';
 		}
 
-		$sl =  isset($data['searchlocation']) ? $data['searchlocation'] : '';
+		$sl  = isset( $data['searchlocation'] ) ? $data['searchlocation'] : '';
 		$frm = ' <div class="emol-apply-row" id="emol-searchlocation-row">
             <div class="emol-label-wrapper">
             <label for="emol-searchlocation">' . EMOL_ACCOUNT_APP_SEARCHLOCATION . ' ' . $asterix . '</label>
@@ -705,7 +707,7 @@ if ( ! emol_session::isValidId( 'applicant_id' ) ) {
 			$asterix = ' <strong class="emol-required-asterix">*</strong>';
 		}
 
-		$sl =  isset($data['availablehours']) ? $data['availablehours'] : '';
+		$sl  = isset( $data['availablehours'] ) ? $data['availablehours'] : '';
 		$frm = ' <div class="emol-apply-row" id="emol-availablehours-row">
             <div class="emol-label-wrapper">
             <label for="emol-availablehours">' . EMOL_ACCOUNT_APP_AVAILABLEHOURS . ' ' . $asterix . '</label>
@@ -727,7 +729,7 @@ if ( ! emol_session::isValidId( 'applicant_id' ) ) {
 			$req     = 'required';
 			$asterix = ' <strong class="emol-required-asterix">*</strong>';
 		}
-		$sl =  isset($data['salary']) ? $data['salary'] : '';
+		$sl  = isset( $data['salary'] ) ? $data['salary'] : '';
 		$frm = ' <div class="emol-apply-row" id="emol-salary-row">
             <div class="emol-label-wrapper">
             <label for="emol-salary">' . EMOL_ACCOUNT_APP_SALARY . ' ' . $asterix . '</label>
@@ -875,11 +877,12 @@ if ( get_option( 'emol_frm_google_captcha_sitekey' ) && get_option( 'emol_frm_go
         </div>';
 } else {
 
+	$capotcga  = new emol_captcha();
 	$applyHtml .= '
         <div class="emol-apply-row" id="emol-captcha-row">
 
-        <div class="emol-input-wrapper">' . $this->captcha->getImageTag() . '</div>
-        <div class="emol-input-wrapper">' . $this->captcha->getFormFields() . '</div>
+        <div class="emol-input-wrapper">' . $capotcga->getImageTag() . '</div>
+        <div class="emol-input-wrapper">' . $capotcga->getFormFields() . '</div>
         </div>';
 }
 
@@ -889,7 +892,7 @@ $applyHtml .= '
     &nbsp;
     </div>
     <div class="emol-input-wrapper">
-    <input type="submit" class="emol-button" id="emol-apply-submit-button" value="' . EMOL_APPLY_SEND . '" />
+    <input type="button" class="emol-button emol-form-submit" id="emol-apply-submit-button" value="' . EMOL_APPLY_SEND . '" />
     <input type="button" class="emol-button" id="emol-apply-back-button" value="' . EMOL_BACK . '" onclick="history.go(-1)" />
     </div>
     </div>';

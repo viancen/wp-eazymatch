@@ -20,7 +20,29 @@ class emol_shortcode_job {
 		//isset in functions.php, by the custom title function
 		global $emol_job;
 
-		//emol_dump($emol_job);
+		if ( is_null( $emol_job ) ) {
+
+			eazymatch_connect();
+
+			$emol_job_id = ( get_query_var( 'emol_job_id' ) );
+			if ( ! empty( $emol_job_id ) ) {
+
+				$emol_job_id = explode( '-', $emol_job_id );
+				$emol_job_id = array_pop( $emol_job_id );
+
+				$trunk = new EazyTrunk();
+
+				// create a response array and add all the requests to the trunk
+				$emol_job['job']            = &$trunk->request( 'job', 'getFullPublished', array( $emol_job_id ) );
+				$emol_job['jobTexts']       = &$trunk->request( 'job', 'getCustomTexts', array( $emol_job_id ) );
+				$emol_job['jobCompetences'] = &$trunk->request( 'job', 'getCompetenceTree', array( $emol_job_id ) );
+
+				// execute the trunk request
+				$trunk->execute();
+			}
+		}
+
+
 		if ( ! isset( $emol_job['job'] ) ) {
 
 			//$jobHtml = (get_option( 'emol_job_offline' )) ? get_option( 'emol_job_offline' ) : 'This page does not exist anymore';
@@ -38,7 +60,7 @@ class emol_shortcode_job {
 				$this->job['shortcode'] = 'V' . sprintf( "%05d", $this->job['id'] );
 			}
 
-			$class = '';
+			$class  = '';
 			$class2 = '';
 			if ( ! empty( $this->job['Statusses'] ) ) {
 				foreach ( $this->job['Statusses'] as $aroStat ) {
@@ -85,8 +107,16 @@ class emol_shortcode_job {
 
 			$jobHtml .= '</table></div>';
 
+			$appUrl = get_option( 'emol_apply_url' );
+			if ( ! empty( $appUrl ) ) {
+				$appUrl = get_bloginfo( 'wpurl' ) . '/' . $appUrl . '/' . $this->job['id'] . '/' . eazymatch_friendly_seo_string( $this->job['name'] );
+			} else {
+				$appUrl = get_option( 'emol_apply_page' );
+				$appUrl = get_bloginfo( 'wpurl' ) . '/' . $appUrl . '/' . eazymatch_friendly_seo_string( $this->job['name'] ) . '-' . $this->job['id'];
+			}
+
 			$jobHtml .= '<div class="emol-job-apply emol-job-apply-top">
-                <a href="' . get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_apply_url' ) . '/' . $this->job['id'] . '/' . eazymatch_friendly_seo_string( $this->job['name'] ) . '/" class="emol-button emol-button-apply emol-apply-button" rel="nofollow">' . EMOL_JOB_APPLY . '</a></div>';
+                <a href="' . $appUrl . '" class="emol-button emol-button-apply emol-apply-button" rel="nofollow">' . EMOL_JOB_APPLY . '</a></div>';
 
 			/**
 			 * Text blocks
@@ -104,6 +134,7 @@ class emol_shortcode_job {
 					} else {
 						$contentText = $custom['value'];
 					}
+					$contentText = nl2br( $contentText );
 					if ( strlen( $custom['value'] ) == 0 ) {
 						continue;
 					}
@@ -172,7 +203,7 @@ class emol_shortcode_job {
 			}
 
 			$jobHtml .= '<div class="emol-job-apply emol-job-apply-bottom">
-                <a href="' . get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_apply_url' ) . '/' . $this->job['id'] . '/' . eazymatch_friendly_seo_string( $this->job['name'] ) . '/" class="emol-button emol-button-apply emol-apply-button" rel="nofollow">' . EMOL_JOB_APPLY . '</a></div>';
+                <a href="' . $appUrl . '" class="emol-button emol-button-apply emol-apply-button" rel="nofollow">' . EMOL_JOB_APPLY . '</a></div>';
 
 			$jobHtml .= '</div>'; //job-container
 

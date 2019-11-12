@@ -158,7 +158,6 @@ class emol_page_job_view extends emol_page {
 
 		$cust = $this->jobTexts;
 
-
 		if ( is_array( $cust ) && count( $cust ) > 0 ) {
 			foreach ( $cust as $custom ) {
 				if ( get_option( 'emol_strip_html' ) == 1 ) {

@@ -1,5 +1,8 @@
 <?php
 function eazymatch_plugin_job() {
+
+	flush_rewrite_rules( true );
+
 	//must check that the user has the required capability
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
@@ -31,6 +34,7 @@ function eazymatch_plugin_job() {
 			'emol_job_page'                   => get_option( 'emol_job_page' ),
 			'emol_job_amount_pp'              => get_option( 'emol_job_amount_pp' ),
 			'emol_job_search_url'             => get_option( 'emol_job_search_url' ),
+			'emol_job_search_page'            => get_option( 'emol_job_search_page' ),
 			'emol_job_search_logo'            => get_option( 'emol_job_search_logo' ),
 			'emol_job_search_date'            => get_option( 'emol_job_search_date' ),
 			'emol_job_search_hours'           => get_option( 'emol_job_search_hours' ),
@@ -48,6 +52,7 @@ function eazymatch_plugin_job() {
 			'emol_apply_email_text'           => get_option( 'emol_apply_email_text' ),
 			'emol_apply_url_free'             => get_option( 'emol_apply_url_free' ),
 			'emol_job_texts'                  => get_option( 'emol_job_texts' ),
+			'emol_apply_page'                 => get_option( 'emol_apply_page' ),
 			'emol_job_competence_exclude'     => get_option( 'emol_job_competence_exclude' ),
 			//'emol_filter_options'           => get_option('emol_filter_options'),
 			'emol_job_search_competence'      => get_option( 'emol_job_search_competence' ),
@@ -264,33 +269,129 @@ function eazymatch_plugin_job() {
             <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
 
             <div id="emol-admin-table">
-                <table class="welcome-panel" cellpadding="4" style="width: 100%;">
+                <table class="welcome-panel" style="width: 100%;">
                     <tr>
-                        <td colspan="3" class="cTdh"><br>
-
-                            <h2><?php echo EMOL_ADMIN_SETTINGS . ' - ' . EMOL_ADMIN_JOB ?></h2></td>
-                    </tr>
-                    <tr>
-                        <td><?php _e( EMOL_ADMIN_JOBDISPLAY_URL, 'Emol-3.0-identifier' ); ?> <Br> (<strong>default, eazymatch will create a "dummy" page for you</strong>)</td>
+                        <td><?php _e( EMOL_ADMIN_JOBDISPLAY_URL, 'Emol-3.0-identifier' ); ?><Br/> <em>(dummy-url: url mag niet bestaan)</em></td>
                         <td><input type="text" name="emol_job_url"
                                    value="<?php echo $eazymatchOptions['emol_job_url']; ?>" size="40"></td>
                         <td>
                         </td>
                     </tr>
                     <tr>
-                        <td><?php _e( EMOL_ADMIN_JOBDISPLAY_PAGE, 'Emol-3.0-identifier' ); ?> <Br>(<strong>only use this when your wordpress config is compatible</strong>)</td>
-                        <td><input type="text" name="emol_job_page"
-                                   value="<?php echo $eazymatchOptions['emol_job_page']; ?>" size="40"></td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php _e( EMOL_ADMIN_JOBSEARCH_URL, 'Emol-3.0-identifier' ); ?>  <Br>&nbsp;</td>
+                        <td><?php _e( EMOL_ADMIN_JOBSEARCH_URL, 'Emol-3.0-identifier' ); ?><Br/> <em>(dummy-url: url mag niet bestaan)</em></td>
                         <td><input type="text" name="emol_job_search_url"
                                    value="<?php echo $eazymatchOptions['emol_job_search_url']; ?>" size="40"></td>
                         <td>
                         </td>
                     </tr>
+                    <tr>
+                        <td><?php _e( EMOL_ADMIN_APPLY_URL, 'Emol-3.0-identifier' ); ?><Br/> <em>(dummy-url: url mag niet bestaan)</em></td>
+                        <td><input type="text" name="emol_apply_url"
+                                   value="<?php echo $eazymatchOptions['emol_apply_url']; ?>" size="40"></td>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><?php _e( EMOL_ADMIN_APPLY_URL_FREE, 'Emol-3.0-identifier' ); ?><Br/> <em>(dummy-url: url mag niet bestaan)</em></td>
+                        <td><input type="text" name="emol_apply_url_free"
+                                   value="<?php echo $eazymatchOptions['emol_apply_url_free'] ?>" size="40"></td>
+                        <td>
+                        </td>
+                    </tr>
+                </table>
+
+                <table class="welcome-panel"  style="width: 100%;">
+                    <tr>
+                        <td><?php _e( EMOL_ADMIN_JOBDISPLAY_PAGE, 'Emol-3.0-identifier' ); ?> <Br>(<strong>Pagina met shortcode [eazymatch view="job"]</strong>)</td>
+                        <td><?php
+
+							//id and name of form element should be same as the setting name.
+							$args  = array(
+								'sort_order'   => 'asc',
+								'sort_column'  => 'post_title',
+								'hierarchical' => 1,
+								'exclude'      => '',
+								'include'      => '',
+								'meta_key'     => '',
+								'meta_value'   => '',
+								'authors'      => '',
+								'child_of'     => 0,
+								'exclude_tree' => '',
+								'number'       => '',
+								'offset'       => 0,
+								'post_type'    => 'page',
+								'post_status'  => 'publish,private,draft'
+							);
+							$pages = get_pages( $args );
+
+							?>
+
+                            <select type="text" class="eazycv-admin-select" name="emol_job_page" style="width:100%;">
+                                <option value=""></option>
+								<?php
+								foreach ( $pages as $page ) { ?>
+                                    <option <?php if ( $eazymatchOptions['emol_job_page'] == $page->post_name ) {
+										echo 'selected';
+									} ?>
+                                            value="<?php echo $page->post_name ?>"><?php echo $page->post_title ?> (<?php echo $page->post_name ?>)
+                                    </option>
+								<?php } ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php _e( EMOL_ADMIN_JOBSEARCH_PAGE, 'Emol-3.0-identifier' ); ?><Br>(<strong>Pagina met shortcode [eazymatch view="jobsearch"]</strong>)</td>
+                        <td>
+                            <select type="text" class="eazycv-admin-select" name="emol_job_search_page" style="width:100%;">
+                                <option value=""></option>
+								<?php
+								foreach ( $pages as $page ) { ?>
+                                    <option <?php if ( $eazymatchOptions['emol_job_search_page'] == $page->post_name ) {
+										echo 'selected';
+									} ?>
+                                            value="<?php echo $page->post_name ?>"><?php echo $page->post_title ?> (<?php echo $page->post_name ?>)
+                                    </option>
+								<?php } ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php _e( EMOL_ADMIN_APPLY_PAGE, 'Emol-3.0-identifier' ); ?><Br>(<strong>Pagina met shortcode [eazymatch view="apply"]</strong>)</td>
+                        <td>
+                            <select type="text" class="eazycv-admin-select" name="emol_apply_page" style="width:100%;">
+                                <option value=""></option>
+								<?php
+								foreach ( $pages as $page ) { ?>
+                                    <option <?php if ( $eazymatchOptions['emol_apply_page'] == $page->post_name ) {
+										echo 'selected';
+									} ?>
+                                            value="<?php echo $page->post_name ?>"><?php echo $page->post_title ?> (<?php echo $page->post_name ?>)
+                                    </option>
+								<?php } ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php _e( EMOL_ADMIN_APPLY_URL_REDIRECT, 'Emol-3.0-identifier' ); ?> <Br>(<strong>Bedankt pagina</strong>)</td>
+                        <td>
+                            <select type="text" class="eazycv-admin-select" name="emol_apply_url_success_redirect" style="width:100%;">
+                                <option value=""></option>
+								<?php
+								foreach ( $pages as $page ) { ?>
+                                    <option <?php if ( $eazymatchOptions['emol_apply_url_success_redirect'] == $page->post_name ) {
+										echo 'selected';
+									} ?>
+                                            value="<?php echo $page->post_name ?>"><?php echo $page->post_title ?> (<?php echo $page->post_name ?>)
+                                    </option>
+								<?php } ?>
+                            </select>
+                        </td>
+                    </tr>
+
+                </table>
+
+                <table class="welcome-panel" style="width: 100%;">
                     <tr>
                         <td><?php _e( EMOL_ADMIN_JOBSEARCH_LOGOS, 'Emol-3.0-identifier' ); ?> </td>
                         <td><?php echo $checkboxPicture; ?></td>
@@ -404,20 +505,7 @@ function eazymatch_plugin_job() {
                         <td>
                         </td>
                     </tr>
-                    <tr>
-                        <td><?php _e( EMOL_ADMIN_APPLY_URL, 'Emol-3.0-identifier' ); ?> </td>
-                        <td><input type="text" name="emol_apply_url"
-                                   value="<?php echo $eazymatchOptions['emol_apply_url']; ?>" size="40"></td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php _e( EMOL_ADMIN_APPLY_URL_REDIRECT, 'Emol-3.0-identifier' ); ?> </td>
-                        <td><input type="text" name="emol_apply_url_success_redirect"
-                                   value="<?php echo $eazymatchOptions['emol_apply_url_success_redirect']; ?>"></td>
-                        <td>
-                        </td>
-                    </tr>
+
                     <tr>
                         <td><?php _e( EMOL_ADMIN_APPLY_EMAIL, 'Emol-3.0-identifier' ); ?> </td>
                         <td><input type="text" name="emol_apply_email"
@@ -431,13 +519,6 @@ function eazymatch_plugin_job() {
                         <td><input type="text" name="emol_apply_email_text"
                                    value="<?php echo stripslashes( $eazymatchOptions['emol_apply_email_text'] ); ?>"
                                    size="40"></td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php _e( EMOL_ADMIN_APPLY_URL_FREE, 'Emol-3.0-identifier' ); ?> </td>
-                        <td><input type="text" name="emol_apply_url_free"
-                                   value="<?php echo $eazymatchOptions['emol_apply_url_free'] ?>" size="40"></td>
                         <td>
                         </td>
                     </tr>

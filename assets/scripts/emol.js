@@ -70,6 +70,45 @@ var EazyWP = {
             });
             jQuery(".ui-dialog-titlebar").hide();
             //$("#emolAvgStatement").css({height:"400px", overflow:"auto"});
+
+        }).on('keyup change', '#emol-form-wrapper .required', function () {
+
+            if (jQuery(this).val()) {
+                jQuery('#eazymatch-error-' + jQuery(this).attr('id')).remove();
+            }
+
+        }).on('click', '.emol-form-submit', function () {
+
+
+            var hasError = false;
+            jQuery('#emol-form-wrapper .required').each(function (a, b) {
+
+
+                if (jQuery(b).attr('id') == 'emol-avg-check') {
+                    if (!jQuery(b).is(':checked')) {
+                        var $errEl = '<div class="emol-error-label" id="eazymatch-error-' + jQuery(b).attr('id') + '">Dit veld is niet of incorrect ingevuld</div>';
+                        jQuery(b).parent().append($errEl);
+                        hasError = true;
+                    }
+                } else {
+                    if (!jQuery(b).val()) {
+                        var $errEl = '<div class="emol-error-label" id="eazymatch-error-' + jQuery(b).attr('id') + '">Dit veld is niet of incorrect ingevuld</div>';
+                        jQuery(b).parent().append($errEl);
+                        hasError = true;
+                    }
+                }
+            }).promise().done(function () {
+
+                if (hasError) {
+                    return false;
+                } else {
+                    $.featherlight($('#eazymatch-wait-modal'), {
+                        closeOnEsc: false,
+                        closeIcon: '',
+                    });
+                    jQuery('#emol-apply-form').submit();
+                }
+            });
         });
 
         // grid initialize
@@ -158,8 +197,7 @@ var EazyWP = {
         // make sure initial input is in dutch format if date is valid
         if (isNaN(date.getFullYear())) {
             $input.val('');
-        }
-        else {
+        } else {
             $input.val(date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear());
         }
 

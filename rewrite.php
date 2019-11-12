@@ -7,6 +7,7 @@
 function eazymatch_add_var( $public_query_vars ) {
 
 	$public_query_vars[] = 'emol_job_id';
+	$public_query_vars[] = 'emol_apply_id';
 	$public_query_vars[] = 'emolpage';
 	$public_query_vars[] = 'emolaction';
 	$public_query_vars[] = 'emolparameters'; //for seo texts or /apply or whatever.
@@ -24,8 +25,11 @@ add_filter( 'query_vars', 'eazymatch_add_var' );
  */
 function eazymatch_do_rewrite() {
 
-	/**job urls**/
+	#new skool
 	add_rewrite_rule( get_option( 'emol_job_page' ) . '/([^/]+)/?$', 'index.php?pagename=' . get_option( 'emol_job_page' ) . '&emol_job_id=$matches[1]', 'top' );
+	add_rewrite_rule( get_option( 'emol_apply_page' ) . '/([^/]+)/?$', 'index.php?pagename=' . get_option( 'emol_apply_page' ) . '&emol_job_id=$matches[1]', 'top' );
+
+	#old skool
 	add_rewrite_rule( get_option( 'emol_job_url' ) . '/([^/]+)/([^/]+)/?$', 'index.php?emolpage=' . get_option( 'emol_job_url' ) . '&emolaction=$matches[1]&emolparameters=$matches[2]', 'top' );
 	add_rewrite_rule( get_option( 'emol_apply_url' ) . '/([^/]+)/([^/]+)/?$', 'index.php?emolpage=' . get_option( 'emol_apply_url' ) . '&emolaction=$matches[1]&emolparameters=$matches[2]', 'top' );
 	add_rewrite_rule( get_option( 'emol_account_url' ) . '/([^/]+)/?$', 'index.php?emolpage=' . get_option( 'emol_account_url' ) . '&emolaction=$matches[1]', 'top' );
@@ -34,6 +38,7 @@ function eazymatch_do_rewrite() {
 
 	/**rss feed**/
 	add_rewrite_rule( 'em-jobfeed/([^/]+)/?$', 'index.php?emolpage=rss&emolaction=$matches[1]', 'top' );
+	add_rewrite_rule( 'em-submit-subscription', 'index.php?emolpage=submit_subscription', 'top' );
 
 	/**cv urls**/
 	add_rewrite_rule( get_option( 'emol_cv_url' ) . '/([^/]+)/([^/]+)/?$', 'index.php?emolpage=' . get_option( 'emol_cv_url' ) . '&emolaction=$matches[1]&emolparameters=$matches[2]', 'top' );
@@ -55,6 +60,7 @@ function emol_parse_query( $wp_query ) {
 
 	//if we have a page (but not the job_page option) this one handles just the shortcode for a jobpage
 	if ( isset( $allVars['emolpage'] ) && $allVars['emolpage'] != '' && $allVars['emolpage'] != get_option( 'emol_job_page' ) ) {
+
 
 		$EmolPage     = get_query_var( 'emolpage', false ); //the emol page
 		$EmolFunction = get_query_var( 'emolaction', false ); //id or handle data
@@ -82,6 +88,11 @@ function emol_parse_query( $wp_query ) {
 		switch ( $EmolPage ) {
 			case 'rss':
 				$dummyPage = 'emol_page_job_rss';
+				break;
+			case 'submit_subscription':
+
+				$data = emol_post_application();
+				wp_redirect($data);
 				break;
 
 			case get_option( 'emol_job_url' ):

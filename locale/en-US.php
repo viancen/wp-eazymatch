@@ -278,10 +278,12 @@ define( 'EMOL_ADMIN_FORM_COMPANY', "Company subscription form" );
 
 define( 'EMOL_ADMIN_JOBDISPLAY_URL', "Job url" );
 define( 'EMOL_ADMIN_JOBDISPLAY_PAGE', "Job page" );
+define( 'EMOL_ADMIN_JOBSEARCH_PAGE', "Job search page" );
 define( 'EMOL_ADMIN_JOBSEARCH_URL', "Job search url" );
 define( 'EMOL_ADMIN_APPLY_EMAIL', "Apply with e-mail" );
 define( 'EMOL_ADMIN_APPLY_EMAIL_TEXT', "Text button, apply with e-mail" );
 define( 'EMOL_ADMIN_JOB_TEXTS', "Textblocks" );
+define( 'EMOL_ADMIN_APPLY_PAGE', "Apply page" );
 
 define( 'EMOL_ADMIN_JOBSEARCH_LOGOS', "Logo's companys visible?" );
 define( 'EMOL_ADMIN_JOBSEARCH_DESCR', "Short description in search result?" );

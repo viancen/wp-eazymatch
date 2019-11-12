@@ -155,7 +155,9 @@ a.emol-button,
 .emol-login-logo {
     cursor: pointer;
 }
-
+.eazymatch-hidden{
+    display:none;
+}
 /**
 * login widget styling
 */
@@ -561,7 +563,13 @@ a.emol-button,
     color: red;
     float: left;
 }
-
+.emol-error-label {
+    border: solid 1px red;
+    padding: 2px;
+    background-color: #ffa0a0;
+    color: red;
+}
+.eazymatch-modal,
 #emol-job-page-description {
     display: none;
 }
