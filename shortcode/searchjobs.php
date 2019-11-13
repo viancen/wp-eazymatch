@@ -70,7 +70,7 @@ class emol_shortcode_searchjobs {
 			if ( $emol_side == 'company' ) {
 				$setUrl = get_option( 'emol_cv_search_url' );
 			} else {
-				$setUrl = get_option( 'emol_job_search_url' );
+				$setUrl = ! empty( get_option( 'emol_job_search_page' ) ) ? get_option( 'emol_job_search_page' ) : get_option( 'emol_job_search_url' );
 			}
 
 			if ( count( $competenceList ) > 0 ) {
@@ -167,13 +167,9 @@ class emol_shortcode_searchjobs {
 				$text .= $lists->lists;
 			}
 
-			//$allUrl = str_replace('//','/',$setUrl.'/'.get_option( 'emol_job_search_url' ));
-
-			$base =  get_option( 'emol_job_search_page' ) ? get_option( 'emol_job_search_page' ) : get_option( 'emol_job_search_url' ) . '/all/';
-
 			$text .= '
             <div class="emol-submit-wrapper">
-                <span class="emol-reset-button"><a href="' . get_bloginfo( 'wpurl' ) . '/' . $base . '" class="emol-altbutton emol-button-reset">' . $reset . '</a></span>
+                <span class="emol-reset-button"><a href="' . get_bloginfo( 'wpurl' ) . '/' . $setUrl . '" class="emol-altbutton emol-button-reset">' . $reset . '</a></span>
                 <button onclick="emolSearch(\'/' . $setUrl . '/\');" class="emol-button emol-button-search">' . $searchLabel . '</button>
             </div>';
 

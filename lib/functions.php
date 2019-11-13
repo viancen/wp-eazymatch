@@ -663,7 +663,7 @@ function emol_get_job_search_results( $reqVars, $page_slug, $searchCriteria ) {
 
 		if ( substr( $searchValue, 0, 5 ) == 'page-' ) {
 			//pagnation
-			$basecam = explode( '-', $searchValue );
+			$basecam   = explode( '-', $searchValue );
 			$pagnation = (int) array_pop( $basecam );
 			$page_slug = str_replace( ',' . $searchValue, '', $page_slug );
 
@@ -1178,7 +1178,7 @@ function emol_custom_title( $title ) {
 		$emol_job_id = array_pop( $arref );
 
 		if ( ! is_numeric( $emol_job_id ) ) {
-			$base =  get_option( 'emol_job_search_page' ) ? get_option( 'emol_job_search_page' ) : get_option( 'emol_job_search_url' ) . '/all/';
+			$base = ! empty( get_option( 'emol_job_search_page' ) ) ? get_option( 'emol_job_search_page' ) : get_option( 'emol_job_search_url' ) . '/all/';
 			emol_301( get_bloginfo( 'wpurl' ) . '/' . $base );
 		} else {
 			$emol_api = eazymatch_connect();
