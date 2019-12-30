@@ -90,7 +90,7 @@ var EazyWP = {
             jQuery('#emol-form-wrapper .required').each(function (a, b) {
 
                 if (jQuery(b).attr('id') == 'emol-email') {
-                    var theEmail = jQuery('emol-email').val();
+                    var theEmail = jQuery('#emol-email').val();
                     if (!validateEmail(theEmail)) {
                         var $errEl = '<div class="emol-error-label" id="eazymatch-error-emol-email">Dit is een ongeldig e-mailadres</div>';
                         jQuery(b).parent().append($errEl);
