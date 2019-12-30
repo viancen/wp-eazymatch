@@ -4,13 +4,13 @@ Plugin Name: EazyMatch
 Plugin URI: https://github.com/viancen/wp-eazymatch
 Description: De EazyMatch Wordpress plugin. Bij twijfel over de instellingen mail naar support@eazymatch.nl
 Name: EazyMatch
-Version: 5.3.1
+Version: 5.3.2
 Author: EazyMatch
 Author URI: https://www.eazymatch-online.nl
 */
 
 #php
-$globalVersion = '5.3.1';
+$globalVersion = '5.3.2';
 define( 'EMOL_VERSION', $globalVersion );
 
 //eazymatch directory on server
@@ -49,7 +49,6 @@ add_action( 'wp_loaded', 'emol_boot_session' );
 
 //Core location
 $emol_Core = 'https://api.eazymatch.cloud';
-//$emol_Core = 'http://core.eazymatch.local';
 
 //check permalink structure
 global $trailingData;
