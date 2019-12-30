@@ -1048,8 +1048,8 @@ function emol_post_application()
                 );
 
             } elseif (isset($_POST['zipcode']) && $_POST['zipcode'] != '') {
-
-                $addrPiece = $emolApi->getAddressByZipcode(emol_post('zipcode'));
+                $wsTool = $emolApi->get('tool');
+                $addrPiece = $wsTool->getAddressByZipcode(emol_post('zipcode'));
 
                 $addrPiece['province_id'] = (isset($addrPiece['province_id']) ? $addrPiece['province_id'] : null);
                 $addrPiece['country_id'] = (isset($addrPiece['country_id']) ? $addrPiece['country_id'] : null);

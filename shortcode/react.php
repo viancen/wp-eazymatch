@@ -83,6 +83,7 @@ class emol_shortcode_react {
 	 */
 	function doReact() {
 		$ws = $this->emolApi->get( 'company' );
+		$wsTool = $this->emolApi->get( 'tool' );
 
 		if ( ! emol_session::isValidId( 'company_id' ) ) {
 
@@ -116,7 +117,7 @@ class emol_shortcode_react {
 
 			} elseif ( isset( $_POST['zipcode'] ) && $_POST['zipcode'] != '' ) {
 
-				$addrPiece = $this->toolApi->getAddressByZipcode( emol_post( 'zipcode' ) );
+				$addrPiece = $wsTool->getAddressByZipcode( emol_post( 'zipcode' ) );
 
 				$subscription->addAddress(
 					null,

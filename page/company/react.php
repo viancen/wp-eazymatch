@@ -157,8 +157,8 @@ class emol_page_company_react extends emol_page {
 				);
 
 			} elseif ( isset( $_POST['zipcode'] ) && $_POST['zipcode'] != '' ) {
-
-				$addrPiece = $this->toolApi->getAddressByZipcode( emol_post( 'zipcode' ) );
+                $wsTool = $this->emolApi->get( 'tool' );
+				$addrPiece = $wsTool->getAddressByZipcode( emol_post( 'zipcode' ) );
 
 				$subscription->addAddress(
 					null,
