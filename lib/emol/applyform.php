@@ -411,7 +411,7 @@ if (!emol_session::isValidId('applicant_id')) {
             <label for="emol-email">' . EMOL_EMAIL . '  <strong class="emol-required-asterix">*</strong></label>
             </div>
             <div class="emol-input-wrapper">
-            <input type="email" required placeholder="' . EMOL_EMAIL . '" class="emol-text-input required email" value="' . $data['email'] . '" name="email" id="emol-email" />
+            <input type="text" required placeholder="' . EMOL_EMAIL . '" class="emol-text-input required email" value="' . $data['email'] . '" name="email" id="emol-email" />
             </div>
             </div>';
 
