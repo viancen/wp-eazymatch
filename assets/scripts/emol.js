@@ -80,11 +80,23 @@ var EazyWP = {
 
         }).on('click', '.emol-form-submit', function () {
 
+            function validateEmail(email) {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
 
             var hasError = false;
+
             jQuery('#emol-form-wrapper .required').each(function (a, b) {
 
-                if (jQuery(b).attr('id') == 'emol-avg-check') {
+                if (jQuery(b).attr('id') == 'emol-email') {
+                    var theEmail = jQuery('emol-email').val();
+                    if (!validateEmail(theEmail)) {
+                        var $errEl = '<div class="emol-error-label" id="eazymatch-error-emol-email">Dit is een ongeldig e-mailadres</div>';
+                        jQuery(b).parent().append($errEl);
+                        hasError = true;
+                    }
+                } else if (jQuery(b).attr('id') == 'emol-avg-check') {
                     if (!jQuery(b).is(':checked')) {
                         var $errEl = '<div class="emol-error-label" id="eazymatch-error-' + jQuery(b).attr('id') + '">Dit veld is niet of incorrect ingevuld</div>';
                         jQuery(b).parent().append($errEl);
