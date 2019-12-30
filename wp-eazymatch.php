@@ -6,7 +6,7 @@ Description: De EazyMatch Wordpress plugin. Bij twijfel over de instellingen mai
 Name: EazyMatch
 Version: 5.3.6
 Author: EazyMatch
-Author URI: https://www.eazymatch-online.nl
+Author URI: https://eazymatch-online.nl
 */
 
 #php
