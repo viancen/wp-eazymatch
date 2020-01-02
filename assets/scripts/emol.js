@@ -394,11 +394,14 @@ var navProtect = {
 
 window.onbeforeunload = navProtect.unloadCheck;
 
+function emolRecaptchaCallback() {
+    document.getElementById('emol-apply-submit-button').removeAttribute('disabled');
+};
 
 function emol_connect_linkedin(url, instance) {
     var url = 'https://linkedin.eazymatch.cloud/?refer=' + url + '&instance=' + instance;
     //var features = 'width=600;height=350;menubar=no;directories=no;location=no;modal=yes';
     //window.open(url, 'emol_connect_linkedin', features, false);
     window.location = url;
-}
+};
 

@@ -40,7 +40,10 @@ class emol_shortcode_apply {
 			}
 		}
 
-		return emol_get_apply_form( $emol_job['job'] );
+		$jobInfo = !empty($emol_job['job']) ? $emol_job['job'] : null;
+
+
+		return emol_get_apply_form( $jobInfo );
 		//getApplyForm();
 	}
 

@@ -548,7 +548,7 @@ function emol_parse_html_jobresult($job, $class = '')
     $text = '<div class="emol-job-result-item ' . $class . '">';
 
     $img = '';
-    if ($job['Company']['Logo']['content'] > '' && $picVisible == 1) {
+    if (!empty($job['Company']['Logo']['content']) && $picVisible == 1) {
         $img = '<div class="emol-job-result-logo"><img src="data:image/png;base64,' . $job['Company']['Logo']['content'] . '" /></div>';
     } elseif ($picVisible == 1) {
         $img = '<div class="emol-job-result-logo"><img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-eazymatch/assets/img/blank-icon.png" alt="" /></div>';
@@ -909,10 +909,12 @@ function emol_get_apply_form($jobData)
 
     $mailto = get_option('emol_email');
 
+    $jobid = isset($jobData['id']) ? $jobData['id'] : '';
+
     $applyHtml = $firstDescription . $loginWidget . '
         <div id="emol-form-apply" class="emol-form-div emol-form-table">
         <form method="post" id="emol-apply-form" enctype="multipart/form-data" action="' . get_bloginfo('wpurl') . '/em-submit-subscription">
-        <input type="hidden" name="job_id" value="' . $jobData['id'] . '" />
+        <input type="hidden" name="job_id" value="' . $jobid . '" />
         <input type="hidden" name="EMOL_apply" value="1" />
         <input type="hidden" name="linkedInrequest" value="' . $linkedInrequest . '" />';
 
@@ -923,14 +925,15 @@ function emol_get_apply_form($jobData)
     //$url = $url . '/';
 
     if (in_array('success', $urlVars)) {
-        $applyHtml .= '<tr><td colspan="2">' . stripslashes(get_option('emol_apply_success')) . '</td></tr>';
+        $applyHtml .= '<div>' . stripslashes(get_option('emol_apply_success')) . '</div>';
     } elseif (isset($urlVars[2]) && $urlVars[2] == 'unsuccess') {
-        $applyHtml .= '<tr><td colspan="2">' . EMOL_APPLY_FAIL_MSG . '</td></tr>';
+        $applyHtml .= '<div>' . EMOL_APPLY_FAIL_MSG . '</div>';
     } else {
-        $applyHtml .= '<tr><td colspan="2" class="emol-apply-mandatory">' . EMOL_APPLY_MANDATORY . '</td></tr>';
+        $applyHtml .= '<div id="emol-mandatory-check">' . EMOL_APPLY_MANDATORY . '</div>';
         $applyHtml .= '<div id="emol-form-wrapper">';
         include(EMOL_DIR . '/lib/emol/applyform.php');
         $applyHtml .= '</div>';
+
     }
 
     //finish up html
