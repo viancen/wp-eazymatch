@@ -1165,10 +1165,11 @@ function emol_post_application()
              * It also will register a correspondence moment and will send an e-mail to the emol user ( notification )
              **/
             $success = $ws->applyToJob(emol_post('job_id'), emol_session::get('applicant_id'), nl2br(emol_post('motivation')), true);
-            if ($success == true) {
-                return (get_bloginfo('wpurl') . '/' . get_option('emol_apply_url') . '/' . $this->jobId . '/success/');
+            $redirectUrl = get_option('emol_apply_url_success_redirect');
+            if (!empty($redirectUrl)) {
+                return ($redirectUrl);
             } else {
-                return (get_bloginfo('wpurl') . '/' . get_option('emol_apply_page') . '?error=true');
+                return (get_bloginfo('wpurl') . '/' . get_option('emol_apply_url') . '/0/success/');
             }
         }
     } else {

@@ -99,8 +99,10 @@ function emol_parse_query($wp_query)
                 $data = emol_post_application();
                 if ($data == false) {
                     wp_redirect(get_bloginfo('wpurl') . '/' . get_option('emol_apply_page') . '?error=true');
+                    exit;
                 } else {
                     wp_redirect($data);
+                    exit;
                 }
                 break;
 
