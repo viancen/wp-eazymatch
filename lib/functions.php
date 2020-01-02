@@ -953,7 +953,7 @@ function emol_post_application()
         if (!filter_var($emailValidate, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
-
+        $resultCaptcha = false;
         if (emol_post_exists('g-recaptcha-response')) {
 
             $data_google = array(
@@ -976,12 +976,17 @@ function emol_post_application()
 
             $context = stream_context_create($options);
             $result = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
-
             $result = json_decode($result, true);
-            if (!$result || @$result['success'] !== true) {
-                return false;
+
+            if (isset ($result['success']) && $result['success'] == true) {
+                $resultCaptcha = true;
             }
+
         } else {
+            return false;
+        }
+
+        if (!$resultCaptcha) {
             return false;
         }
 
@@ -1147,7 +1152,6 @@ function emol_post_application()
 
             //save the subscription to EazyMatch, this will send an notification to emol user and an email to the subscriber
             $ws->subscription($postData);
-
 
             //naar eigen url of naar globale
             $redirectUrl = get_option('emol_apply_url_success_redirect');
