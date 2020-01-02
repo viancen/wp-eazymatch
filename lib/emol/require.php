@@ -130,28 +130,6 @@ class emol_require {
 		}
 	}
 
-
-	static public function validation() {
-
-		if ( self::hasInclude( 'validation' ) ) {
-			return;
-		}
-
-		// jquery is required for validation
-		self::basicJavascript();
-
-		function load_emol_js_validation() {
-			wp_deregister_script( 'validation' );
-			wp_register_script( 'validation', plugins_url( 'wp-eazymatch' ) . '/assets/jquery-validate/jquery.validate.min.js', 'jquery' );
-			wp_enqueue_script( 'validation' );
-		}
-
-		add_action( 'wp_enqueue_scripts', 'load_emol_js_validation' );
-
-
-		self::registerInclude( 'validation' );
-	}
-
 	static public function basicCss() {
 		if ( self::hasInclude( 'emol-css' ) ) {
 			return;
@@ -222,7 +200,6 @@ class emol_require {
 	 */
 	static public function all() {
 		self::basic();
-		self::validation();
 		self::jqueryUi();
 	}
 
