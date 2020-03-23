@@ -1426,7 +1426,6 @@ function emol_delete_options_prefixed($prefix)
 function eazymatch_connect()
 {
     $connectionManager = emol_connectManager::getInstance();
-
     return $connectionManager->getConnection();
 }
 

@@ -7,7 +7,8 @@
  * @author Rob van der Burgt
  *
  */
-abstract class emol_connectproxy_rest {
+abstract class emol_connectproxy_rest
+{
 	/**
 	 *  EazyCore root url
 	 *
@@ -62,36 +63,40 @@ abstract class emol_connectproxy_rest {
 	 *
 	 * @param string $serviceUrl url of the eazycore
 	 */
-	public function __construct( $instanceName, $apiKey, $serviceName ) {
+	public function __construct($instanceName, $apiKey, $serviceName)
+	{
 		// create a reference to the error logger
 		global $emol_Core;
 		global $emol_isDebug;
 
 
-		$this->serviceUrl = get_option( 'emol_service_url' ) ? get_option( 'emol_service_url' ) : 'https:://api.eazymatch.cloud';
+		$this->serviceUrl = get_option('emol_service_url') ? get_option('emol_service_url') : 'https:://api.eazymatch.cloud';
 
 
 		$this->debug = $emol_isDebug;
 
 		$this->instanceName = $instanceName;
-		$this->apiKey       = $apiKey;
-		$this->serviceName  = $serviceName;
+		$this->apiKey = $apiKey;
+		$this->serviceName = $serviceName;
 	}
 
-	public function setApiKey( $apiKey ) {
+	public function setApiKey($apiKey)
+	{
 		$this->apiKey = $apiKey;
 	}
 
-	public function setKey( $apiKey ) {
-		$this->setApiKey( $apiKey );
+	public function setKey($apiKey)
+	{
+		$this->setApiKey($apiKey);
 	}
 
 	// magic method to catch all funtion calls
-	public function __call( $name, $argu ) {
+	public function __call($name, $argu)
+	{
 		// check if apiKey is present and instanceName is not empty
-		if ( strlen( $this->apiKey ) < 6 || strlen( $this->instanceName ) < 3 ) {
-			if ( is_admin() ) {
-				eazymatch_trow_error( 'Eazymatch connection settings incorrect.' );
+		if (strlen($this->apiKey) < 6 || strlen($this->instanceName) < 3) {
+			if (is_admin()) {
+				eazymatch_trow_error('Eazymatch connection settings incorrect.');
 			}
 
 			// TODO: create better response ( notify error )
@@ -99,111 +104,111 @@ abstract class emol_connectproxy_rest {
 		}
 
 
-		return $this->doCall( $name, $argu );
+		return $this->doCall($name, $argu);
 	}
 
 	// private method to make a call to the soap object
-	private function doCall( $name, $argu ) {
+	private function doCall($name, $argu)
+	{
 
-		$this->tryCount ++;
+		$this->tryCount++;
 
 		// collect post variables for service
 		$fields = array(
 			// name of instance
-			'instance' => urlencode( $this->instanceName ),
+			'instance' => urlencode($this->instanceName),
 
 			// key to use for session
-			'key'      => $this->apiKey
+			'key' => $this->apiKey
 		);
 
 		// add arugments for method
-		if ( is_array( $argu ) ) {
-			$argumentCounter = - 1;
+		if (is_array($argu)) {
+			$argumentCounter = -1;
 
-			foreach ( $argu as $argument ) {
-				$argumentCounter ++;
-				$fields[ 'argument[' . $argumentCounter . ']' ] = $this->encodeArgument( $argument );
+			foreach ($argu as $argument) {
+				$argumentCounter++;
+				$fields['argument[' . $argumentCounter . ']'] = $this->encodeArgument($argument);
 			}
 		}
 
 		// transform the field format to POST format
-		$fields_string = http_build_query( $fields );
-
+		$fields_string = http_build_query($fields);
 
 		// compile url for apicall
+		$this->format = 'json';
 		$url = $this->serviceUrl . '/v1/' . $this->serviceName . '/' . $name . '.' . $this->format;
 
-
 		// get requests and requests to the tool controller should not take llong
-		$shortRequest = substr( $name, 0, 3 ) == 'get' || $this->serviceName == 'tool';
+		$shortRequest = substr($name, 0, 3) == 'get' || $this->serviceName == 'tool';
 
 		//open connection
 		$ch = curl_init();
 
 		// configure curl connection for api call
-		curl_setopt_array( $ch, array(
+		curl_setopt_array($ch, array(
 			// url for api call
-			CURLOPT_URL            => $url,
+			CURLOPT_URL => $url,
 
 			// add post functionality
-			CURLOPT_POST           => true,
-			CURLOPT_POSTFIELDS     => $fields_string,
+			CURLOPT_POST => true,
+			CURLOPT_POSTFIELDS => $fields_string,
 
 			//no need for this ssl verifypeer
 			CURLOPT_SSL_VERIFYPEER => false,
 
 			// optimize connection
 			CURLOPT_CONNECTTIMEOUT => 0,
-			CURLOPT_TIMEOUT        => 400,
+			CURLOPT_TIMEOUT => 400,
 
 			// force returning the result into an variable
 			CURLOPT_RETURNTRANSFER => true
-		) );
+		));
 
 		// execute the api call
-		$apiResponse = curl_exec( $ch );
+		$apiResponse = curl_exec($ch);
 
 		// check if connection error occured
-		if ( curl_errno( $ch ) ) {
+		if (curl_errno($ch)) {
 
 			//delete_option('emol_apihash');
-			echo 'Error connecting to eazymatch with code curl code: "' . curl_errno( $ch ) . '".';
+			echo 'Error connecting to eazymatch with code curl code: "' . curl_errno($ch) . '".';
 
 			//close connection
-			curl_close( $ch );
+			curl_close($ch);
 
 			die();
 		}
 
 		//close connection
-		curl_close( $ch );
+		curl_close($ch);
 
 		// decode the result
-		$apiOutput = $this->decodeResult( $apiResponse );
+		$apiOutput = $this->decodeResult($apiResponse);
 
 
 		//echo $this->serviceName . '->' . $name . '<br />';
 		//echo "API call in $time seconds<br />";
 
 		// check if api call failed because session needs to be restored
-		if ( isset( $apiOutput['result']['error_code'] ) && !empty($apiOutput['result']['error_code'])) {
+		if (isset($apiOutput['result']['error_code']) && !empty($apiOutput['result']['error_code'])) {
 
 			// if the api request fails, its most likely the session on the core is lost
 			// try to reset the connection to the EazyCore
 			$connectionManager = emol_connectManager::getInstance();
-			$connectionManager->resetUserConnection( false );
+			$connectionManager->resetUserConnection(false);
 			$connectionManager->resetConnection();
 
 			// retry with new session
-			$result = $this->doCall( $name, $argu );
+			$result = $this->doCall($name, $argu);
 
 			return $result;
 		}
 
 		// return good results inmediatly
-		if ( is_array( $apiOutput ) && array_key_exists( 'success', $apiOutput ) && $apiOutput['success'] === true ) {
+		if (is_array($apiOutput) && array_key_exists('success', $apiOutput) && $apiOutput['success'] === true) {
 
-			if ( array_key_exists( 'result', $apiOutput ) ) {
+			if (array_key_exists('result', $apiOutput)) {
 				return $apiOutput['result'];
 			} else {
 				return;
@@ -211,25 +216,25 @@ abstract class emol_connectproxy_rest {
 		}
 
 
-		if ( $this->debug ) {
-			ob_clean();
+		if ($this->debug) {
+			//ob_clean();
 
-			emol_dump( array(
-				'error'              => 'EazyMatch plugin',
-				'core'               => $this->serviceUrl,
-				'service'            => $this->serviceName,
-				'method'             => $name,
+			emol_dump(array(
+				'error' => 'EazyMatch plugin',
+				'core' => $this->serviceUrl,
+				'service' => $this->serviceName,
+				'method' => $name,
 				'api_output_decoded' => $apiOutput,
-				'api_output_raw'     => $apiResponse
-			) );
+				'api_output_raw' => $apiResponse
+			));
 
 			//refresh emol_apihash
 			//delete_option( 'emol_apihash' );
 
-			emol_session::terminate();
+			//emol_session::terminate();
 
-			throw new Exception();
-			exit();
+			//throw new Exception();
+
 		}
 	}
 
@@ -247,7 +252,7 @@ abstract class emol_connectproxy_rest {
 	 *
 	 * @return mixed[]
 	 */
-	abstract protected function decodeResult( $input );
+	abstract protected function decodeResult($input);
 
 	/**
 	 * encodes an argument to an string format
@@ -256,5 +261,5 @@ abstract class emol_connectproxy_rest {
 	 *
 	 * @return string
 	 */
-	abstract protected function encodeArgument( $input );
+	abstract protected function encodeArgument($input);
 }

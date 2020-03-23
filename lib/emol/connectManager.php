@@ -20,6 +20,7 @@ Class emol_connectManager {
 	 * @return emol_connectManager
 	 */
 	public static function getInstance() {
+
 		if ( ! isset( self::$instanceObj ) ) {
 			self::$instanceObj = new emol_connectManager();
 		}
@@ -132,7 +133,7 @@ Class emol_connect {
 	 */
 	public function &__get( $serviceName ) {
 		// generate a new emol_connectProxy to provide access to the Core controller
-		$this->{$serviceName} = new emol_connectproxy_php( $this->instanceName, $this->apiKey, $serviceName );
+		$this->{$serviceName} = new emol_connectproxy_json( $this->instanceName, $this->apiKey, $serviceName );
 
 		if ( ! in_array( $serviceName, $this->serviceNames ) ) {
 			$this->serviceNames[] = $serviceName;
