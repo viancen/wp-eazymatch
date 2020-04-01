@@ -911,7 +911,7 @@ function emol_get_apply_form($jobData)
 
     $jobid = isset($jobData['id']) ? $jobData['id'] : '';
 
-    $applyHtml = $firstDescription . $loginWidget . '
+    $applyHtml = $firstDescription .'
         <div id="emol-form-apply" class="emol-form-div emol-form-table">
         <form method="post" id="emol-apply-form" enctype="multipart/form-data" action="' . get_bloginfo('wpurl') . '/em-submit-subscription">
         <input type="hidden" name="job_id" value="' . $jobid . '" />
@@ -938,6 +938,7 @@ function emol_get_apply_form($jobData)
 
     //finish up html
     $applyHtml .= '</div>';
+    $applyHtml .= '</form>';
 
     //return some html
     return str_replace(PHP_EOL, ' ', $applyHtml);
