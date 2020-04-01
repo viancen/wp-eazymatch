@@ -1,0 +1,96 @@
+<div id="emol-form-apply" class="emol-form-div emol-form-table">
+    <form method="post" id="emol-apply-form" enctype="multipart/form-data" action="https://wordpress.test/em-submit-subscription">
+        <input type="hidden" name="job_id" value=""/>
+        <input type="hidden" name="EMOL_apply" value="1"/>
+        <input type="hidden" name="linkedInrequest" value=""/>
+        <div id="emol-mandatory-check">(*=verplicht veld)</div>
+        <div id="emol-form-wrapper">
+            <div id="eazymatch-wait-modal" class="eazymatch-modal">Eén moment geduld, uw sollicitatie wordt verwerkt.</div>
+
+            <div class="emol-label-wrapper" id="emol-connect-widget">
+                <a class="emol-linkedin-logo emol-button" onclick="emol_connect_linkedin('https://wordpress.test/solliciteren-eazymathc/','demonstratie');" href="javascript:void(0);">
+                    Solliciteer met LinkedIN
+                </a>
+            </div>
+
+            <div class="emol-apply-row" id="emol-gender-row">
+                <div class="emol-label-wrapper">
+                    <label for="emol-gender-male">Aanhef</label>
+                </div>
+                <div class="emol-input-wrapper">
+                    <select name="gender" class="emol-select-input">
+                        <option id="emol-gender-male" value="m">Dhr.</option>
+                        <option id="emol-gender-female" value="f">Mevr.</option>
+                    </select>
+                </div>
+            </div>
+            <div class="emol-apply-row" id="emol-firstname-row">
+                <div class="emol-label-wrapper">
+                    <label for="emol-firstname">Voornaam </label>
+                </div>
+                <div class="emol-input-wrapper">
+                    <input type="text" class="emol-text-input " placeholder="Voornaam" name="firstname" id="emol-firstname" value=""/>
+                </div>
+            </div>
+
+            <div class="emol-apply-row" id="emol-lastname-row">
+                <div class="emol-label-wrapper">
+                    <label for="emol-middlename">Tussenv. &amp;</label> <label for="emol-lastname">Achternaam </label>
+                </div>
+                <div class="emol-input-wrapper">
+                    <input type="text" class="emol-text-input emol-small" placeholder="Tussenv." name="middlename" value="" id="emol-middlename"/>
+                    <input type="text" class="emol-text-input " placeholder="Achternaam" value="" name="lastname" id="emol-lastname"/>
+                </div>
+            </div>
+            <div class="emol-apply-row" id="emol-phone-row">
+                <div class="emol-label-wrapper">
+                    <label for="emol-phonenumber">Telefoon </label>
+                </div>
+                <div class="emol-input-wrapper">
+                    <input type="text" placeholder="Telefoon" class="emol-text-input " name="phonenumber" value="" id="emol-phonenumber"/>
+                </div>
+            </div>
+            <div class="emol-apply-row" id="emol-email-row">
+                <div class="emol-label-wrapper">
+                    <label for="emol-email">E-mailadres <strong class="emol-required-asterix">*</strong></label>
+                </div>
+                <div class="emol-input-wrapper">
+                    <input type="text" required placeholder="E-mailadres" class="emol-text-input required email" value="" name="email" id="emol-email"/>
+                </div>
+            </div>
+            <div class="emol-apply-row" id="emol-schoolingtype_id-row">
+                <div class="emol-label-wrapper">
+                    <label for="emol-schoolingtype_id">Hoogst genoten opleiding </label>
+                </div>
+                <div class="emol-input-wrapper">
+                    <select name="schoolingtype_id" id="emol-schoolingtype_id" class="emol-select-input ">
+                        <option></option>
+                        <option value="3">WO</option>
+                        <option value="2">HBO</option>
+                        <option value="1">MBO</option>
+                        <option value="5">VO</option>
+                        <option value="6">cursus</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="emol-apply-row" id="emol-captcha-row">
+                <div class="emol-input-wrapper">&nbsp;</div>
+
+                <div class="emol-input-wrapper">
+                    <div class="g-recaptcha" data-callback="emolRecaptchaCallback" data-sitekey="6LcKvsgUAAAAADANBcrva4dHLShaVscXv21-Vk9U"></div>
+                </div>
+
+            </div>
+            <div class="emol-apply-row" id="emol-submit-row">
+                <div class="emol-input-wrapper">
+                    &nbsp;
+                </div>
+                <div class="emol-input-wrapper">
+                    <input type="button" class="emol-button emol-form-submit" disabled id="emol-apply-submit-button" value="Sollicitatie verzenden"/>
+                    <input type="button" class="emol-button" id="emol-apply-back-button" value="Terug" onclick="history.go(-1)"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

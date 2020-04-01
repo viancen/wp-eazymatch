@@ -901,7 +901,7 @@ function emol_get_apply_form($jobData)
 
     $firstDescription = '';
     if (isset($jobData['description']) && trim($jobData['description'] != '')) {
-        $firstDescription = '<p id="emol-apply-job-summary">' . EMOL_APPLY_HEADER . ' <strong>' . $jobData['name'] . '</strong>.</p>';
+        $firstDescription = '<div id="emol-apply-job-summary">' . EMOL_APPLY_HEADER . ' <strong>' . $jobData['name'] . '</strong>.</div>';
     }
 
     //the apply form
@@ -929,19 +929,21 @@ function emol_get_apply_form($jobData)
     } elseif (isset($urlVars[2]) && $urlVars[2] == 'unsuccess') {
         $applyHtml .= '<div>' . EMOL_APPLY_FAIL_MSG . '</div>';
     } else {
-        $applyHtml .= '<div id="emol-mandatory-check">' . EMOL_APPLY_MANDATORY . '</div>';
-        $applyHtml .= '<div id="emol-form-wrapper">';
-        include(EMOL_DIR . '/lib/emol/applyform.php');
-        $applyHtml .= '</div>';
-
+		$applyHtml .= '<div id="emol-mandatory-check">' . EMOL_APPLY_MANDATORY . '</div>';
+		$applyHtml .= '<div id="emol-form-wrapper">';
+		include(EMOL_DIR . '/lib/emol/applyform.php');
+		$applyHtml .= '</div>';
     }
 
     //finish up html
-    $applyHtml .= '</div>';
-    $applyHtml .= '</form>';
+	$applyHtml .= '</form>';
+	$applyHtml .= '</div>';
+
+
+
 
     //return some html
-    return str_replace(PHP_EOL, ' ', $applyHtml);
+    return $applyHtml;
 }
 
 function emol_post_application()

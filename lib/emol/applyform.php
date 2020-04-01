@@ -867,8 +867,9 @@ if (get_option('emol_frm_google_captcha_sitekey') && get_option('emol_frm_google
 			<div class="emol-input-wrapper">&nbsp;</div>
 			
 			<div class="emol-input-wrapper">
-				<div class="g-recaptcha" data-callback="emolRecaptchaCallback" data-sitekey="' . get_option('emol_frm_google_captcha_sitekey') . '">
+				<div class="g-recaptcha" data-callback="emolRecaptchaCallback" data-sitekey="' . get_option('emol_frm_google_captcha_sitekey') . '"></div>
 			</div>
+			
         </div>';
 
 	$applyHtml .= '

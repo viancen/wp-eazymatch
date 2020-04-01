@@ -1,12 +1,13 @@
 <?php
-if ( ! defined( 'EMOL_DIR' ) ) {
-	die( 'no direct access' );
+if (!defined('EMOL_DIR')) {
+	die('no direct access');
 }
 
 /**
  * Applying to a job or open or whatever
  */
-class emol_page_applicant_apply extends emol_page {
+class emol_page_applicant_apply extends emol_page
+{
 
 	/**
 	 * Function to be executed in eazymatch
@@ -42,7 +43,8 @@ class emol_page_applicant_apply extends emol_page {
 	/**
 	 * Class constructor
 	 */
-	function __construct( $slug, $function = '' ) {
+	function __construct($slug, $function = '')
+	{
 
 		global $trailingData;
 
@@ -53,31 +55,31 @@ class emol_page_applicant_apply extends emol_page {
 		//first connect to the api
 		$this->emolApi = eazymatch_connect();
 
-		if ( ! $this->emolApi ) {
+		if (!$this->emolApi) {
 			eazymatch_trow_error();
 		}
 
 		//split up the variables given
-		$urlVars = explode( '/', $this->page_slug );
-		$jobId   = $urlVars[1];
+		$urlVars = explode('/', $this->page_slug);
+		$jobId = $urlVars[1];
 
 		//get competences
 		//$this->competenceApi    = $this->emolApi->get('competence');
 		//$this->competences         = $this->competenceApi->tree();
-		$this->toolApi = $this->emolApi->get( 'tool' );
+		$this->toolApi = $this->emolApi->get('tool');
 
-		if ( is_numeric( $jobId ) && $jobId > 0 ) {
+		if (is_numeric($jobId) && $jobId > 0) {
 
 			//initialize wsdls
-			$this->jobApi = $this->emolApi->get( 'job' );
+			$this->jobApi = $this->emolApi->get('job');
 
 			//get the job
-			$this->job = $this->jobApi->getFullPublished( $jobId );
+			$this->job = $this->jobApi->getFullPublished($jobId);
 
-			if ( empty( $this->job ) ) {
+			if (empty($this->job)) {
 
-				header( "HTTP/1.0 404 Not Found" );
-				header( 'Location: ' . get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . $trailingData );
+				header("HTTP/1.0 404 Not Found");
+				header('Location: ' . get_bloginfo('wpurl') . '/' . get_option('emol_job_search_url') . $trailingData);
 				exit();
 			} else {
 				$this->jobId = $this->job['id'];
@@ -88,21 +90,22 @@ class emol_page_applicant_apply extends emol_page {
 			$this->page_title = EMOL_APPLY . ' "' . $this->job['name'] . '"';
 		} else {
 
-			$this->jobId      = 'open';
+			$this->jobId = 'open';
 			$this->page_title = EMOL_JOB_APPLY_FREE;
 		}
 		/**
 		 * We'll wait til WordPress has looked for posts, and then
 		 * check to see if the requested url matches our target.
 		 */
-		add_filter( 'the_posts', array( &$this, 'detectPost' ) );
+		add_filter('the_posts', array(&$this, 'detectPost'));
 	}
 
 
 	/**
 	 * Called by the 'detectPost' action
 	 */
-	function createPost() {
+	function createPost()
+	{
 
 		/**
 		 * Create a fake post.
@@ -117,7 +120,7 @@ class emol_page_applicant_apply extends emol_page {
 		/**
 		 * Not sure if this is even important.  But gonna fill it up anyway.
 		 */
-		$post->guid = get_bloginfo( 'wpurl' ) . '/' . $this->page_slug;
+		$post->guid = get_bloginfo('wpurl') . '/' . $this->page_slug;
 
 		/**
 		 * The title of the page.
@@ -130,19 +133,20 @@ class emol_page_applicant_apply extends emol_page {
 		 * plugin function calls, and put the output into this var.
 		 */
 
-        $post->post_content = $this->getContent();
+		$post->post_content = $this->getContent();
 
 
-		return ( $post );
+		return ($post);
 	}
 
 	/**
 	 * creates the fake content
 	 */
-	function getContent( $defaultData = array() ) {
+	function getContent($defaultData = array())
+	{
 
 		// remove auto line breaks
-		remove_filter( 'the_content', 'wpautop' );
+		remove_filter('the_content', 'wpautop');
 		return emol_get_apply_form($this->job);
 
 		//wp_redirect( $suUrl );
@@ -151,7 +155,8 @@ class emol_page_applicant_apply extends emol_page {
 	/**
 	 * userd by the initialisation
 	 */
-	function detectPost( $posts ) {
+	function detectPost($posts)
+	{
 		global $wp;
 		global $wp_query;
 
@@ -159,9 +164,9 @@ class emol_page_applicant_apply extends emol_page {
 		 * Check if the requested page matches our target
 		 */
 
-		if ( strtolower( $wp->request ) == strtolower( $this->page_slug ) || @$wp->query_vars['page_id'] == $this->page_slug ) {
+		if (strtolower($wp->request) == strtolower($this->page_slug) || @$wp->query_vars['page_id'] == $this->page_slug) {
 			//Add the fake post
-			$posts   = null;
+			$posts = null;
 			$posts[] = $this->createPost();
 
 			/**
@@ -172,13 +177,13 @@ class emol_page_applicant_apply extends emol_page {
 			$wp_query->is_page = true;
 			//Not sure if this one is necessary but might as well set it like a true page
 			$wp_query->is_singular = true;
-			$wp_query->is_home     = false;
-			$wp_query->is_archive  = false;
+			$wp_query->is_home = false;
+			$wp_query->is_archive = false;
 			$wp_query->is_category = false;
 			//Longer permalink structures may not match the fake post slug and cause a 404 error so we catch the error here
-			unset( $wp_query->query["error"] );
+			unset($wp_query->query["error"]);
 			$wp_query->query_vars["error"] = "";
-			$wp_query->is_404              = false;
+			$wp_query->is_404 = false;
 
 		}
 
