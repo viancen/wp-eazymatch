@@ -9,10 +9,10 @@ if (!emol_session::isValidId('applicant_id')) {
 	$applyHtml .= '
 		<div id="eazymatch-wait-modal" class="eazymatch-modal">Eén moment geduld, uw sollicitatie wordt verwerkt.</div>
 
-        <div class="emol-label-wrapper" id="emol-connect-widget">
-			<a href="javascript:;" class="emol-login-logo emol-button" onclick="emolLoginPopup();">Login met EazyMatch</a> 
-			<span class="emol-app-log-form">|</span> 
-			<a class="emol-linkedin-logo emol-button" onclick="emol_connect_linkedin(\'' . $url . '\',\'' . $api->instanceName . '\');" href="javascript:;">Solliciteer met LinkedIN</a>
+        <div class="emol-label-wrapper" id="emol-connect-widget"> 
+			<a class="emol-linkedin-logo emol-button" onclick="emol_connect_linkedin(\'' . $url . '\',\'' . $api->instanceName . '\');" href="javascript:void(0);">
+			Solliciteer met LinkedIN
+			</a>
         </div>
         ';
 
