@@ -824,6 +824,11 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 	return $searchHtml;
 }
 
+function emol_get($name)
+{
+	return filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING);
+}
+
 function emol_get_apply_form($jobData)
 {
 
@@ -833,8 +838,8 @@ function emol_get_apply_form($jobData)
 
 	//fillup default array of presets
 	$data['birthdate'] = '';
-	$data['firstname'] = '';
-	$data['lastname'] = '';
+	$data['firstname'] = emol_get('first_name') ? emol_get('first_name') : '';
+	$data['lastname'] = emol_get('last_name') ? emol_get('last_name') : '';
 	$data['middlename'] = '';
 
 	$data['city'] = '';
@@ -853,7 +858,7 @@ function emol_get_apply_form($jobData)
 	$data['managercompany_id'] = '';
 	$data['schoolingtype_id'] = '';
 	$data['zipcode'] = '';
-	$data['email'] = '';
+	$data['email'] = emol_get('email_address') ? emol_get('email_address') : '';
 	$data['extension'] = '';
 	$data['competence'] = array();
 
@@ -861,42 +866,6 @@ function emol_get_apply_form($jobData)
 	if (isset($defaultData) && count($defaultData) > 0 && isset($defaultData['birthdate-year']) && isset($defaultData['birthdate-month']) && isset($defaultData['birthdate-day'])) {
 		$data = $defaultData;
 		$data['birthdate'] = $defaultData['birthdate-year'] . '-' . $defaultData['birthdate-month'] . '-' . $defaultData['birthdate-day'];
-	}
-
-	// prepare client resources
-	// emol_require::validation();
-	// emol_require::jqueryUi();
-
-	if (isset($data['linkedInrequest'])) {
-		$linkedInrequest = $data['linkedInrequest'];
-	} else {
-		$linkedInrequest = (get_query_var('emolrequestid'));
-	}
-
-
-	$inImage = 'connect-to-linkedin.png';
-	if (strlen($linkedInrequest) == 128) {
-
-		$appApi = $api->get('applicant');
-		$dataIn = $appApi->getLinkedInProfile($linkedInrequest);
-
-
-		if (!empty($dataIn['date-of-birth'])) {
-			$data['birthdate'] = $dataIn['date-of-birth']['year'] . '-' . $dataIn['date-of-birth']['month'] . '-' . $dataIn['date-of-birth']['day'];
-		}
-
-		//normalize data
-		$data['title'] = @$dataIn['headline'];
-		$data['email'] = @$dataIn['email-address'];
-		$data['phonenumber'] = @$dataIn['phone-numbers']['phone-number']['phone-number'];
-		$data['description'] = @$dataIn['summary'];
-		$data['city'] = @$dataIn['location']['name'];
-		$dataIn['last-name'] = explode(' ', $dataIn['last-name']);
-		$data['lastname'] = array_pop($dataIn['last-name']);
-		$data['firstname'] = $dataIn['first-name'];
-		$data['middlename'] = implode(' ', $dataIn['last-name']);
-		//$data['birthdate'] = $dataIn['birthdate-year'].'-'.$dataIn['birthdate-month'].'-'.$dataIn['birthdate-day'];
-		$inImage = 'connected-to-linkedin.png';
 	}
 
 	$firstDescription = '';
@@ -915,8 +884,7 @@ function emol_get_apply_form($jobData)
         <div id="emol-form-apply" class="emol-form-div emol-form-table">
         <form method="post" id="emol-apply-form" enctype="multipart/form-data" action="' . get_bloginfo('wpurl') . '/em-submit-subscription">
         <input type="hidden" name="job_id" value="' . $jobid . '" />
-        <input type="hidden" name="EMOL_apply" value="1" />
-        <input type="hidden" name="linkedInrequest" value="' . $linkedInrequest . '" />';
+        <input type="hidden" name="EMOL_apply" value="1" />';
 
 	$urlVars = explode('/', $_SERVER['REQUEST_URI']);
 
@@ -929,7 +897,7 @@ function emol_get_apply_form($jobData)
 	} elseif (isset($urlVars[2]) && $urlVars[2] == 'unsuccess') {
 		$applyHtml .= '<div>' . EMOL_APPLY_FAIL_MSG . '</div>';
 	} else {
-		$applyHtml .= '<div id="emol-mandatory-check">' . EMOL_APPLY_MANDATORY . '</div>';
+
 		$applyHtml .= '<div id="emol-form-wrapper">';
 		include(EMOL_DIR . '/lib/emol/applyform.php');
 		$applyHtml .= '</div>';

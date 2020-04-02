@@ -6,16 +6,18 @@ if (!defined('EMOL_DIR')) {
 if (!emol_session::isValidId('applicant_id')) {
 
 	//create the form
+
 	$applyHtml .= '
 		<div id="eazymatch-wait-modal" class="eazymatch-modal">Eén moment geduld, uw sollicitatie wordt verwerkt.</div>
+        ';
 
-        <div class="emol-label-wrapper" id="emol-connect-widget"> 
+	if (!emol_get('linkedin')) {
+		$applyHtml .= '<div class="emol-label-wrapper" id="emol-connect-widget"> 
 			<a class="emol-linkedin-logo emol-button" onclick="emol_connect_linkedin(\'' . $url . '\',\'' . $api->instanceName . '\');" href="javascript:void(0);">
 			Solliciteer met LinkedIN
 			</a>
-        </div>
-        ';
-
+        </div>';
+	}
 	//
 	$gen1 = (isset($data['gender']) && $data['gender'] = 'm') ? 'selected="selected"' : '';
 	$gen2 = (isset($data['gender']) && $data['gender'] = 'f') ? 'selected="selected"' : '';
