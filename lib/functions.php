@@ -489,6 +489,7 @@ function emol_tree_to_list($a, $prefix = ' ', $level = 0, $parent_id = 0, $tree_
 function emol_301($newUrl)
 {
 
+	ob_clean();
 	Header("HTTP/1.1 301 Moved Permanently");
 	Header("Location: " . $newUrl);
 	exit();
@@ -610,6 +611,7 @@ function emol_parse_html_jobresult($job, $class = '')
 	$text .= '</div>';
 
 	return $text;
+
 
 }
 
@@ -759,6 +761,7 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 	}
 
 	$searchQuery = $ws->searchPublished($search, $offset, $items_per_pagina);
+
 
 	if ($searchQuery['total'] == 0) {
 		$searchHtml = '<div class="emol-no-results">' . stripslashes(get_option('emol_job_no_result')) . '</div>';
