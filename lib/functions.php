@@ -835,7 +835,7 @@ function emol_get_google_jobs($job)
       "@context" : "https://schema.org/",
       "@type" : "JobPosting",
       "title" : "' . ($job['name']) . '",
-      "description" : "<p>' . emol_firstWords($job['description']) . '</p>",
+      "description" : "<p>' . emol_firstWords(strip_tags($job['description'])) . '</p>",
       "datePosted" : "' . ($job['startpublished']) . '",
       "validThrough" : "' . ($job['endpublished']) . '",
       "employmentType" : "CONTRACTOR",
