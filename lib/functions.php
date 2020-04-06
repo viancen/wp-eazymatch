@@ -744,7 +744,6 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 		emol_session::remove('freeSearch');
 	}
 
-
 	// get the searchresults
 	$items_per_pagina = get_option('emol_job_amount_pp', 15);
 	$huidige_pagina = 0;
@@ -761,7 +760,6 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 	}
 
 	$searchQuery = $ws->searchPublished($search, $offset, $items_per_pagina);
-
 
 	if ($searchQuery['total'] == 0) {
 		$searchHtml = '<div class="emol-no-results">' . stripslashes(get_option('emol_job_no_result')) . '</div>';
@@ -825,6 +823,47 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 	}
 
 	return $searchHtml;
+}
+
+function emol_get_google_jobs($job)
+{
+	$googleJobs = get_option('emol_sharing_googlejobs');
+	$googleJobsSnippet = '';
+	if ($googleJobs != 0) {
+
+		$googleJobsSnippet = '<script type="application/ld+json">{
+      "@context" : "https://schema.org/",
+      "@type" : "JobPosting",
+      "title" : "' . ($job['name']) . '",
+      "description" : "<p>' . emol_firstWords($job['description']) . '</p>",
+      "datePosted" : "' . ($job['startpublished']) . '",
+      "validThrough" : "' . ($job['endpublished']) . '",
+      "employmentType" : "CONTRACTOR",
+		"identifier": {
+			"@type": "PropertyValue",
+			"name": "' . get_bloginfo('name') . '",
+			"value": "' . $job['id'] . '"
+		},
+		"jobLocation": {
+			"@type": "Place",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "' . get_option('emol_base_address') . '",
+				"addressLocality": "' . get_option('emol_base_city') . '",
+				"addressRegion": "' . get_option('emol_base_region') . '",
+				"Postalcode": "' . get_option('emol_base_zipcode') . '",
+				"addressCountry": "' . get_option('emol_base_country') . '"
+			}
+		  },
+		  "hiringOrganization" : {
+			"@type" : "Organization",
+			"name" : "' . get_bloginfo('name') . '",
+			"sameAs" : "' . get_bloginfo('wpurl') . '"
+		  }	  
+		}
+		</script>';
+	}
+	return $googleJobsSnippet;
 }
 
 function emol_get($name)

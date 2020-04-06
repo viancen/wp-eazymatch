@@ -253,7 +253,7 @@ define( 'EMOL_ADMIN_GLOBAL', 'EazyMatch' );
 define( 'EMOL_ADMIN_MANAGER', 'Managers' );
 
 define( 'EMOL_ADMIN_STYLESHEET', 'Styling' );
-define( 'EMOL_ADMIN_SHARING', 'XML Feeds' );
+define( 'EMOL_ADMIN_SHARING', 'Connectivity' );
 define( 'EMOL_ADMIN_FORM', 'Forms' );
 define( 'EMOL_ADMIN_FORM_APP_BIRTH', "Date of birth" );
 define( 'EMOL_ADMIN_FORM_APP_PHOTO', "Photo" );

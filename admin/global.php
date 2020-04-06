@@ -33,7 +33,12 @@ function eazymatch_plugin_options() {
 		'emol_account_url'         => get_option( 'emol_account_url' ),
 		'emol_logout_url'          => get_option( 'emol_logout_url', '/' ),
 		'emol_jquery_ui_skin'      => get_option( 'emol_jquery_ui_skin' ),
-		'emol_company_account_url' => get_option( 'emol_company_account_url' )
+		'emol_company_account_url' => get_option( 'emol_company_account_url' ),
+		'emol_base_address' => get_option( 'emol_base_address' ),
+		'emol_base_city' => get_option( 'emol_base_city' ),
+		'emol_base_zipcode' => get_option( 'emol_base_zipcode' ),
+		'emol_base_region' => get_option( 'emol_base_region' ),
+		'emol_base_country' => get_option( 'emol_base_country' ),
 	);
 
 
@@ -146,6 +151,45 @@ function eazymatch_plugin_options() {
                     <td>
                     </td>
                 </tr>
+
+                <tr>
+                    <td><?php _e( "CustomerAddress:", 'Emol-3.0-identifier' ); ?> </td>
+                    <td><input type="text" name="emol_base_address" value="<?php echo @$eazymatchOptions['emol_base_address']; ?>"
+                               size="40"></td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><?php _e( "CustomerCity:", 'Emol-3.0-identifier' ); ?> </td>
+                    <td><input type="text" name="emol_base_city" value="<?php echo @$eazymatchOptions['emol_base_city']; ?>"
+                               size="40"></td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?php _e( "CustomerRegion:", 'Emol-3.0-identifier' ); ?> </td>
+                    <td><input type="text" name="emol_base_region" value="<?php echo @$eazymatchOptions['emol_base_region']; ?>"
+                               size="40"></td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?php _e( "CustomerZipcode:", 'Emol-3.0-identifier' ); ?> </td>
+                    <td><input type="text" name="emol_base_zipcode" value="<?php echo @$eazymatchOptions['emol_base_zipcode']; ?>"
+                               size="40"></td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><?php _e( "CustomerCountry:", 'Emol-3.0-identifier' ); ?> </td>
+                    <td><input type="text" name="emol_base_country" value="<?php echo @$eazymatchOptions['emol_base_country']; ?>"
+                               size="40"></td>
+                    <td>
+                    </td>
+                </tr>
+
                 <tr>
                     <td><?php _e( "Lang:", 'Emol-3.0-identifier' ); ?> </td>
                     <td>
@@ -216,7 +260,8 @@ function eazymatch_plugin_options() {
 							?>
                         </select>
                     </td>
-                    <td><a href="https://jqueryui.com/themeroller/" target="_new">http://code.jquery.com/ui/</a>
+                    <td>
+                        <a href="https://jqueryui.com/themeroller/" target="_new">http://code.jquery.com/ui/</a>
 
                     </td>
                 </tr>
