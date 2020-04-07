@@ -662,3 +662,25 @@ a.emol-button,
 .emol-required-asterix {
     color: lightcoral;
 }
+
+.emol-pagination {
+    display: inline-block;
+}
+
+.emol-pagination a {
+    color: black;
+    float: left;
+    padding: 4px 8px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+
+.emol-pagination a.emol-active {
+    background-color: #c1bbcf;
+    color: white;
+    border: 1px solid #c1bbcf;
+}
+
+.emol-pagination a:hover:not(.emol-active) {background-color: #ddd;}

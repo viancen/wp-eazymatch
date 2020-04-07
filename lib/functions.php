@@ -660,6 +660,10 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 	//slaslehs html etc
 	global $trailingData;
 
+	if (substr($page_slug, -1) !== '/') {
+		$page_slug .= '/';
+	}
+
 	//initialize the results
 	$searchHtml = '';
 
@@ -668,20 +672,18 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 	$ws = $api->get('job');
 	$searchAction = explode(',', $reqVars);
 
+	$getvars = emol_get(null);
+
 	//create an array with searchcriteria that is understandable
 	$search = array();
 	$keyValue = '';
 
+	global $wp;
+	$searchurlFull = home_url(add_query_arg(array(), $wp->request));
 
 	foreach ($searchAction as $searchValue) {
 
-		if (substr($searchValue, 0, 5) == 'page-') {
-			//pagnation
-			$basecam = explode('-', $searchValue);
-			$pagnation = (int)array_pop($basecam);
-			$page_slug = str_replace(',' . $searchValue, '', $page_slug);
-
-		} elseif (!in_array($searchValue, $searchCriteria) && $keyValue > '') {
+		if (!in_array($searchValue, $searchCriteria) && $keyValue > '') {
 
 			//value
 			$search[$keyValue][] = $searchValue;
@@ -747,6 +749,8 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 	// get the searchresults
 	$items_per_pagina = get_option('emol_job_amount_pp', 15);
 	$huidige_pagina = 0;
+	$pagnation = emol_get('emol-page');
+
 	if (isset($pagnation) && is_numeric($pagnation) && $pagnation > 0) {
 		$huidige_pagina = $pagnation;
 	}
@@ -769,18 +773,18 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 
 		//get the actual result with pagination
 
-		$nav = '<table class="emol-pagination-table"><tr>';
-		$nav .= '<td class="emol-pagnation"><a href="' . get_bloginfo('wpurl') . '/' . $page_slug . $trailingData . '"> &lt;&lt;&lt; </a></td>';
-		if ($aantal_paginas > 1 && ($huidige_pagina - 1) > 0) {
-			$nav .= '<td class="emol-pagnation"><a href="' . get_bloginfo('wpurl') . '/' . $page_slug . ',page-' . ($huidige_pagina - 1) . $trailingData . '"> &lt;&lt; </a></td>';
-		}
+		$nav = '<div class="emol-pagination">';
+		$nav .= '<a href="' . $searchurlFull . '"> &lt;&lt; </a>';
 
+		if ($aantal_paginas > 1 && ($huidige_pagina - 1) > 0) {
+			$nav .= '<a href="' . $searchurlFull . '?emol-page=' . ($huidige_pagina - 1) . '"> &lt; </a>';
+		}
 
 		for ($i = 0; $i < $aantal_paginas; $i++) {
 
 			if ($huidige_pagina == $i) {
 				// huidige pagina is niet klikbaar
-				$nav .= '<td class="emol-pagnation emol-pagnation-selected">' . ($i + 1) . '</td>';
+				$nav .= '<a  href="#" class="emol-active">' . ($i + 1) . '</a>';
 			} else {
 				// een andere pagina
 				if (
@@ -789,19 +793,17 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 					($i - 1 == $huidige_pagina) ||
 					($i - 2 == $huidige_pagina)
 				) {
-					$nav .= '<td class="emol-pagnation"><a href="' . get_bloginfo('wpurl') . '/' . $page_slug . ',page-' . $i . $trailingData . '">' . ($i + 1) . '</a></td>';
+					$nav .= '<a href="' . $searchurlFull . '?emol-page=' . $i . '">' . ($i + 1) . '</a>';
 				}
 			}
-
 		}
 
 		if ($huidige_pagina + 1 != $aantal_paginas) {
-			$nav .= '<td class="emol-pagnation"><a href="' . get_bloginfo('wpurl') . '/' . $page_slug . ',page-' . ($huidige_pagina + 1) . $trailingData . '"> &gt;&gt; </a></td>';
+			$nav .= '<a href="' . $searchurlFull . '?emol-page=' . ($huidige_pagina + 1) . '"> &gt; </a>';
 		}
 
-		$nav .= '<td class="emol-pagnation last"><a href="' . get_bloginfo('wpurl') . '/' . $page_slug . ',page-' . ($aantal_paginas - 1) . $trailingData . '"> &gt;&gt;&gt; </a></span></td>';
-		$nav .= '</tr></table>';
-
+		$nav .= '<a href="' . $searchurlFull . '?emol-page=' . ($aantal_paginas - 1) . '"> &gt;&gt; </a>';
+		$nav .= '</div>';
 
 		//title of result
 		$searchHtml .= '<div id="emol-search-result-header">' . EMOL_JOBSEARCH_TOTAL . ' ' . $searchQuery['total'] . ', ' . EMOL_PAGE . '<b>' . ($huidige_pagina + 1) . '</b>/' . $aantal_paginas . '</div>';
@@ -866,10 +868,21 @@ function emol_get_google_jobs($job)
 	return $googleJobsSnippet;
 }
 
-function emol_get($name)
+function emol_get($name = null)
 {
-	return filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING);
+	if (!empty($name)) {
+		return filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING);
+	} else {
+		$return = [];
+		$ks = array_keys($_GET);
+		foreach ($ks as $key) {
+			$return[] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRING);
+		}
+		return $return;
+	}
+
 }
+
 
 function emol_get_apply_form($jobData)
 {
