@@ -833,37 +833,58 @@ function emol_get_google_jobs($job)
 	$googleJobsSnippet = '';
 	if ($googleJobs != 0) {
 
-		$googleJobsSnippet = '<script type="application/ld+json">{
-      "@context" : "https://schema.org/",
-      "@type" : "JobPosting",
-      "title" : "' . ($job['name']) . '",
-      "description" : "<p>' . emol_firstWords(strip_tags($job['description'])) . '</p>",
-      "datePosted" : "' . ($job['startpublished']) . '",
-      "validThrough" : "' . ($job['endpublished']) . '",
-      "employmentType" : "CONTRACTOR",
-		"identifier": {
-			"@type": "PropertyValue",
-			"name": "' . get_bloginfo('name') . '",
-			"value": "' . $job['id'] . '"
-		},
-		"jobLocation": {
-			"@type": "Place",
-			"address": {
-				"@type": "PostalAddress",
-				"streetAddress": "' . get_option('emol_base_address') . '",
-				"addressLocality": "' . get_option('emol_base_city') . '",
-				"addressRegion": "' . get_option('emol_base_region') . '",
-				"Postalcode": "' . get_option('emol_base_zipcode') . '",
-				"addressCountry": "' . get_option('emol_base_country') . '"
+		//--lijst moet worden aangemaakt in Categorieen : Vacature -soort
+		//--eerste hit wordt hier weergegeven
+		if (!empty($job['Statusses'])) {
+			foreach ($job['Statusses'] as $status) {
+				if (!isset($lft) && !isset($rgt) && $status['Jobstatus']['name'] == 'employmentType') {
+					$lft = $status['Jobstatus']['lft'];
+					$rgt = $status['Jobstatus']['rgt'];
+				} elseif (isset($lft) && isset($rgt)) {
+					if ($status['Jobstatus']['lft'] > $lft && $status['Jobstatus']['rgt'] < $rgt) {
+						$contractType[] = $status['Jobstatus']['name'];
+
+					}
+				}
 			}
-		  },
-		  "hiringOrganization" : {
-			"@type" : "Organization",
-			"name" : "' . get_bloginfo('name') . '",
-			"sameAs" : "' . get_bloginfo('wpurl') . '"
-		  }	  
 		}
-		</script>';
+		if (!isset($contractType)) {
+			$contractType = 'OTHER';
+		}
+		$jobObject = [
+			'@context' => 'https://schema.org/',
+			'@type' => "JobPosting",
+			'title' => $job['name'],
+			'description' => emol_firstWords(strip_tags($job['description'])),
+			'datePosted' => date('Y-m-d', strtotime($job['startpublished'])),
+			'validThrough' => date('Y-m-d', strtotime($job['startpublished'])) . 'T00:00',
+			'employmentType' => $contractType,
+			'identifier' => [
+				'@type' => "PropertyValue",
+				"name" => get_bloginfo('name'),
+				"value" => $job['id']
+			],
+			'jobLocation' => [
+				'@type' => 'Place',
+				'address' => [
+					'@type' => "PostalAddress",
+					'streetAddress' => get_option('emol_base_address'),
+					'addressLocality' => get_option('emol_base_city'),
+					'addressRegion' => get_option('emol_base_region'),
+					'Postalcode' => get_option('emol_base_zipcode'),
+					'addressCountry' => get_option('emol_base_country'),
+				]
+			],
+			'hiringOrganization' => [
+				'@type' => 'Organization',
+				'name' => get_bloginfo('name'),
+				'sameAs' => get_bloginfo('wpurl'),
+			]
+		];
+
+		$googleJobsSnippet = '<script type="application/ld+json">';
+		$googleJobsSnippet .= json_encode($jobObject, JSON_PRETTY_PRINT);
+		$googleJobsSnippet .= '</script>';
 	}
 	return $googleJobsSnippet;
 }
