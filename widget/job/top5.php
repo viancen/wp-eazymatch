@@ -95,11 +95,20 @@ class emol_widget_job_top5 extends WP_Widget {
 			}
 			echo '</ul>';
 
+			$setUrl = get_option('emol_job_search_page');
+			if (empty($setUrl)) {
+				$setUrl = get_option('emol_job_search_url');
+			} else {
+				$setUrl = '/' . $setUrl;
+			}
+			if(substr($setUrl,0,1) != '/'){
+				$setUrl = '/' . $setUrl;
+            }
 
 			echo '
                 <div id="emol_top5jobs_findmore">
                     <div class="emol-submit-wrapper">
-                        <a href="' . get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . '/all' . $trailingData . '" class="emol-button emol-button-showalljobs">' . EMOL_JOBSEARCH_MORE . '</a>
+                        <a href="' . $setUrl . '" class="emol-button emol-button-showalljobs">' . EMOL_JOBSEARCH_MORE . '</a>
                     </div>
                 </div>';
 
