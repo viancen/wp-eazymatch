@@ -22,4 +22,5 @@ add_action('emol_cron_hook', 'emol_cron_function');
 function emol_cron_function()
 {
 	delete_option('emol_apihash');
+	eazymatch_connect();
 }
