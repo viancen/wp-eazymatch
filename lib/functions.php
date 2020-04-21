@@ -827,6 +827,7 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 	return $searchHtml;
 }
 
+
 function emol_get_google_jobs($job)
 {
 	$googleJobs = get_option('emol_sharing_googlejobs');
@@ -1503,7 +1504,7 @@ function emol_view_load($viewName, $data = array())
 function emol_dateselector($inName, $useDate = 0, $extraCls = '')
 {
 	/* create array so we can name months */
-	$monthName = ARRAY(
+	$monthName = array(
 		1 => "01",
 		"02",
 		"03",
@@ -1534,7 +1535,7 @@ function emol_dateselector($inName, $useDate = 0, $extraCls = '')
 		$returnMonth .= INTVAL($currentMonth);
 		$returnMonth .= "\"";
 		if ($skipSelected === false) {
-			IF (INTVAL(DATE("m", $useDate)) == $currentMonth) {
+			if (INTVAL(DATE("m", $useDate)) == $currentMonth) {
 				$returnMonth .= " SELECTED";
 			}
 		}
@@ -1547,7 +1548,7 @@ function emol_dateselector($inName, $useDate = 0, $extraCls = '')
 	for ($currentDay = 1; $currentDay <= 31; $currentDay++) {
 		$returnDay .= "<OPTION VALUE=\"$currentDay\"";
 		if ($skipSelected === false) {
-			IF (INTVAL(DATE("d", $useDate)) == $currentDay) {
+			if (INTVAL(DATE("d", $useDate)) == $currentDay) {
 				$returnDay .= " SELECTED";
 			}
 		}
@@ -1572,6 +1573,7 @@ function emol_dateselector($inName, $useDate = 0, $extraCls = '')
 	return array('day' => $returnDay, 'month' => $returnMonth, 'year' => $returnYear);
 
 }
+
 
 // A copy of rel_canonical but to allow an override on a custom tag
 function rel_canonical_with_custom_tag_override()

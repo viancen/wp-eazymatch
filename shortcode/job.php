@@ -39,6 +39,7 @@ class emol_shortcode_job
 				$emol_job['jobTexts'] = &$trunk->request('job', 'getCustomTexts', array($emol_job_id));
 				$emol_job['jobCompetences'] = &$trunk->request('job', 'getCompetenceTree', array($emol_job_id));
 
+
 				// execute the trunk request
 				$trunk->execute();
 			}

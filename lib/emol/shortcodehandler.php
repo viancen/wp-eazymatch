@@ -23,7 +23,6 @@ class emol_shortcodehandler {
 			'settings'    => ''
 		), $atts ) );
 
-
 		$return = '';
 
 		if ( in_array( $view, array( 'cv', 'job', 'jobs', 'jobpage', 'apply', 'react', 'searchjobs' ) ) ) {
@@ -43,6 +42,7 @@ class emol_shortcodehandler {
 				$shortCodeObj              = new emol_shortcode_jobs();
 				$shortCodeObj->competences = $competences;
 				$return                    = $shortCodeObj->getContent();
+
 			} else {
 
 				// define shortcode classname
