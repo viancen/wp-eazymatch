@@ -38,6 +38,7 @@ var EazyWP = {
             var wHeight = $(window).height();
             var dHeight = wHeight * 0.8;
 
+
             jQuery('#emolAvgStatement').dialog({
                 show: {
                     effect: "blind",
@@ -70,6 +71,7 @@ var EazyWP = {
                 resizable: false
             });
             jQuery(".ui-dialog-titlebar").hide();
+
             //$("#emolAvgStatement").css({height:"400px", overflow:"auto"});
 
         }).on('keyup change', '#emol-form-wrapper .required', function () {
@@ -116,22 +118,27 @@ var EazyWP = {
                 } else {
 
                     jQuery('.emol-form-submit').attr('disabled', 'disabled');
+                    jQuery('.emol-form-submit').val('Een moment geduld');
 
-                    jQuery('#eazymatch-wait-modal').dialog({
-                        show: {
-                            effect: "blind",
-                            duration: 500
-                        },
-                        hide: {
-                            effect: "blind",
-                            duration: 100
-                        },
-                        buttons: [],
-                        closeOnEscape: false,
-                        draggable: false,
-                        modal: true,
-                        width: 500
-                    });
+                    try {
+                        jQuery('#eazymatch-wait-modal').dialog({
+                            show: {
+                                effect: "blind",
+                                duration: 500
+                            },
+                            hide: {
+                                effect: "blind",
+                                duration: 100
+                            },
+                            buttons: [],
+                            closeOnEscape: false,
+                            draggable: false,
+                            modal: true,
+                            width: 500
+                        });
+                    } catch (error) {
+                        console.error(error);
+                    }
 
                     jQuery('#emol-apply-form').submit();
                 }
