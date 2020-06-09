@@ -102,6 +102,7 @@ class emol_page_job_view extends emol_page
 
 		$jobHtml .= '<div id="emol-job-body">';
 
+
 		if (isset($this->job['Company']['LogoUrl']) && get_option('emol_job_search_logo') == 1) {
 			$jobHtml .= '<div class="emol-job-picture"><img src="' . $this->job['Company']['LogoUrl'] . '" /></div>';
 		} elseif (isset($this->job['Company']['Logo']) && !empty($this->job['Company']['Logo']['content']) && get_option('emol_job_search_logo') == 1) {

@@ -549,7 +549,9 @@ function emol_parse_html_jobresult($job, $class = '')
 	$text = '<div class="emol-job-result-item ' . $class . '">';
 
 	$img = '';
-	if (!empty($job['Company']['Logo']['content']) && $picVisible == 1) {
+	if (isset($job['Company']['LogoUrl']) && $picVisible == 1) {
+		$img = '<div class="emol-job-result-logo"><img src="' . $job['Company']['LogoUrl'] . '" /></div>';
+	} elseif (!empty($job['Company']['Logo']['content']) && $picVisible == 1) {
 		$img = '<div class="emol-job-result-logo"><img src="data:image/png;base64,' . $job['Company']['Logo']['content'] . '" /></div>';
 	} elseif ($picVisible == 1) {
 		$img = '<div class="emol-job-result-logo"><img src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-eazymatch/assets/img/blank-icon.png" alt="" /></div>';
