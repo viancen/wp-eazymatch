@@ -174,6 +174,7 @@ abstract class emol_connectproxy_rest
 			//delete_option('emol_apihash');
 			echo 'Error connecting to eazymatch with code curl code: "' . curl_errno($ch) . '".';
 
+
 			//close connection
 			curl_close($ch);
 
@@ -191,8 +192,9 @@ abstract class emol_connectproxy_rest
 		//echo "API call in $time seconds<br />";
 
 		// check if api call failed because session needs to be restored
-		if (isset($apiOutput['result']['error_code']) && !empty($apiOutput['result']['error_code'])) {
+		if (isset($apiOutput['status']) && $apiOutput['status'] == 'error') {
 
+			
 			// if the api request fails, its most likely the session on the core is lost
 			// try to reset the connection to the EazyCore
 			$connectionManager = emol_connectManager::getInstance();

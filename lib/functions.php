@@ -1471,7 +1471,7 @@ function emol_delete_options_prefixed($prefix)
 /**
  * returns the current eazymatch connect Instance
  *
- * @return emol_connectsvn mv co
+ * @return emol_connect
  */
 function eazymatch_connect()
 {
