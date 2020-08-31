@@ -328,7 +328,7 @@ function eazymatch_plugin_job() {
 							?>
 
                             <select type="text" class="eazycv-admin-select" name="emol_job_page" style="width:100%;">
-                                <option value=""></option>
+                                <option value="">--selecteer--</option>
 								<?php
 								foreach ( $pages as $page ) { ?>
                                     <option <?php if ( $eazymatchOptions['emol_job_page'] == $page->post_name ) {
@@ -344,7 +344,7 @@ function eazymatch_plugin_job() {
                         <td><?php _e( EMOL_ADMIN_JOBSEARCH_PAGE, 'Emol-3.0-identifier' ); ?><Br>(<strong>Pagina met shortcode [eazymatch view="jobpage"]</strong>)</td>
                         <td>
                             <select type="text" class="eazycv-admin-select" name="emol_job_search_page" style="width:100%;">
-                                <option value=""></option>
+                                <option value="">--selecteer--</option>
 								<?php
 								foreach ( $pages as $page ) { ?>
                                     <option <?php if ( $eazymatchOptions['emol_job_search_page'] == $page->post_name ) {
@@ -360,7 +360,7 @@ function eazymatch_plugin_job() {
                         <td><?php _e( EMOL_ADMIN_APPLY_PAGE, 'Emol-3.0-identifier' ); ?><Br>(<strong>Pagina met shortcode [eazymatch view="apply"]</strong>)</td>
                         <td>
                             <select type="text" class="eazycv-admin-select" name="emol_apply_page" style="width:100%;">
-                                <option value=""></option>
+                                <option value="">--selecteer--</option>
 								<?php
 								foreach ( $pages as $page ) { ?>
                                     <option <?php if ( $eazymatchOptions['emol_apply_page'] == $page->post_name ) {
@@ -376,7 +376,7 @@ function eazymatch_plugin_job() {
                         <td><?php _e( EMOL_ADMIN_APPLY_URL_REDIRECT, 'Emol-3.0-identifier' ); ?> <Br>(<strong>Bedankt pagina</strong>)</td>
                         <td>
                             <select type="text" class="eazycv-admin-select" name="emol_apply_url_success_redirect" style="width:100%;">
-                                <option value=""></option>
+                                <option value="">--selecteer--</option>
 								<?php
 								foreach ( $pages as $page ) { ?>
                                     <option <?php if ( $eazymatchOptions['emol_apply_url_success_redirect'] == $page->post_name ) {

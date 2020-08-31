@@ -65,7 +65,7 @@ class emol_page_job_view extends emol_page
             emol_301($job_url);
         }
 
-        if (empty($this->job)) {
+        if (!isset($this->job['id']) || empty($this->job['id'])) {
             return "The job was not found.";
         } else {
             $this->jobId = $this->job['id'];

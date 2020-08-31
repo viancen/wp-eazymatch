@@ -76,11 +76,9 @@ class emol_page_applicant_apply extends emol_page
 			//get the job
 			$this->job = $this->jobApi->getFullPublished($jobId);
 
-			if (empty($this->job)) {
+            if (!isset($this->job['id']) || empty($this->job['id'])) {
 
-				header("HTTP/1.0 404 Not Found");
-				header('Location: ' . get_bloginfo('wpurl') . '/' . get_option('emol_job_search_url') . $trailingData);
-				exit();
+				return 'The requested job is not found.';
 			} else {
 				$this->jobId = $this->job['id'];
 			}

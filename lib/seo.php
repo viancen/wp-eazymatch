@@ -13,6 +13,9 @@ function emol_meta_description()
 
 			$jobInfo = $emol_api->get('job')->getFullPublished($emol_job_id);
 		}
+		if(empty($jobInfo['id'])){
+		    return '';
+        }
 		$pre = get_option('emol_job_header');
 		$meta = trim($pre . ' ' . str_replace(['\'', '"', PHP_EOL], " ", $jobInfo['description']));
 		echo "<meta name='description' content='" . $meta . "'/>";
@@ -35,6 +38,9 @@ function emol_page_title($title)
 
 			$jobInfo = $emol_api->get('job')->getFullPublished($emol_job_id);
 		}
+        if(empty($jobInfo['id'])){
+            return '';
+        }
 		$pre = get_option('emol_job_header');
 		if ($pre) {
 			return $pre . ': ' . $jobInfo['name'] . ' (Ref. ' . $jobInfo['id'] . ')';
