@@ -1261,6 +1261,8 @@ function emol_custom_title($title)
 
             // create a response array and add all the requests to the trunk
             $emol_job['job'] = &$trunk->request('job', 'getFullPublished', array($emol_job_id));
+            $emol_job['jobTexts'] = &$trunk->request('job', 'getCustomTexts', array($emol_job_id));
+            $emol_job['jobCompetences'] = &$trunk->request('job', 'getCompetenceTree', array($emol_job_id));
 
             // execute the trunk request
             $trunk->execute();
