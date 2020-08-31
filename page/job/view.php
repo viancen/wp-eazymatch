@@ -39,7 +39,12 @@ class emol_page_job_view extends emol_page
 
         // discover the jobId
         $urlVars = explode('/', $this->page_slug);
+
         $jobId = $urlVars[1];
+
+        if (empty($jobId)) {
+            return "-- eazymatch job placeholder --"; //mosly cms opening the page and parsing the shortcode
+        }
 
         eazymatch_connect();
 
