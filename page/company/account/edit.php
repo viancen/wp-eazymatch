@@ -117,7 +117,7 @@ class emol_page_company_account_edit extends emol_pagedummy {
 		remove_filter( 'the_content', 'wpautop' );
 
 		// prepare client resources
-		emol_require::validation();
+		//emol_require::validation();
 		emol_require::jqueryUi();
 
 		if ( $this->emol_function == 'login' ) {
@@ -243,7 +243,7 @@ class emol_page_company_account_edit extends emol_pagedummy {
 	 */
 	function getNAWContent() {
 		// prepare client resources
-		emol_require::validation();
+		//emol_require::validation();
 		emol_require::jqueryUi();
 
 		//get the data of this logged on person
@@ -562,7 +562,7 @@ class emol_page_company_account_edit extends emol_pagedummy {
 	 */
 	function getApplicationsContent() {
 		// prepare client resources
-		emol_require::validation();
+		//emol_require::validation();
 		emol_require::jqueryUi();
 
 		try {
