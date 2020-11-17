@@ -22,7 +22,7 @@
          });
          */
 
-        $('#emol_forminstance_itemadd').change(function () {
+        $('#emol_forminstance_itemadd').on('change', function () {
             var fieldId = $('#emol_forminstance_itemadd option:selected').val();
 
             if (fieldId == 'empty')
@@ -54,7 +54,7 @@
             );
         });
 
-        $('.emol_remove_handler').live('click', function () {
+        $('.emol_remove_handler').on('click', function () {
             var fieldContainer = $(this).parent();
 
             fieldContainer.slideUp(400, function () {
