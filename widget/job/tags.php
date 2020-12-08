@@ -56,14 +56,16 @@ class emol_widget_job_tags extends emol_widget {
 			$cpt            = $api->get( 'job' );
 			$competenceList = $cpt->getPublishedCompetenceTree( $filterOptions );
 			// var_dump($jobs);
-		} catch ( SoapFault $e ) {
-			eazymatch_trow_error( 'Fout in SOAP request EazyMatch -> jobs' );
+		} catch ( Exception $e ) {
+			eazymatch_trow_error( 'Fout in API request EazyMatch -> jobs' );
 			die();
 		}
 
+
+		if(!empty($competenceList)){
 		foreach ( $competenceList as $cl ) {
 			foreach ( $cl['children'] as $cl2 ) {
-				if ( count( $cl2['children'] ) > 0 ) {
+				if ( !empty($cl2['children']) && count( $cl2['children'] ) > 0 ) {
 					echo '<div class="emol-tag-wrapper tag-group-' . $cl2['id'] . '"><h6 class="emol-tag-header">' . htmlentities( $cl2['name'] ) . '</h6>';
 					$i = 0;
 					foreach ( $cl2['children'] as $cl3 ) {
@@ -77,7 +79,7 @@ class emol_widget_job_tags extends emol_widget {
 				}
 			}
 		}
-
+        }
 		//echo $text;
 
 		echo '</div>';

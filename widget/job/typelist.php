@@ -69,14 +69,14 @@ class emol_widget_job_typelist extends emol_widget {
 			$wsJob = $api->get( 'job' );
 			$jobs  = $wsJob->siteSearch( $filterOptions, 0, $limit );
 			// var_dump($jobs);
-		} catch ( SoapFault $e ) {
-			eazymatch_trow_error( 'Fout in SOAP request EazyMatch -> jobs' );
+		} catch ( Exception $e ) {
+			eazymatch_trow_error( 'Fout in API request EazyMatch -> jobs' );
 			die();
 		}
 
 
 		//navigation
-		$total = count( $jobs );
+		$total = !empty($jobs) ? count( $jobs ) : 0;
 
 		//check if the description may be visbile
 		$descVisible  = get_option( 'emol_job_search_desc' );

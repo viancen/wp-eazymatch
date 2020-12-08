@@ -4,7 +4,7 @@ function emol_meta_description()
 {
 	global $post;
 	global $jobInfo;
-	if (strstr($post->post_content, '[eazymatch view="job"')) {
+	if (!is_null($post) && strstr($post->post_content, '[eazymatch view="job"')) {
 		if (empty($jobInfo)) {
 			$emol_api = eazymatch_connect();
 			$emol_job_id = (get_query_var('emol_job_id'));
@@ -29,7 +29,7 @@ function emol_page_title($title)
 {
 	global $post;
 	global $jobInfo;
-	if (stristr($post->post_content, '[eazymatch view="job"')) {
+	if (!is_null($post) && stristr($post->post_content, '[eazymatch view="job"')) {
 		if (empty($jobInfo)) {
 			$emol_api = eazymatch_connect();
 			$emol_job_id = (get_query_var('emol_job_id'));

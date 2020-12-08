@@ -94,7 +94,7 @@ class emol_widget_search extends emol_widget
 		}
 		$reset_rul = $setUrl;
 
-		if (count($competenceList) > 0) {
+		if (!empty($competenceList) && count($competenceList) > 0) {
 			if ($checkBoxSearch == 1) {
 				$lists = new emol_Level2Checkboxes($competenceList, $setUrl, 'search_competences_checkboxes');
 			} else {
@@ -169,7 +169,7 @@ class emol_widget_search extends emol_widget
                         </div>
                     </div>';
 
-			if (count($provinceList) > 0) {
+			if (!empty($provinceList) && count($provinceList) > 0) {
 				$currentProvince = emol_session::get('locationSearchProvince');
 
 				echo '<div class="emol-province-search">';

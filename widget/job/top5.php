@@ -67,7 +67,7 @@ class emol_widget_job_top5 extends WP_Widget {
 
 
 		//navigation
-		$total = count( $jobs );
+		$total = !empty($jobs) ? count( $jobs ) : 0;
 
 		//check if the description may be visbile
 		$descVisible  = get_option( 'emol_job_search_desc' );
