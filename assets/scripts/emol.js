@@ -256,7 +256,7 @@ var EazyWP = {
             showButtonPanel: false,
             changeYear: true,
             changeMonth: true,
-            yearRange: '1910:2020',
+            yearRange: '1910:2045',
             altField: $hidden,
             altFormat: 'yy-mm-dd'
         });
