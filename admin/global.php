@@ -96,7 +96,7 @@ function eazymatch_plugin_options() {
         <div align="right"><a href="https://www.eazymatch-online.nl" target="_new"><img
                         src="https://base.eazymatch.cloud/images/login-img/EazyMatch-vector.svg"/></a></div>
         <div id="emol-admin-table">
-            <table class="welcome-panel" style="width: 100%;">
+            <table class="emol-welcome-panel" style="width: 100%;">
                 <tr>
                     <td colspan="3" class="cTdh"><br>
                         <h2>Uw EazyMatch account</h2> Versie plugin :<strong>  <?php echo EMOL_VERSION ?></strong></td>

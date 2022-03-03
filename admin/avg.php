@@ -70,7 +70,7 @@ function eazymatch_plugin_avg() {
 
                 <h2><?php echo EMOL_ADMIN_SETTINGS . ' - ' . EMOL_ADMIN_FORM_AVG ?></h2>
 
-                <table class="welcome-panel" style="width: 100%;">
+                <table class="emol-welcome-panel" style="width: 100%;">
                     <colgroup>
                         <col style="width: 200px;"/>
                         <col style="width: 350px;"/>
