@@ -100,7 +100,7 @@ function eazymatch_plugin_manager() {
 			?>
             <form method="post">
                 <div class="emol-admin-table">
-                    <table class="welcome-panel" style="width: 100%;">
+                    <table class="emol-welcome-panel" style="width: 100%;">
                         <tr>
                             <td width="250"><label>Contactblok weergeven (vacature)?</label></td>
                             <td><select name="emol_view_manager_contact">
@@ -138,7 +138,7 @@ function eazymatch_plugin_manager() {
                         <input type="hidden" name="emol_manager_settings[<?php echo $user['id'] ?>][id]"
                                value="<?php echo $user['id'] ?>">
                         <div class="emol-admin-table">
-                            <table class="welcome-panel" style="width: 100%;">
+                            <table class="emol-welcome-panel" style="width: 100%;">
                                 <tr>
                                     <td width="250">User</td>
                                     <td width="350"><strong><?php echo $user['id'] ?>

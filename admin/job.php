@@ -241,7 +241,7 @@ function eazymatch_plugin_job() {
         <strong><?php echo get_option( 'emol_instance' ) ?></strong><br/>
 
         <h3>Shorttags</h3>
-        <table class="welcome-panel" style="width: 100%;">
+        <table class="emol-welcome-panel" style="width: 100%;">
             <thead>
             <tr>
                 <td><strong>Shortcode</strong></td>
@@ -269,7 +269,7 @@ function eazymatch_plugin_job() {
             <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
 
             <div id="emol-admin-table">
-                <table class="welcome-panel" style="width: 100%;">
+                <table class="emol-welcome-panel" style="width: 100%;">
                     <tr>
                         <td><?php _e( EMOL_ADMIN_JOBDISPLAY_URL, 'Emol-3.0-identifier' ); ?><Br/> <em>(dummy-url: url mag niet bestaan)</em></td>
                         <td><input type="text" name="emol_job_url"
@@ -301,7 +301,7 @@ function eazymatch_plugin_job() {
                     </tr>
                 </table>
 
-                <table class="welcome-panel"  style="width: 100%;">
+                <table class="emol-welcome-panel"  style="width: 100%;">
                     <tr>
                         <td><?php _e( EMOL_ADMIN_JOBDISPLAY_PAGE, 'Emol-3.0-identifier' ); ?> <Br>(<strong>Pagina met shortcode [eazymatch view="job"]</strong>)</td>
                         <td><?php
@@ -391,7 +391,7 @@ function eazymatch_plugin_job() {
 
                 </table>
 
-                <table class="welcome-panel" style="width: 100%;">
+                <table class="emol-welcome-panel" style="width: 100%;">
                     <tr>
                         <td><?php _e( EMOL_ADMIN_JOBSEARCH_LOGOS, 'Emol-3.0-identifier' ); ?> </td>
                         <td><?php echo $checkboxPicture; ?></td>

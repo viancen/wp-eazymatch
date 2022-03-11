@@ -184,7 +184,7 @@ function eazymatch_plugin_cv() {
             <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
 
             <div id="emol-admin-table">
-                <table class="welcome-panel" style="width: 100%;">
+                <table class="emol-welcome-panel" style="width: 100%;">
                     <tr>
                         <td colspan="3" class="cTdh"><br>
 

@@ -212,7 +212,7 @@ function eazymatch_plugin_sharing()
         <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
 
         <div id="emol-admin-table">
-            <table class="welcome-panel" style="width: 100%;">
+            <table class="emol-welcome-panel" style="width: 100%;">
                 <tr>
                     <td><br/> EazyMatch Social sharing</td>
                     <td><br/> <?php echo $checkboxSocialsharing ?></td>
@@ -363,7 +363,7 @@ function eazymatch_plugin_sharing()
                 </tr>
             </table>
             <br/ >
-            <table class="welcome-panel" style="width: 100%;">
+            <table class="emol-welcome-panel" style="width: 100%;">
                 <tr>
                     <td colspan="2" class="cTdh"><br>
 
