@@ -2,15 +2,10 @@
 
 class emol_jobfilter_factory {
 	public static function create( $filterName = 'default' ) {
-		switch ( $filterName ) {
-			case 'default':
-				return emol_jobfilter_factory::createDefault();
-				break;
-
-			default:
-				return new emol_jobfilter_instance();
-				break;
-		}
+        return match ($filterName) {
+            'default' => emol_jobfilter_factory::createDefault(),
+            default => new emol_jobfilter_instance(),
+        };
 	}
 
 	public static function createDefault() {
