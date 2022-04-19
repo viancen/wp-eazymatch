@@ -48,7 +48,6 @@ class emol_shortcodehandler {
 				// define shortcode classname
 				$shortcodeClass = 'emol_shortcode_' . $view;
 
-
 				// create new shortcode object
 				$shortCodeObj = new $shortcodeClass();
 
