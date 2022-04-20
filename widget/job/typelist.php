@@ -63,7 +63,10 @@ class emol_widget_job_typelist extends emol_widget {
 		echo '<div class="emol_widget" id="emol_typejobs_widget">';
 
 		try {
-			$filterOptions                = emol_jobfilter_factory::createDefault()->getFilterArray();
+            $filterFactory = new emol_jobfilter_factory();
+            $searchDefault = $filterFactory::createDefault();
+            $filterOptions = $searchDefault->getFilterArray();
+
 			$filterOptions['valuestatus'] = array( $filter );
 
 			$wsJob = $api->get( 'job' );

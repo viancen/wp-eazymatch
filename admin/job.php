@@ -61,7 +61,8 @@ function eazymatch_plugin_job() {
 
 
 		// get the default filter options
-		$filter = emol_jobfilter_factory::createDefault();
+		$filterFactory = new emol_jobfilter_factory();
+        $filter = $filterFactory::createDefault();
 
 		// See if the user has posted us some information
 		// If they did, this hidden field will be set to 'Y'

@@ -49,8 +49,11 @@ class emol_widget_job_tags extends emol_widget {
 		}
 
 		echo '<div class="emol_widget" id="emol_tag_widget">';
+//first try and get all published jobid's
+        $filterFactory = new emol_jobfilter_factory();
+        $searchDefault = $filterFactory::createDefault();
+        $filterOptions = $searchDefault->getFilterArray();
 
-		$filterOptions = emol_jobfilter_factory::createDefault()->getFilterArray();
 
 		try {
 			$cpt            = $api->get( 'job' );

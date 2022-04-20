@@ -144,7 +144,9 @@ class emol_page_job_rss extends emol_pagedummy {
         </url>';
 
 		//first try and get all published jobid's
-		$search = emol_jobfilter_factory::createDefault()->getFilterArray();
+        $filterFactory = new emol_jobfilter_factory();
+        $searchDefault = $filterFactory::createDefault();
+        $search = $searchDefault->getFilterArray();
 
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
@@ -192,7 +194,10 @@ class emol_page_job_rss extends emol_pagedummy {
 	function atom() {
 
 
-		$search = emol_jobfilter_factory::createDefault()->getFilterArray();
+        //first try and get all published jobid's
+        $filterFactory = new emol_jobfilter_factory();
+        $searchDefault = $filterFactory::createDefault();
+        $search = $searchDefault->getFilterArray();
 
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
@@ -264,7 +269,10 @@ class emol_page_job_rss extends emol_pagedummy {
 		$genDate = date( "r" );
 
 		//first try and get all published jobid's
-		$search = emol_jobfilter_factory::createDefault()->getFilterArray();
+        //first try and get all published jobid's
+        $filterFactory = new emol_jobfilter_factory();
+        $searchDefault = $filterFactory::createDefault();
+        $search = $searchDefault->getFilterArray();
 
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
@@ -321,7 +329,10 @@ class emol_page_job_rss extends emol_pagedummy {
 		set_time_limit( 500 );
 
 		//first try and get all published jobid's
-		$search = emol_jobfilter_factory::createDefault()->getFilterArray();
+        //first try and get all published jobid's
+        $filterFactory = new emol_jobfilter_factory();
+        $searchDefault = $filterFactory::createDefault();
+        $search = $searchDefault->getFilterArray();
 
 		try {
 			$wsJob = $this->emolApi->get( 'job' );

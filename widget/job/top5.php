@@ -55,9 +55,12 @@ class emol_widget_job_top5 extends WP_Widget {
 		echo '<div class="emol_widget" id="emol_top5jobs_widget">';
 
 		try {
-			$filterOptions = emol_jobfilter_factory::createDefault()->getFilterArray();
+            $filterFactory = new emol_jobfilter_factory();
+            $searchDefault = $filterFactory::createDefault();
+            $filterOptions = $searchDefault->getFilterArray();
 
-			$wsJob = $api->get( 'job' );
+
+            $wsJob = $api->get( 'job' );
 			$jobs  = $wsJob->getPublished( $limit, $filterOptions );
 			// var_dump($jobs);
 		} catch ( SoapFault $e ) {

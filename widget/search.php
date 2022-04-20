@@ -53,8 +53,10 @@ class emol_widget_search extends emol_widget
 
 		$showProvince = $setUrl = get_option('emol_cv_search_url');
 
-		// type get filters for jobs/applicants
-		$filters = emol_jobfilter_factory::createDefault()->getFilterArray();
+        $filterFactory = new emol_jobfilter_factory();
+        $searchDefault = $filterFactory::createDefault();
+        $filters = $searchDefault->getFilterArray();
+
 
 		// make sure EazyMatch connection is initialized
 		eazymatch_connect();

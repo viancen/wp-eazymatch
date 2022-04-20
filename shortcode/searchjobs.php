@@ -46,7 +46,10 @@ class emol_shortcode_searchjobs {
 			$text = $title;
 
 			// type get filters for jobs/applicants
-			$filters = emol_jobfilter_factory::createDefault()->getFilterArray();
+            //first try and get all published jobid's
+            $filterFactory = new emol_jobfilter_factory();
+            $searchDefault = $filterFactory::createDefault();
+            $filters = $searchDefault->getFilterArray();
 
 			$trunk = new EazyTrunk();
 
