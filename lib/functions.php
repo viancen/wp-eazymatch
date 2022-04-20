@@ -699,9 +699,10 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
     }
 
     // forced filters
-
     //status
-    $filterOptions = emol_jobfilter_factory::createDefault()->getFilterArray();
+    $baseFilterOptions = new emol_jobfilter_factory();
+    $baseDefault = $baseFilterOptions::createDefault();
+    $filterOptions = $baseDefault->getFilterArray();
 
 
     foreach ($filterOptions as $filterKey => $filterValue) {
