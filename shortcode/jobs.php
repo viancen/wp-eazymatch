@@ -12,7 +12,7 @@ class emol_shortcode_jobs
 
     public $competences;
 
-    function getContent()
+    function getContent($atts = [])
     {
 
         global $emol_side;
@@ -26,7 +26,9 @@ class emol_shortcode_jobs
             $jobs = array();
 
             $limit = 5;
-            if (is_numeric(get_option('emol_job_amount_pp')) && get_option('emol_job_amount_pp') > 0) {
+            if (isset($atts['limit'])) {
+                $limit = $atts['limit'];
+            } elseif (is_numeric(get_option('emol_job_amount_pp')) && get_option('emol_job_amount_pp') > 0) {
                 $limit = get_option('emol_job_amount_pp');
             }
 
