@@ -44,6 +44,10 @@ class emol_require
 
     static public function jsSocials()
     {
+        if (self::hasInclude('js-socials')) {
+            return;
+        }
+
         if (!function_exists('emol_load_jsSocials')) {
             function emol_load_jsSocials()
             {
@@ -63,10 +67,16 @@ class emol_require
             }
         }
         add_action('wp_enqueue_scripts', 'emol_load_cssSocials');
+
+        self::registerInclude('js-socials');
     }
 
     static public function font_awesome()
     {
+        if (self::hasInclude('font-awesome')) {
+            return;
+        }
+
         if (!function_exists('emol_load_fa')) {
             function emol_load_fa()
             {
@@ -76,6 +86,8 @@ class emol_require
         }
 
         add_action('wp_enqueue_scripts', 'emol_load_fa');
+
+        self::registerInclude('font-awesome');
     }
 
     static public function jquery()

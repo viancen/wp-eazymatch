@@ -59,6 +59,13 @@ abstract class emol_connectproxy_rest
 	private $tryCount = 0;
 
 	/**
+	 * Shared cURL handle so API services can reuse DNS, TCP and TLS state.
+	 *
+	 * @var resource|CurlHandle|null
+	 */
+	private static $curlHandle = null;
+
+	/**
 	 * contructe the connection to the eazycore
 	 *
 	 * @param string $serviceUrl url of the eazycore
@@ -139,11 +146,8 @@ abstract class emol_connectproxy_rest
 		$this->format = 'json';
 		$url = $this->serviceUrl . '/v1/' . $this->serviceName . '/' . $name . '.' . $this->format;
 
-		// get requests and requests to the tool controller should not take llong
-		$shortRequest = substr($name, 0, 3) == 'get' || $this->serviceName == 'tool';
-
-		//open connection
-		$ch = curl_init();
+		// Reuse one handle across API service proxies to avoid reconnecting for every call.
+		$ch = $this->getCurlHandle();
 
 		// configure curl connection for api call
 		curl_setopt_array($ch, array(
@@ -169,10 +173,11 @@ abstract class emol_connectproxy_rest
 		$apiResponse = curl_exec($ch);
 
 		// check if connection error occured
-		if (curl_errno($ch)) {
+		$curlError = curl_errno($ch);
+		if ($curlError) {
 
 			//delete_option('emol_apihash');
-			echo 'Error connecting to eazymatch with code curl code: "' . curl_errno($ch) . '".';
+			echo 'Error connecting to eazymatch with code curl code: "' . $curlError . '".';
 
 
 			die();
@@ -232,6 +237,19 @@ abstract class emol_connectproxy_rest
 			//throw new Exception();
 
 		}
+	}
+
+	/**
+	 * Return the cURL handle used by this service proxy.
+	 *
+	 * @return resource|CurlHandle
+	 */
+	private function getCurlHandle() {
+		if ( null === self::$curlHandle ) {
+			self::$curlHandle = curl_init();
+		}
+
+		return self::$curlHandle;
 	}
 
 	/**

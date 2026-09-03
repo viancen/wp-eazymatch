@@ -116,7 +116,6 @@ Class emol_connectManager {
 Class emol_connect {
 	private $apiKey = '';
 	public $instanceName = '';
-	private $serviceNames = array();
 	private $services = array();
 
 	/**
@@ -135,7 +134,6 @@ Class emol_connect {
 	public function &__get( $serviceName ) {
 		if ( ! isset( $this->services[ $serviceName ] ) ) {
 			$this->services[ $serviceName ] = new emol_connectproxy_json( $this->instanceName, $this->apiKey, $serviceName );
-			$this->serviceNames[] = $serviceName;
 		}
 
 		return $this->services[ $serviceName ];
@@ -143,10 +141,6 @@ Class emol_connect {
 
 	public function __set( $serviceName, $service ) {
 		$this->services[ $serviceName ] = $service;
-
-		if ( ! in_array( $serviceName, $this->serviceNames, true ) ) {
-			$this->serviceNames[] = $serviceName;
-		}
 	}
 
 	public function __isset( $serviceName ) {
@@ -155,22 +149,20 @@ Class emol_connect {
 
 	public function __unset( $serviceName ) {
 		unset( $this->services[ $serviceName ] );
-		$this->serviceNames = array_values( array_diff( $this->serviceNames, array( $serviceName ) ) );
 	}
 
 	public function get( $serviceName ) {
 		if ( isset( $this->services[ $serviceName ] ) ) {
 			return $this->services[ $serviceName ];
-		} else {
-			return $this->__get( $serviceName );
 		}
+
+		return $this->__get( $serviceName );
 	}
 
 	public function setKey( $key ) {
 		$this->apiKey = $key;
 
-		foreach ( $this->serviceNames as $serviceName ) {
-			$service = $this->get( $serviceName );
+		foreach ( $this->services as $service ) {
 			$service->setKey( $key );
 		}
 	}
@@ -193,15 +185,17 @@ Class emol_trunk {
 	}
 
 	public function &request( $class, $method, $arguments = array() ) {
+		$responseIndex = count( $this->response );
+
 		$this->calls[] = array(
 			'class'     => $class,
 			'method'    => $method,
 			'arguments' => $arguments
 		);
 
-		$this->response[] = null;
+		$this->response[ $responseIndex ] = null;
 
-		return $this->response[ count( $this->response ) - 1 ];
+		return $this->response[ $responseIndex ];
 	}
 
 	public function execute() {
