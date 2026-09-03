@@ -547,7 +547,7 @@ if (!emol_session::isValidId('applicant_id')) {
 			$asterix = ' <strong class="emol-required-asterix">*</strong>';
 		}
 
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 		$companylist = &$trunk->request('licence', 'allCompanys');
 		$trunk->execute();
 
@@ -571,9 +571,9 @@ if (!emol_session::isValidId('applicant_id')) {
 	// Competences
 	$competenceElements = get_option('emol_frm_app_competence', array());
 
-	if (count($competenceElements) > 0) {
+	if (is_array($competenceElements) && count($competenceElements) > 0) {
 		// get all competence childs via trunk request
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		foreach ($competenceElements as &$competence) {
 			$competence['list'] = &$trunk->request('competence', 'getChildren', array($competence['competence_id']));

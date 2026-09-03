@@ -17,26 +17,26 @@ class emol_competences {
 		foreach ( $competences as $competence ) {
 			$level = $competence['level'];
 			$name  = $competence['name'];
-			if ( ! in_array( trim( $name ), $emol_job_competence_exclude ) ) {
-				$children = isset( $competence['children'] ) ? $competence['children'] : array();
-
-				switch ( $level ) {
-					case 0:
-						$start = '<div class="competence-level-0">';
-						$end   = '</div>';
-						break;
-					case 1:
-						$start = '<div class="competence-level-1"><h4>' . $name . '</h4>';
-						$end   = '</div>';
-
-						break;
-					default:
-						$start = '<li class="competence-level-' . $level . '">' . $name;
-						$end   = '</li>';
-						break;
-				}
+			if ( in_array( trim( $name ), $emol_job_competence_exclude ) ) {
+				continue;
 			}
 
+			$children = isset( $competence['children'] ) ? $competence['children'] : array();
+
+			switch ( $level ) {
+				case 0:
+					$start = '<div class="competence-level-0">';
+					$end   = '</div>';
+					break;
+				case 1:
+					$start = '<div class="competence-level-1"><h4>' . $name . '</h4>';
+					$end   = '</div>';
+					break;
+				default:
+					$start = '<li class="competence-level-' . $level . '">' . $name;
+					$end   = '</li>';
+					break;
+			}
 
 			$children = self::generateTree( $children );
 

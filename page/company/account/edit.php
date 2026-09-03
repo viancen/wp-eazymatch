@@ -40,6 +40,7 @@ class emol_page_company_account_edit extends emol_pagedummy {
 	 */
 	var $emolApi;
 	var $ws;
+	var $wsApp;
 	var $user;
 
 	var $msag;
@@ -182,8 +183,7 @@ class emol_page_company_account_edit extends emol_pagedummy {
 	 * when someone has hit the button to login
 	 */
 	function doLogin() {
-
-		session_start();
+		emol_boot_session();
 
 
 		$wsLogin  = $this->emolApi->get( 'session' );

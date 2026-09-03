@@ -25,7 +25,7 @@ abstract class emol_form_field {
 	}
 
 	public function getSafeValue() {
-		return htmlspecialchars( $this->getValue() );
+		return htmlspecialchars( $this->getValue(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' );
 	}
 
 	public function setValue( $value ) {

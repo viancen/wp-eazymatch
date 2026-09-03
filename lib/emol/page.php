@@ -134,7 +134,11 @@ class emol_page {
 		return $viewManager->load( $viewName, $data );
 	}
 
-	//protected function preparePost();
+	protected function preparePost() {
+		return true;
+	}
 
-	//public function getContent();
+	public function getContent() {
+		return '';
+	}
 }

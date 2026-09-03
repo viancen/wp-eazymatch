@@ -33,6 +33,7 @@ class emol_widget_cv_typelist extends emol_widget {
 
 		//get filter
 		$filter = 0;
+		$regioVisible = 0;
 		if ( isset( $instance['filter'] ) ) {
 			$filter = $instance['filter'];
 		}
@@ -132,6 +133,7 @@ class emol_widget_cv_typelist extends emol_widget {
 
 	/** @see WP_Widget::form */
 	function form( $instance ) {
+		$list = '';
 		if ( isset( $instance['title'] ) ) {
 			$title = esc_attr( $instance['title'] );
 		} else {

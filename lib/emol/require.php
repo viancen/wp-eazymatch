@@ -224,6 +224,8 @@ class emol_require
     {
         self::basic();
         self::jqueryUi();
+
+		return true;
     }
 
 }

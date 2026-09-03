@@ -69,14 +69,18 @@ class emol_CompanyMutation {
 	 * @param mixed $gender
 	 */
 	function setPerson( $personId = null, $firstname = null, $middlename = null, $lastname = null, $birthdate = null, $username = null, $password = null, $gender = null ) {
+		$birthdate = null !== $birthdate && '' !== $birthdate
+			? date( 'Ymd', strtotime( $birthdate ) )
+			: null;
+
 		$this->Person = array(
 			'id'         => $personId,
 			'firstname'  => $firstname,
 			'lastname'   => $lastname,
 			'middlename' => $middlename,
-			'birthdate'  => date( 'Ymd', strtotime( $birthdate ) ),
+			'birthdate'  => $birthdate,
 			'username'   => $username,
-			'password'   => str_replace( '**********', '', $password ),
+			'password'   => str_replace( '**********', '', (string) $password ),
 			'gender'     => $gender,
 		);
 
@@ -281,4 +285,3 @@ class emol_CompanyMutation {
 
 
 }
-

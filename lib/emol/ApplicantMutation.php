@@ -91,7 +91,6 @@ class emol_ApplicantMutation {
 			'availableto'          => $availableto,
 			'title'                => $title,
 			'healthcarereference'  => $healthcarereference,
-			'maritalstatus_id'     => $maritalstatus_id,
 			'linkedinrequesttoken' => $linkedinrequesttoken,
 			'contactvia'           => $contactvia,
 			'maritalstatus_id'     => $maritalstatus_id,
@@ -142,7 +141,7 @@ class emol_ApplicantMutation {
 			'birthdate'         => $birthdate,
 			'username'          => $username,
 			'ssn'               => $ssn,
-			'password'          => str_replace( '**********', '', $password ),
+			'password'          => str_replace( '**********', '', (string) $password ),
 			'gender'            => $gender,
 		);
 
@@ -491,4 +490,3 @@ class emol_ApplicantMutation {
 
 
 }
-

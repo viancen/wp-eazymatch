@@ -129,7 +129,6 @@ class emol_captcha {
 
 		// save generated image
 		imagegif( $im, $tempName );
-		imagedestroy( $im );
 
 		// convert image to DATA URI and delete temp file
 		$imgbinary = fread( fopen( $tempName, "r" ), filesize( $tempName ) );

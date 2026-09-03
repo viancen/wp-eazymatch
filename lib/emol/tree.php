@@ -22,7 +22,7 @@ class emol_tree {
 	}
 
 	public function getRootId() {
-		return (int) $rootId;
+		return (int) $this->rootId;
 	}
 
 	protected function findSubTree( $treeItems, $rootId ) {

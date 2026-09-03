@@ -55,7 +55,7 @@ class Markdown_Parser {
 	var $predef_titles = array();
 
 
-	function Markdown_Parser() {
+	function __construct() {
 		#
 		# Constructor function. Initialize appropriate member variables.
 		#
@@ -1508,9 +1508,13 @@ class Markdown_Parser {
 		if ( function_exists( $this->utf8_strlen ) ) {
 			return;
 		}
-		$this->utf8_strlen = create_function( '$text', 'return preg_match_all(
-			"/[\\\\x00-\\\\xBF]|[\\\\xC0-\\\\xFF][\\\\x80-\\\\xBF]*/", 
-			$text, $m);' );
+		$this->utf8_strlen = function ( $text ) {
+			return preg_match_all(
+				'/[\\x00-\\xBF]|[\\xC0-\\xFF][\\x80-\\xBF]*/',
+				$text,
+				$matches
+			);
+		};
 	}
 
 

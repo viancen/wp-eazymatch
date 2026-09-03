@@ -640,7 +640,7 @@ function getTime()
 {
     $a = explode(' ', microtime());
 
-    return (double)$a[0] + $a[1];
+    return (float)$a[0] + $a[1];
 }
 
 function emol_get_job_url($jobdata)
@@ -900,20 +900,40 @@ function emol_get_google_jobs($job)
 function emol_get($name = null)
 {
     if (!empty($name)) {
-        return filter_input(INPUT_GET, $name, FILTER_SANITIZE_STRING);
+        if (!isset($_GET[$name]) || is_array($_GET[$name])) {
+            return null;
+        }
+
+        return sanitize_text_field(wp_unslash($_GET[$name]));
     } else {
         $return = [];
         $ks = array_keys($_GET);
         foreach ($ks as $key) {
-            $return[] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRING);
+            $return[] = is_array($_GET[$key])
+                ? false
+                : sanitize_text_field(wp_unslash($_GET[$key]));
         }
         return $return;
     }
 
 }
 
+/**
+ * Convert legacy ISO-8859-1 feed values to UTF-8.
+ *
+ * This keeps the output of the former utf8_encode() calls without relying on
+ * that deprecated PHP function.
+ *
+ * @param mixed $value Feed value.
+ * @return string
+ */
+function emol_latin1_to_utf8($value)
+{
+    return mb_convert_encoding((string)$value, 'UTF-8', 'ISO-8859-1');
+}
 
-function emol_get_apply_form($jobData)
+
+function emol_get_apply_form($jobData, $defaultData = array())
 {
 
     $api = eazymatch_connect();
@@ -1258,7 +1278,7 @@ function emol_custom_title($title)
         } else {
             $emol_api = eazymatch_connect();
 
-            $trunk = new EazyTrunk();
+            $trunk = new emol_trunk();
 
             // create a response array and add all the requests to the trunk
             $emol_job['job'] = &$trunk->request('job', 'getFullPublished', array($emol_job_id));
@@ -1330,6 +1350,45 @@ function emol_post_exists($keyName)
     global $emol_post_obj;
 
     return $emol_post_obj->exists($keyName);
+}
+
+/**
+ * Validate a Google reCAPTCHA response through the WordPress HTTP API.
+ *
+ * @param string $response Client response token.
+ * @return bool
+ */
+function emol_verify_recaptcha($response)
+{
+    $secret = get_option('emol_frm_google_captcha_secret');
+    if (empty($secret) || empty($response)) {
+        return false;
+    }
+
+    $body = array(
+        'secret' => $secret,
+        'response' => $response,
+    );
+
+    if (!empty($_SERVER['REMOTE_ADDR'])) {
+        $body['remoteip'] = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
+    }
+
+    $request = wp_remote_post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        array(
+            'timeout' => 10,
+            'body' => $body,
+        )
+    );
+
+    if (is_wp_error($request) || 200 !== wp_remote_retrieve_response_code($request)) {
+        return false;
+    }
+
+    $result = json_decode(wp_remote_retrieve_body($request), true);
+
+    return is_array($result) && !empty($result['success']);
 }
 
 function emol_post_set($keyName, $value)

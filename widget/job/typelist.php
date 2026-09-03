@@ -138,6 +138,7 @@ class emol_widget_job_typelist extends emol_widget {
 
 	/** @see WP_Widget::form */
 	function form( $instance ) {
+		$list = '';
 		if ( isset( $instance['title'] ) ) {
 			$title = esc_attr( $instance['title'] );
 		} else {

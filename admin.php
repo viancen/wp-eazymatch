@@ -14,11 +14,6 @@ $MyUpdateChecker = new emol_updater( 'https://wordpress.eazymatch.cloud/info.jso
 );
 */
 
-//when activated do install function to create nescesserry settings
-include( EMOL_DIR . '/install.php' );
-register_activation_hook( __FILE__, 'eazymatch_install' );
-
-
 add_action( 'admin_menu', 'eazymatch_admin_menu' );
 
 /**

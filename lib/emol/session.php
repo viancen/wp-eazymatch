@@ -4,7 +4,7 @@ class emol_session {
 	/**
 	 * name of the session scoping
 	 *
-	 * @var sting
+	 * @var string
 	 */
 	public static $scope = 'emol';
 
@@ -21,9 +21,9 @@ class emol_session {
 	 * make sure session is available
 	 */
 	static public function checkSession() {
-		//start session if not enabled
-		//if (!session_id())
-		//   session_start();
+		if ( function_exists( 'emol_boot_session' ) ) {
+			emol_boot_session();
+		}
 
 		// check scope
 		emol_session::checkScope();
@@ -140,9 +140,8 @@ class emol_session {
 	 * make sure scope exists
 	 */
 	static public function terminate() {
-		//start session if not enabled
-		if ( ! session_id() ) {
-			session_start();
+		if ( function_exists( 'emol_boot_session' ) ) {
+			emol_boot_session();
 		}
 
 		// create empty sessions tring

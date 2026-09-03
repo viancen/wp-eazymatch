@@ -61,7 +61,7 @@ class emol_widget_search extends emol_widget
 		// make sure EazyMatch connection is initialized
 		eazymatch_connect();
 
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		$provinceList = array();
 

@@ -34,6 +34,7 @@ class emol_markdown {
 		foreach ( $lines as $line ) {
 			if ( strlen( $line ) > 3 ) {
 				$isList     = false;
+				$listBeginning = '';
 				$trimedLine = trim( $line );
 
 				foreach ( self::getListBeginning() as $listBeginning ) {

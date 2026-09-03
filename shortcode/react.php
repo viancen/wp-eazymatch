@@ -11,13 +11,27 @@ class emol_shortcode_react
 {
 
     var $captcha;
+    var $emolApi;
+    var $applicantId = 0;
+    var $page_slug = '';
 
     /**
      * determines what will happen
      *
      */
-    function getContent()
+    function getContent($atts = array())
     {
+
+        $this->emolApi = eazymatch_connect();
+        $this->page_slug = isset($_SERVER['REQUEST_URI'])
+            ? ltrim((string)$_SERVER['REQUEST_URI'], '/')
+            : '';
+
+        $applicantId = emol_post('applicantId', '');
+        if ($applicantId === '' && isset($atts['applicant_id'])) {
+            $applicantId = $atts['applicant_id'];
+        }
+        $this->applicantId = is_numeric($applicantId) ? (int)$applicantId : 0;
 
         if (isset($_POST['birthdate-year']) && isset($_POST['birthdate-month']) && isset($_POST['birthdate-day'])) {
             //fetch birthdate parts
@@ -37,27 +51,7 @@ class emol_shortcode_react
 
             if (emol_post_exists('g-recaptcha-response')) {
 
-                $data_google = array(
-                    'secret' => get_option('emol_frm_google_captcha_secret'),
-                    'response' => emol_post('g-recaptcha-response'),
-                    'remoteip' => $_SERVER['REMOTE_ADDR']
-                );
-                $options = array(
-                    'http' => array(
-                        'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                        'method' => 'POST',
-                        'content' => http_build_query($data_google),
-                    ),
-                    "ssl" => array(
-                        "verify_peer" => false,
-                        "verify_peer_name" => false,
-                    )
-                );
-                $context = stream_context_create($options);
-                $result = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
-
-                $result = json_decode($result, true);
-                if ($result['success'] == true) {
+                if (emol_verify_recaptcha(emol_post('g-recaptcha-response'))) {
                     $secure = true;
                 }
             }
@@ -322,4 +316,3 @@ class emol_shortcode_react
         return $reactHtml;
     }
 }
-

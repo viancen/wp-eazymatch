@@ -32,7 +32,7 @@ class emol_shortcode_job
                 $emol_job_id = explode('-', $emol_job_id);
                 $emol_job_id = array_pop($emol_job_id);
 
-                $trunk = new EazyTrunk();
+                $trunk = new emol_trunk();
 
                 // create a response array and add all the requests to the trunk
                 $emol_job['job'] = &$trunk->request('job', 'getFullPublished', array($emol_job_id));
@@ -232,4 +232,3 @@ class emol_shortcode_job
     }
 
 }
-

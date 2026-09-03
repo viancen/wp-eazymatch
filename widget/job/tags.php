@@ -69,14 +69,14 @@ class emol_widget_job_tags extends emol_widget {
 		foreach ( $competenceList as $cl ) {
 			foreach ( $cl['children'] as $cl2 ) {
 				if ( !empty($cl2['children']) && count( $cl2['children'] ) > 0 ) {
-					echo '<div class="emol-tag-wrapper tag-group-' . $cl2['id'] . '"><h6 class="emol-tag-header">' . htmlentities( $cl2['name'] ) . '</h6>';
+					echo '<div class="emol-tag-wrapper tag-group-' . $cl2['id'] . '"><h6 class="emol-tag-header">' . htmlentities( $cl2['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . '</h6>';
 					$i = 0;
 					foreach ( $cl2['children'] as $cl3 ) {
 						if ( $i >= $limit ) {
 							continue;
 						}
 						$i ++;
-						echo '<a href="' . get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . '/competence,' . $cl3['id'] . $trailingData . '" class="emol-tagcloud-' . rand( 1, 6 ) . '">' . $pretext . ' ' . htmlentities( $cl3['name'] ) . '</a> ';
+						echo '<a href="' . get_bloginfo( 'wpurl' ) . '/' . get_option( 'emol_job_search_url' ) . '/competence,' . $cl3['id'] . $trailingData . '" class="emol-tagcloud-' . rand( 1, 6 ) . '">' . $pretext . ' ' . htmlentities( $cl3['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . '</a> ';
 					}
 					echo "</div>";
 				}

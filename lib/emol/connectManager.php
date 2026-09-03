@@ -101,7 +101,7 @@ Class emol_connectManager {
 
 	// functie om singleton af te sluiten, let op, alle gekopieerde instancies moeten ook afgesloten worden
 	public function destroy() {
-		self::$instance = null;
+		self::$instanceObj = null;
 	}
 }
 
@@ -117,6 +117,7 @@ Class emol_connect {
 	private $apiKey = '';
 	public $instanceName = '';
 	private $serviceNames = array();
+	private $services = array();
 
 	/**
 	 * contructe the connection to the eazycore
@@ -132,20 +133,34 @@ Class emol_connect {
 	 * Magic function to autocreate class objects for soap services
 	 */
 	public function &__get( $serviceName ) {
-		// generate a new emol_connectProxy to provide access to the Core controller
-		$this->{$serviceName} = new emol_connectproxy_json( $this->instanceName, $this->apiKey, $serviceName );
-
-		if ( ! in_array( $serviceName, $this->serviceNames ) ) {
+		if ( ! isset( $this->services[ $serviceName ] ) ) {
+			$this->services[ $serviceName ] = new emol_connectproxy_json( $this->instanceName, $this->apiKey, $serviceName );
 			$this->serviceNames[] = $serviceName;
 		}
 
-		// return the object
-		return $this->{$serviceName};
+		return $this->services[ $serviceName ];
+	}
+
+	public function __set( $serviceName, $service ) {
+		$this->services[ $serviceName ] = $service;
+
+		if ( ! in_array( $serviceName, $this->serviceNames, true ) ) {
+			$this->serviceNames[] = $serviceName;
+		}
+	}
+
+	public function __isset( $serviceName ) {
+		return isset( $this->services[ $serviceName ] );
+	}
+
+	public function __unset( $serviceName ) {
+		unset( $this->services[ $serviceName ] );
+		$this->serviceNames = array_values( array_diff( $this->serviceNames, array( $serviceName ) ) );
 	}
 
 	public function get( $serviceName ) {
-		if ( isset( $this->{$serviceName} ) ) {
-			return $this->{$serviceName};
+		if ( isset( $this->services[ $serviceName ] ) ) {
+			return $this->services[ $serviceName ];
 		} else {
 			return $this->__get( $serviceName );
 		}

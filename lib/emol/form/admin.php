@@ -87,7 +87,7 @@ class emol_form_admin {
 				}
 
 				$formInstance->setFieldConfig( isset( $_POST['fieldconfig'] ) ? $_POST['fieldconfig'] : array() );
-				$formInstance->setLabel( htmlspecialchars( $_POST['label'] ) );
+				$formInstance->setLabel( htmlspecialchars( $_POST['label'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) );
 				$formManager->persistInstanceConfig( $formInstance );
 				$instanceId = $formManager->findInstanceId( $formInstance );
 

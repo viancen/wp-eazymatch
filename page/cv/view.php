@@ -25,7 +25,7 @@ class emol_page_cv_view extends emol_page {
 
 		//fetch the cv
 		eazymatch_connect();
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		// create a response array and add all the requests to the trunk
 		$this->cv            = &$trunk->request( 'applicant', 'getPublishedSummary', array( $cvId ) );

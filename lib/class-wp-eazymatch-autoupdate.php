@@ -2,12 +2,12 @@
 
 class WP_EazyMatch_Updater {
 
-	private $slug; // plugin slug
-	private $pluginData; // plugin data
+	private $slug = ''; // plugin basename
+	private $pluginData = array(); // plugin data
 	private $username; // GitHub username
 	private $repo; // GitHub repo name
 	private $pluginFile; // __FILE__ of our plugin
-	private $githubAPIResult; // holds data from GitHub
+	private $githubAPIResult = null; // holds data from GitHub
 	private $accessToken; // GitHub private repo token
 
 	//__C
@@ -35,50 +35,61 @@ class WP_EazyMatch_Updater {
 
 	// Get information regarding our plugin from GitHub
 	private function EMOL_getRepoReleaseInfo() {
-		// code here
-		// Only do this once
-
-		if ( ! empty( $this->githubAPIResult ) ) {
-			return;
+		if ( null !== $this->githubAPIResult ) {
+			return is_object( $this->githubAPIResult );
 		}
 
-		// Query the GitHub API
 		$url = "https://api.github.com/repos/{$this->username}/{$this->repo}/releases";
+		$args = array(
+			'timeout' => 10,
+			'headers' => array(
+				'Accept' => 'application/vnd.github+json',
+			),
+		);
 
-		// We need the access token for private repos
 		if ( ! empty( $this->accessToken ) ) {
-			$url = add_query_arg( array( "access_token" => $this->accessToken ), $url );
+			$args['headers']['Authorization'] = 'Bearer ' . $this->accessToken;
 		}
 
-		// Get the results
-		$this->githubAPIResult = wp_remote_retrieve_body( wp_remote_get( $url ) );
-		if ( ! empty( $this->githubAPIResult ) ) {
-			$this->githubAPIResult = @json_decode( $this->githubAPIResult );
+		$request = wp_remote_get( $url, $args );
+		if ( is_wp_error( $request ) || 200 !== wp_remote_retrieve_response_code( $request ) ) {
+			$this->githubAPIResult = false;
+			return false;
 		}
 
-		// Use only the latest release
-		if ( is_array( $this->githubAPIResult ) ) {
-			$this->githubAPIResult = $this->githubAPIResult[0];
+		$releases = json_decode( wp_remote_retrieve_body( $request ) );
+		if ( ! is_array( $releases ) || empty( $releases[0] ) || ! is_object( $releases[0] ) ) {
+			$this->githubAPIResult = false;
+			return false;
 		}
 
+		$this->githubAPIResult = $releases[0];
+		return true;
 	}
 
 	// Push in plugin version information to get the update notification
 	public function EMOL_setTransitent( $transient ) {
 		// code here
 		// If we have checked the plugin data before, don't re-check
-		if ( empty( $transient->checked ) ) {
+		if ( ! is_object( $transient ) || empty( $transient->checked ) || ! is_array( $transient->checked ) ) {
 			return $transient;
 		}
 		// Get plugin & GitHub release information
 		$this->EMOL_initPluginData();
-		$this->EMOL_getRepoReleaseInfo();
+		if ( ! $this->EMOL_getRepoReleaseInfo() || ! isset( $transient->checked[ $this->slug ] ) ) {
+			return $transient;
+		}
 
 		// Check the versions if we need to do an update
-		$doUpdate = version_compare( $this->githubAPIResult->tag_name, $transient->checked[ $this->slug ] );
+		$doUpdate = isset( $this->githubAPIResult->tag_name )
+			&& version_compare( $this->githubAPIResult->tag_name, $transient->checked[ $this->slug ], '>' );
 
 		// Update the transient to include our updated plugin data
-		if ( $doUpdate == 1 ) {
+		if ( $doUpdate ) {
+			if ( empty( $this->githubAPIResult->zipball_url ) ) {
+				return $transient;
+			}
+
 			$package = $this->githubAPIResult->zipball_url;
 
 			// Include the access token for private GitHub repos
@@ -88,9 +99,10 @@ class WP_EazyMatch_Updater {
 
 			$obj                                = new stdClass();
 
-			$obj->slug                          = $this->slug;
+			$obj->slug                          = $this->EMOL_getPluginSlug();
+			$obj->plugin                        = $this->slug;
 			$obj->new_version                   = $this->githubAPIResult->tag_name;
-			$obj->url                           = $this->pluginData["PluginURI"];
+			$obj->url                           = isset( $this->pluginData['PluginURI'] ) ? $this->pluginData['PluginURI'] : '';
 			$obj->package                       = $package;
 			$transient->response[ $this->slug ] = $obj;
 		}
@@ -100,25 +112,30 @@ class WP_EazyMatch_Updater {
 
 	// Push in plugin version information to display in the details lightbox
 	public function EMOL_setPluginInfo( $false, $action, $response ) {
-		// code ehre
-		// Get plugin & GitHub release information
-		$this->EMOL_initPluginData();
-		$this->EMOL_getRepoReleaseInfo();
-		// If nothing is found, do nothing
-		if ( empty( $response->slug ) || $response->slug != $this->slug ) {
-			return false;
+		if ( 'plugin_information' !== $action || ! is_object( $response ) ) {
+			return $false;
 		}
 
-		// Add our plugin information
-		$response->last_updated = $this->githubAPIResult->published_at;
-		$response->slug         = $this->slug;
-		$response->plugin_name  = $this->pluginData["Name"];
-		$response->version      = $this->githubAPIResult->tag_name;
-		$response->author       = $this->pluginData["AuthorName"];
-		$response->homepage     = $this->pluginData["PluginURI"];
+		$this->EMOL_initPluginData();
+		if (
+			empty( $response->slug )
+			|| ! in_array( $response->slug, array( $this->slug, $this->EMOL_getPluginSlug() ), true )
+			|| ! $this->EMOL_getRepoReleaseInfo()
+		) {
+			return $false;
+		}
+
+		$pluginInfo = new stdClass();
+		$pluginInfo->last_updated = isset( $this->githubAPIResult->published_at ) ? $this->githubAPIResult->published_at : '';
+		$pluginInfo->slug         = $this->EMOL_getPluginSlug();
+		$pluginInfo->name         = isset( $this->pluginData['Name'] ) ? $this->pluginData['Name'] : 'EazyMatch';
+		$pluginInfo->plugin_name  = $pluginInfo->name;
+		$pluginInfo->version      = isset( $this->githubAPIResult->tag_name ) ? $this->githubAPIResult->tag_name : '';
+		$pluginInfo->author       = isset( $this->pluginData['AuthorName'] ) ? $this->pluginData['AuthorName'] : '';
+		$pluginInfo->homepage     = isset( $this->pluginData['PluginURI'] ) ? $this->pluginData['PluginURI'] : '';
 
 		// This is our release download zip file
-		$downloadLink = $this->githubAPIResult->zipball_url;
+		$downloadLink = isset( $this->githubAPIResult->zipball_url ) ? $this->githubAPIResult->zipball_url : '';
 
 		// Include the access token for private GitHub repos
 		if ( ! empty( $this->accessToken ) ) {
@@ -127,48 +144,65 @@ class WP_EazyMatch_Updater {
 				$downloadLink
 			);
 		}
-		$response->download_link = $downloadLink;
+		$pluginInfo->download_link = $downloadLink;
 
 		// We're going to parse the GitHub markdown release notes, include the parser
 		require_once( plugin_dir_path( __FILE__ ) . "Parsedown.php" );
 
 		// Create tabs in the lightbox
-		$response->sections = array(
-			'description' => $this->pluginData["Description"],
+		$releaseBody = isset( $this->githubAPIResult->body ) ? $this->githubAPIResult->body : '';
+		$pluginInfo->sections = array(
+			'description' => isset( $this->pluginData['Description'] ) ? $this->pluginData['Description'] : '',
 			'changelog'   => class_exists( "Parsedown" )
-				? Parsedown::instance()->parse( $this->githubAPIResult->body )
-				: $this->githubAPIResult->body
+				? Parsedown::instance()->parse( $releaseBody )
+				: $releaseBody
 		);
 		// Gets the required version of WP if available
 		$matches = null;
-		preg_match( "/requires:\s([\d\.]+)/i", $this->githubAPIResult->body, $matches );
+		preg_match( "/requires:\s([\d\.]+)/i", $releaseBody, $matches );
 		if ( ! empty( $matches ) ) {
 			if ( is_array( $matches ) ) {
 				if ( count( $matches ) > 1 ) {
-					$response->requires = $matches[1];
+					$pluginInfo->requires = $matches[1];
 				}
 			}
 		}
 
 // Gets the tested version of WP if available
 		$matches = null;
-		preg_match( "/tested:\s([\d\.]+)/i", $this->githubAPIResult->body, $matches );
+		preg_match( "/tested:\s([\d\.]+)/i", $releaseBody, $matches );
 		if ( ! empty( $matches ) ) {
 			if ( is_array( $matches ) ) {
 				if ( count( $matches ) > 1 ) {
-					$response->tested = $matches[1];
+					$pluginInfo->tested = $matches[1];
 				}
 			}
 		}
 
-		return $response;
+		return $pluginInfo;
+	}
+
+	private function EMOL_getPluginSlug() {
+		$directory = dirname( $this->slug );
+
+		return '.' === $directory
+			? basename( $this->slug, '.php' )
+			: $directory;
 	}
 
 	// Perform additional actions to successfully install our plugin
 	public function EMOL_postInstall( $true, $hook_extra, $result ) {
-		// code here
-		// Get plugin information
 		$this->EMOL_initPluginData();
+		if (
+			! is_array( $hook_extra )
+			|| empty( $hook_extra['plugin'] )
+			|| $hook_extra['plugin'] !== $this->slug
+			|| ! is_array( $result )
+			|| empty( $result['destination'] )
+		) {
+			return $result;
+		}
+
 		// Remember if our plugin was previously activated
 		$wasActivated = is_plugin_active( $this->slug );
 		// Since we are hosted in GitHub, our plugin folder would have a dirname of
@@ -177,11 +211,13 @@ class WP_EazyMatch_Updater {
 		global $wp_filesystem;
 
 		$pluginFolder = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . dirname( $this->slug );
-		$wp_filesystem->move( $result['destination'], $pluginFolder );
+		if ( $result['destination'] !== $pluginFolder ) {
+			$wp_filesystem->move( $result['destination'], $pluginFolder, true );
+		}
 		$result['destination'] = $pluginFolder;
 		// Re-activate plugin if needed
 		if ( $wasActivated ) {
-			$activate = activate_plugin( $this->slug );
+			activate_plugin( $this->slug );
 		}
 
 		return $result;

@@ -70,7 +70,7 @@ abstract class emol_connectproxy_rest
 		global $emol_isDebug;
 
 
-		$this->serviceUrl = get_option('emol_service_url') ? get_option('emol_service_url') : 'https:://api.eazymatch.cloud';
+		$this->serviceUrl = get_option('emol_service_url') ? get_option('emol_service_url') : $emol_Core;
 
 
 		$this->debug = $emol_isDebug;
@@ -175,14 +175,8 @@ abstract class emol_connectproxy_rest
 			echo 'Error connecting to eazymatch with code curl code: "' . curl_errno($ch) . '".';
 
 
-			//close connection
-			curl_close($ch);
-
 			die();
 		}
-
-		//close connection
-		curl_close($ch);
 
 		// decode the result
 		$apiOutput = $this->decodeResult($apiResponse);

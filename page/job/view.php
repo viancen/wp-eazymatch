@@ -28,6 +28,13 @@ class emol_page_job_view extends emol_page
     var $jobCompetences;
 
     /**
+     * Current job identifier.
+     *
+     * @var int
+     */
+    var $jobId = 0;
+
+    /**
      * prepare the output
      *
      */
@@ -48,7 +55,7 @@ class emol_page_job_view extends emol_page
 
         eazymatch_connect();
 
-        $trunk = new EazyTrunk();
+        $trunk = new emol_trunk();
 
         // create a response array and add all the requests to the trunk
         $this->job = &$trunk->request('job', 'getFullPublished', array($jobId));

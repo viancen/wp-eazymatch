@@ -12,7 +12,7 @@ class emol_Level2Checkboxes {
 	var $side = '';
 
 	/* checkboxes */
-	function __construct( $treeArray, $side = null, $classname ) {
+	function __construct( $treeArray, $side = null, $classname = '' ) {
 
 		if ( $side == null ) {
 			$this->side = get_option( 'emol_job_search_url' );

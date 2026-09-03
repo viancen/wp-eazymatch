@@ -4,13 +4,16 @@ Plugin Name: EazyMatch
 Plugin URI: https://github.com/viancen/wp-eazymatch
 Description: De EazyMatch Wordpress plugin. Bij twijfel over de instellingen mail naar support@eazymatch.nl
 Name: EazyMatch
-Version: 6.2.8
+Version: 6.3.0
+Requires at least: 4.3
+Requires PHP: 7.4
+Update URI: https://github.com/viancen/wp-eazymatch
 Author: EazyMatch
 Author URI: https://eazymatch-online.nl
 */
 
 #php
-$globalVersion = '6.2.8';
+$globalVersion = '6.3.0';
 define('EMOL_VERSION', $globalVersion);
 
 //eazymatch directory on server
@@ -39,14 +42,43 @@ $emol_isDebug = defined('WP_DEBUG') ? WP_DEBUG : false;
 /*check if session started*/
 function emol_boot_session()
 {
-    $sessid = session_id();
-    if (empty($sessid)) {
-        session_start();
+    $isCron = function_exists('wp_doing_cron')
+        ? wp_doing_cron()
+        : defined('DOING_CRON') && DOING_CRON;
+    $isAjax = function_exists('wp_doing_ajax')
+        ? wp_doing_ajax()
+        : defined('DOING_AJAX') && DOING_AJAX;
+
+    if (
+        $isCron
+        || $isAjax
+        || defined('REST_REQUEST') && REST_REQUEST
+        || defined('XMLRPC_REQUEST') && XMLRPC_REQUEST
+        || defined('WP_CLI') && WP_CLI
+    ) {
+        return false;
+    }
+
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return true;
+    }
+
+    if (headers_sent()) {
+        return false;
+    }
+
+    return session_start();
+}
+
+function emol_close_session()
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
     }
 }
 
-//addwp _cldoadded
 add_action('wp_loaded', 'emol_boot_session');
+add_action('shutdown', 'emol_close_session', 0);
 
 //Core location
 $emol_Core = 'https://api.eazymatch.cloud';
@@ -129,6 +161,9 @@ include(EMOL_DIR . '/lib/seo.php');
 // rewrite urls for jobs etc
 include(EMOL_DIR . '/rewrite.php');
 include(EMOL_DIR . '/cron.php');
+include(EMOL_DIR . '/install.php');
+
+register_activation_hook(__FILE__, 'eazymatch_install');
 
 //add shortcodes hooks
 add_shortcode('eazymatch', 'emol_shortcodehandler::apply');
@@ -172,7 +207,7 @@ if (get_option('emol_frm_google_captcha_sitekey') && get_option('emol_frm_google
 add_action('widgets_init', 'emol_widget_init');
 
 //add custom titles for jobs
-add_action('wp_title', 'emol_custom_title');
+add_filter('wp_title', 'emol_custom_title');
 add_filter('wpseo_title', 'emol_custom_title');
 
 

@@ -17,11 +17,13 @@ class emol_shortcodehandler {
 	 */
 	static public function apply( $atts ) {
 
-		extract( shortcode_atts( array(
+		$shortcodeSettings = shortcode_atts( array(
 			'view'        => '',
 			'competences' => '',
 			'settings'    => ''
-		), $atts ) );
+		), $atts );
+		$view = $shortcodeSettings['view'];
+		$competences = $shortcodeSettings['competences'];
 
 		$return = '';
 
@@ -41,7 +43,7 @@ class emol_shortcodehandler {
 
 				$shortCodeObj              = new emol_shortcode_jobs();
 				$shortCodeObj->competences = $competences;
-				$return                    = $shortCodeObj->getContent();
+				$return                    = $shortCodeObj->getContent( $atts );
 
 			} else {
 

@@ -30,6 +30,7 @@ class emol_page_job_rss extends emol_pagedummy {
 	 * @var mixed
 	 */
 	var $emolApi;
+	var $feedFunction = '';
 
 
 	/**
@@ -46,6 +47,16 @@ class emol_page_job_rss extends emol_pagedummy {
 		if ( ! $this->emolApi ) {
 			eazymatch_trow_error();
 		}
+
+		$this->feedFunction = $function;
+		add_action( 'template_redirect', array( $this, 'renderFeed' ), 0 );
+	}
+
+	/**
+	 * Render the requested feed after WordPress has resolved the route.
+	 */
+	function renderFeed() {
+		$function = $this->feedFunction;
 
 		$content    = '';
 		$typeOutput = 'application/xml';
@@ -145,8 +156,9 @@ class emol_page_job_rss extends emol_pagedummy {
 
 		//first try and get all published jobid's
         $filterFactory = new emol_jobfilter_factory();
-        $searchDefault = $filterFactory::createDefault();
-        $search = $searchDefault->getFilterArray();
+		$searchDefault = $filterFactory::createDefault();
+		$search = $searchDefault->getFilterArray();
+		$jobs = array();
 
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
@@ -196,8 +208,9 @@ class emol_page_job_rss extends emol_pagedummy {
 
         //first try and get all published jobid's
         $filterFactory = new emol_jobfilter_factory();
-        $searchDefault = $filterFactory::createDefault();
-        $search = $searchDefault->getFilterArray();
+		$searchDefault = $filterFactory::createDefault();
+		$search = $searchDefault->getFilterArray();
+		$jobs = array();
 
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
@@ -218,10 +231,10 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$items .= '<entry>' . PHP_EOL;
 			$items .= '  <id>' . ( $jobUrl ) . '</id>' . PHP_EOL;
-			$items .= '  <title>' . htmlspecialchars( $job['name'] ) . '</title>' . PHP_EOL;
+			$items .= '  <title>' . htmlspecialchars( $job['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . '</title>' . PHP_EOL;
 			$items .= '  <updated>' . date( 'c', strtotime( $job['datemodified'] . ' - 2 hour' ) ) . '</updated>' . PHP_EOL;
 			$items .= '  <link href="' . $jobUrl . '" />' . PHP_EOL;
-			$items .= '  <summary><![CDATA[' . htmlspecialchars( $job['description'] ) . ']]></summary>' . PHP_EOL;
+			$items .= '  <summary><![CDATA[' . htmlspecialchars( $job['description'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . ']]></summary>' . PHP_EOL;
 			$items .= '</entry>' . PHP_EOL;
 
 		}
@@ -247,18 +260,22 @@ class emol_page_job_rss extends emol_pagedummy {
 	//gets the data from a URL
 	function get_tiny_url( $url ) {
 		if ( get_option( 'emol_sharing_tiny' ) == 1 ) {
-			$ch      = curl_init();
-			$timeout = 5;
-			curl_setopt( $ch, CURLOPT_URL, 'http://tinyurl.com/api-create.php?url=' . $url );
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-			curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $timeout );
-			$data = curl_exec( $ch );
-			curl_close( $ch );
+			$request = wp_remote_get(
+				add_query_arg( 'url', $url, 'https://tinyurl.com/api-create.php' ),
+				array( 'timeout' => 5 )
+			);
 
-			return $data;
+			if ( ! is_wp_error( $request ) && 200 === wp_remote_retrieve_response_code( $request ) ) {
+				$tinyUrl = trim( wp_remote_retrieve_body( $request ) );
+				if ( '' !== $tinyUrl ) {
+					return $tinyUrl;
+				}
+			}
 		} else {
 			return $url;
 		}
+
+		return $url;
 	}
 
 
@@ -271,8 +288,9 @@ class emol_page_job_rss extends emol_pagedummy {
 		//first try and get all published jobid's
         //first try and get all published jobid's
         $filterFactory = new emol_jobfilter_factory();
-        $searchDefault = $filterFactory::createDefault();
-        $search = $searchDefault->getFilterArray();
+		$searchDefault = $filterFactory::createDefault();
+		$search = $searchDefault->getFilterArray();
+		$jobs = array();
 
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
@@ -287,17 +305,14 @@ class emol_page_job_rss extends emol_pagedummy {
 		foreach ( $jobs as $job ) {
 
 			$jobUrl = emol_get_job_url( $job );
-			if ( $fullJob['startdate'] == null ) {
-				$fullJob['startdate'] = date( 'Ymd' );
-			}
 			$tiny = $this->get_tiny_url( $jobUrl );
 
 			$items .= '<item>' . PHP_EOL;
 			$items .= '  <guid>' . $jobUrl . '</guid>' . PHP_EOL;
-			$items .= '  <title>' . htmlspecialchars( $job['name'] ) . '</title>' . PHP_EOL;
+			$items .= '  <title>' . htmlspecialchars( $job['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . '</title>' . PHP_EOL;
 			$items .= '  <pubDate>' . date( 'r', strtotime( $job['datemodified'] . ' - 2 hour' ) ) . '</pubDate>' . PHP_EOL;
 			$items .= '  <link>' . $jobUrl . '</link>' . PHP_EOL;
-			$items .= '  <description><![CDATA[' . htmlspecialchars( $job['description'] ) . '. <a href="' . $tiny . '">' . htmlspecialchars( $job['name'] ) . '</a>]]></description>' . PHP_EOL;
+			$items .= '  <description><![CDATA[' . htmlspecialchars( $job['description'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . '. <a href="' . $tiny . '">' . htmlspecialchars( $job['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . '</a>]]></description>' . PHP_EOL;
 			$items .= '</item>' . PHP_EOL;
 
 		}
@@ -331,8 +346,9 @@ class emol_page_job_rss extends emol_pagedummy {
 		//first try and get all published jobid's
         //first try and get all published jobid's
         $filterFactory = new emol_jobfilter_factory();
-        $searchDefault = $filterFactory::createDefault();
-        $search = $searchDefault->getFilterArray();
+		$searchDefault = $filterFactory::createDefault();
+		$search = $searchDefault->getFilterArray();
+		$jobs = array();
 
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
@@ -342,7 +358,7 @@ class emol_page_job_rss extends emol_pagedummy {
 		}
 
 		//create trunk
-		$trunk   = new EazyTrunk();
+		$trunk   = new emol_trunk();
 		$i       = 0;
 		$results = array();
 		foreach ( $jobs as $job ) {
@@ -357,9 +373,10 @@ class emol_page_job_rss extends emol_pagedummy {
 		$items = '';
 		foreach ( $results as $jResult ) {
 
-			$fullJob      = $jResult['fullJob'];
-			$texts        = $jResult['texts'];
-			$competencies = $jResult['competences'];
+				$fullJob      = $jResult['fullJob'];
+				$texts        = $jResult['texts'];
+				$competencies = $jResult['competences'];
+				$comp         = '';
 
 			$jobUrl = emol_get_job_url( $fullJob );
 			if ( $fullJob['startdate'] == null ) {
@@ -373,11 +390,11 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$items .= '<item>' . PHP_EOL;
 			$items .= '  <guid>' . $jobUrl . '</guid>' . PHP_EOL;
-			$items .= '  <title>' . htmlspecialchars( $fullJob['name'] ) . '</title>' . PHP_EOL;
+			$items .= '  <title>' . htmlspecialchars( $fullJob['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . '</title>' . PHP_EOL;
 			$items .= '  <pubDate>' . date( 'r', strtotime( $fullJob['datemodified'] . ' - 2 hour' ) ) . '</pubDate>' . PHP_EOL;
 			$items .= '  <link>' . $jobUrl . '</link>' . PHP_EOL;
 			$items .= '  <region>' . $region . '</region>' . PHP_EOL;
-			$items .= '  <description><![CDATA[' . htmlspecialchars( $fullJob['description'] ) . ']]></description>' . PHP_EOL;
+			$items .= '  <description><![CDATA[' . htmlspecialchars( $fullJob['description'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . ']]></description>' . PHP_EOL;
 
 			//now for our custom fields
 			//teksten
@@ -386,7 +403,7 @@ class emol_page_job_rss extends emol_pagedummy {
 				$text  = '';
 
 				foreach ( $texts as $val ) {
-					$items .= '    <' . eazymatch_friendly_seo_string( $val['title'] ) . '><![CDATA[' . htmlspecialchars( $val['value'] ) . ']]></' . eazymatch_friendly_seo_string( $val['title'] ) . '>' . PHP_EOL;
+					$items .= '    <' . eazymatch_friendly_seo_string( $val['title'] ) . '><![CDATA[' . htmlspecialchars( $val['value'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . ']]></' . eazymatch_friendly_seo_string( $val['title'] ) . '>' . PHP_EOL;
 				}
 				$items .= '  </texts>' . PHP_EOL;
 			}
@@ -395,7 +412,7 @@ class emol_page_job_rss extends emol_pagedummy {
 				if ( $competencies[0] !== false ) {
 					$comp = '';
 					foreach ( $competencies as $unit ) {
-						$comp .= '    <competence id="' . $unit['id'] . '" level="' . $unit['level'] . '" lft="' . $unit['lft'] . '" rgt="' . $unit['rgt'] . '"><![CDATA[' . htmlspecialchars( trim( $unit['name'] ) ) . ']]></competence>' . PHP_EOL;
+						$comp .= '    <competence id="' . $unit['id'] . '" level="' . $unit['level'] . '" lft="' . $unit['lft'] . '" rgt="' . $unit['rgt'] . '"><![CDATA[' . htmlspecialchars( trim( $unit['name'] ), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ) . ']]></competence>' . PHP_EOL;
 
 					}
 				}
@@ -428,6 +445,7 @@ class emol_page_job_rss extends emol_pagedummy {
 	function trovit() {
 
 		//first try and get all published jobid's
+		$jobs = array();
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
 			$jobs  = $wsJob->getPublishedId();
@@ -436,7 +454,7 @@ class emol_page_job_rss extends emol_pagedummy {
 		}
 
 		//create trunk
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		$results = array();
 		$i       = 0;
@@ -466,7 +484,7 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$city = '';
 			if ( isset( $fullJob['Address']['city'] ) && $fullJob['Address']['city'] != '' ) {
-				$city = '<city><![CDATA[' . utf8_encode( $fullJob['Address']['city'] ) . ']]></city>';
+				$city = '<city><![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['city'] ) . ']]></city>';
 			}
 
 			$region = '';
@@ -476,7 +494,7 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$zipcode = '';
 			if ( isset( $fullJob['Address']['zipcode'] ) && $fullJob['Address']['zipcode'] != '' ) {
-				$zipcode = '<postcode><![CDATA[' . utf8_encode( $fullJob['Address']['zipcode'] ) . ']]></postcode>';
+				$zipcode = '<postcode><![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['zipcode'] ) . ']]></postcode>';
 			}
 
 			$jobtype = '';
@@ -511,19 +529,19 @@ class emol_page_job_rss extends emol_pagedummy {
                 <ad>
                 <id><![CDATA[' . $fullJob['id'] . ']]></id>
                 <url><![CDATA[' . $jobUrl . ']]></url>
-                <title><![CDATA[' . utf8_encode( $fullJob['name'] ) . ']]></title>
-                <content><![CDATA[' . utf8_encode( $output_text[0] ) . ']]></content>
+                <title><![CDATA[' . emol_latin1_to_utf8( $fullJob['name'] ) . ']]></title>
+                <content><![CDATA[' . emol_latin1_to_utf8( $output_text[0] ) . ']]></content>
                 ' . $city . '
                 ' . $zipcode . '
-                <salary><![CDATA[' . utf8_encode( $output_text[5] ) . ']]></salary>
-                <working_hours><![CDATA[' . utf8_encode( $fullJob['hours'] ) . ']]></working_hours>
-                <experience><![CDATA[' . utf8_encode( $output_text[1] ) . ']]></experience>
-                <requirements><![CDATA[' . utf8_encode( $output_text[2] ) . ']]></requirements>
-                <contract><![CDATA[' . utf8_encode( $output_text[3] ) . ']]></contract>
+                <salary><![CDATA[' . emol_latin1_to_utf8( $output_text[5] ) . ']]></salary>
+                <working_hours><![CDATA[' . emol_latin1_to_utf8( $fullJob['hours'] ) . ']]></working_hours>
+                <experience><![CDATA[' . emol_latin1_to_utf8( $output_text[1] ) . ']]></experience>
+                <requirements><![CDATA[' . emol_latin1_to_utf8( $output_text[2] ) . ']]></requirements>
+                <contract><![CDATA[' . emol_latin1_to_utf8( $output_text[3] ) . ']]></contract>
                 ' . $jobtype . '
-                <date><![CDATA[' . utf8_encode( date( 'd/m/Y', strtotime( $fullJob['startdate'] ) ) ) . ']]></date>
-                <time><![CDATA[' . utf8_encode( date( 'H:i:s', strtotime( $fullJob['startdate'] ) ) ) . ']]></time>
-                <studies><![CDATA[' . utf8_encode( $output_text[4] ) . ']]></studies>
+                <date><![CDATA[' . emol_latin1_to_utf8( date( 'd/m/Y', strtotime( $fullJob['startdate'] ) ) ) . ']]></date>
+                <time><![CDATA[' . emol_latin1_to_utf8( date( 'H:i:s', strtotime( $fullJob['startdate'] ) ) ) . ']]></time>
+                <studies><![CDATA[' . emol_latin1_to_utf8( $output_text[4] ) . ']]></studies>
                 </ad>';
 
 			}
@@ -546,6 +564,7 @@ class emol_page_job_rss extends emol_pagedummy {
 	function simplyhired() {
 
 		//first try and get all published jobid's
+		$jobs = array();
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
 			$jobs  = $wsJob->getPublishedId();
@@ -554,7 +573,7 @@ class emol_page_job_rss extends emol_pagedummy {
 		}
 
 		//create trunk
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		$results = array();
 		$i       = 0;
@@ -587,7 +606,7 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$city = '';
 			if ( isset( $fullJob['Address']['city'] ) && $fullJob['Address']['city'] != '' ) {
-				$city = '<state><![CDATA[' . utf8_encode( $fullJob['Address']['city'] ) . ']]></state>';
+				$city = '<state><![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['city'] ) . ']]></state>';
 			} else {
 				//is mandatory for simplyhired
 				continue;
@@ -600,7 +619,7 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$zipcode = '';
 			if ( isset( $fullJob['Address']['zipcode'] ) && $fullJob['Address']['zipcode'] != '' ) {
-				$zipcode = '<zip><![CDATA[' . utf8_encode( $fullJob['Address']['zipcode'] ) . ']]></zip>';
+				$zipcode = '<zip><![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['zipcode'] ) . ']]></zip>';
 			}
 
 			$jobtype = '';
@@ -633,25 +652,25 @@ class emol_page_job_rss extends emol_pagedummy {
 
 				$items .= '
                 <job>
-                <title><![CDATA[' . utf8_encode( $fullJob['name'] ) . ']]></title>
-                <job-board-name><![CDATA[' . utf8_encode( get_bloginfo( 'name' ) ) . ']]></job-board-name>
-                <job-board-url><![CDATA[' . utf8_encode( get_bloginfo( 'wpurl' ) ) . ']]></job-board-url>
+                <title><![CDATA[' . emol_latin1_to_utf8( $fullJob['name'] ) . ']]></title>
+                <job-board-name><![CDATA[' . emol_latin1_to_utf8( get_bloginfo( 'name' ) ) . ']]></job-board-name>
+                <job-board-url><![CDATA[' . emol_latin1_to_utf8( get_bloginfo( 'wpurl' ) ) . ']]></job-board-url>
                 <job-code>' . $fullJob['id'] . '</job-code>
                 <detail-url><![CDATA[' . $jobUrl . ']]></detail-url>
                 <apply-url><![CDATA[' . $apply_url . ']]></apply-url>
                 <description>
-                    <summary><![CDATA[' . utf8_encode( $output_text[0] ) . ']]></summary>
-                    <required-skills><![CDATA[' . utf8_encode( $output_text[2] ) . ']]></required-skills>
-                    <required-education><![CDATA[' . utf8_encode( $output_text[4] ) . ']]></required-education>
+                    <summary><![CDATA[' . emol_latin1_to_utf8( $output_text[0] ) . ']]></summary>
+                    <required-skills><![CDATA[' . emol_latin1_to_utf8( $output_text[2] ) . ']]></required-skills>
+                    <required-education><![CDATA[' . emol_latin1_to_utf8( $output_text[4] ) . ']]></required-education>
                 </description>
-                <posted-date><![CDATA[' . utf8_encode( date( 'd/m/Y', strtotime( $fullJob['created'] ) ) ) . ']]></posted-date>
+                <posted-date><![CDATA[' . emol_latin1_to_utf8( date( 'd/m/Y', strtotime( $fullJob['created'] ) ) ) . ']]></posted-date>
                 <location>
                     ' . $city . '
                     ' . $zipcode . '
                     <country>NL</country>
                 </location>
                 <company>
-                    <name><![CDATA[' . utf8_encode( get_bloginfo( 'name' ) ) . ']]></name>
+                    <name><![CDATA[' . emol_latin1_to_utf8( get_bloginfo( 'name' ) ) . ']]></name>
                 </company>
                 </job>';
 
@@ -674,6 +693,7 @@ class emol_page_job_rss extends emol_pagedummy {
 	function indeed() {
 
 		//first try and get all published jobid's
+		$jobs = array();
 		try {
 			$wsJob = $this->emolApi->get( 'job' );
 			$jobs  = $wsJob->getPublishedId();
@@ -682,7 +702,7 @@ class emol_page_job_rss extends emol_pagedummy {
 		}
 
 		//create trunk
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		$results = array();
 		$i       = 0;
@@ -708,7 +728,7 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$city = '';
 			if ( isset( $fullJob['Address']['city'] ) && $fullJob['Address']['city'] != '' ) {
-				$city = '<city><![CDATA[' . utf8_encode( $fullJob['Address']['city'] ) . ']]></city>';
+				$city = '<city><![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['city'] ) . ']]></city>';
 			}
 
 			$region = '';
@@ -718,7 +738,7 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$zipcode = '';
 			if ( isset( $fullJob['Address']['zipcode'] ) && $fullJob['Address']['zipcode'] != '' ) {
-				$zipcode = '<postalcode><![CDATA[' . utf8_encode( $fullJob['Address']['zipcode'] ) . ']]></postalcode>';
+				$zipcode = '<postalcode><![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['zipcode'] ) . ']]></postalcode>';
 			}
 
 			$jobtype = '';
@@ -789,7 +809,7 @@ class emol_page_job_rss extends emol_pagedummy {
 		$jobs  = $wsJob->getPublishedId();
 
 		//create trunk
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		$results = array();
 		$i       = 0;
@@ -815,7 +835,7 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$city = '';
 			if ( isset( $fullJob['Address']['city'] ) && $fullJob['Address']['city'] != '' ) {
-				$city = '<![CDATA[' . utf8_encode( $fullJob['Address']['city'] ) . ']]>';
+				$city = '<![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['city'] ) . ']]>';
 			}
 
 			$output_text[0] = '-'; //omschrijving
@@ -883,7 +903,7 @@ class emol_page_job_rss extends emol_pagedummy {
 		$jobs  = $wsJob->getPublishedId();
 
 		//create trunk
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		$results = array();
 		$i       = 0;
@@ -909,7 +929,7 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$city = '';
 			if ( isset( $fullJob['Address']['city'] ) && $fullJob['Address']['city'] != '' ) {
-				$city = '<![CDATA[' . utf8_encode( $fullJob['Address']['city'] ) . ']]>';
+				$city = '<![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['city'] ) . ']]>';
 			}
 
 			$output_text[0] = '-'; //omschrijving
@@ -981,7 +1001,7 @@ class emol_page_job_rss extends emol_pagedummy {
 		$jobs  = $wsJob->getPublishedId();
 
 		//create trunk
-		$trunk   = new EazyTrunk();
+		$trunk   = new emol_trunk();
 		$results = array();
 
 		$i = 0;
@@ -1008,7 +1028,7 @@ class emol_page_job_rss extends emol_pagedummy {
 			$city         = '';
 
 			if ( isset( $fullJob['Address']['city'] ) && $fullJob['Address']['city'] != '' ) {
-				$city = '<![CDATA[' . utf8_encode( $fullJob['Address']['city'] ) . ']]>';
+				$city = '<![CDATA[' . emol_latin1_to_utf8( $fullJob['Address']['city'] ) . ']]>';
 			}
 
 			$output_text[0] = '-'; //omschrijving
@@ -1080,7 +1100,7 @@ class emol_page_job_rss extends emol_pagedummy {
 		$jobs  = $wsJob->getPublishedId();
 
 		//create trunk
-		$trunk = new EazyTrunk();
+		$trunk = new emol_trunk();
 
 		$results = array();
 		$i       = 0;
@@ -1105,12 +1125,12 @@ class emol_page_job_rss extends emol_pagedummy {
 
 			$city = '';
 			if ( isset( $fullJob['Address']['city'] ) && $fullJob['Address']['city'] != '' ) {
-				$city = utf8_encode( $fullJob['Address']['city'] );
+				$city = emol_latin1_to_utf8( $fullJob['Address']['city'] );
 			}
 
 			$zipcode = '';
 			if ( isset( $fullJob['Address']['zipcode'] ) && $fullJob['Address']['zipcode'] != '' ) {
-				$zipcode = utf8_encode( $fullJob['Address']['zipcode'] );
+				$zipcode = emol_latin1_to_utf8( $fullJob['Address']['zipcode'] );
 			}
 
 			$jobtype = '';

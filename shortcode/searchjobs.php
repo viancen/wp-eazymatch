@@ -51,7 +51,7 @@ class emol_shortcode_searchjobs {
             $searchDefault = $filterFactory::createDefault();
             $filters = $searchDefault->getFilterArray();
 
-			$trunk = new EazyTrunk();
+			$trunk = new emol_trunk();
 
 			$provinceList = array();
 
@@ -190,4 +190,3 @@ class emol_shortcode_searchjobs {
 
 	}
 }
-
