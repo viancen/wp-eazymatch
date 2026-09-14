@@ -86,7 +86,9 @@ class emol_shortcode_job
             if (isset($this->job['Company']['Logo']) && $this->job['Company']['Logo']['content'] > '' && get_option('emol_job_search_logo') == 1) {
                 $jobHtml .= '<div class="emol-job-picture"><img src="data:image/png;base64,' . $this->job['Company']['Logo']['content'] . '" /></div>';
             }
-            //if($this->job['description'] != '') $jobHtml .= '<div id="emol-job-description">'.$this->job['description'].'</div>';
+            if (emol_jobtext::descriptionVisible(emol_jobtext::CONTEXT_DETAIL) && !empty($this->job['description'])) {
+                $jobHtml .= '<div id="emol-job-page-description">' . emol_firstWords($this->job['description']) . '</div>';
+            }
             $jobHtml .= '<table>';
 
             //code of job

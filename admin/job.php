@@ -53,6 +53,7 @@ function eazymatch_plugin_job() {
 			'emol_apply_url_free'             => get_option( 'emol_apply_url_free' ),
 			'emol_job_texts'                  => get_option( 'emol_job_texts' ),
 			'emol_job_text_display'           => get_option( 'emol_job_text_display' ),
+			'emol_job_description_display'    => get_option( 'emol_job_description_display' ),
 			'emol_apply_page'                 => get_option( 'emol_apply_page' ),
 			'emol_job_competence_exclude'     => get_option( 'emol_job_competence_exclude' ),
 			//'emol_filter_options'           => get_option('emol_filter_options'),
@@ -100,6 +101,9 @@ function eazymatch_plugin_job() {
 
 			update_option( 'emol_jobfilter_default', $filter );
 
+			if ( isset( $_POST['emol_job_description_display'] ) && is_array( $_POST['emol_job_description_display'] ) ) {
+				$_POST['emol_job_search_desc'] = ! empty( $_POST['emol_job_description_display']['list'] ) ? '1' : '0';
+			}
 
 			// save all options defined earlier
 			foreach ( $_POST as $option => $value ) {
@@ -107,7 +111,7 @@ function eazymatch_plugin_job() {
 					continue;
 				}
 
-				if ( $option == 'emol_job_texts' || $option == 'emol_job_text_display' ) {
+				if ( $option == 'emol_job_texts' || $option == 'emol_job_text_display' || $option == 'emol_job_description_display' ) {
 					$value = serialize( $value );
 				}
 
@@ -134,8 +138,8 @@ function eazymatch_plugin_job() {
 		$sel2 = 'checked="checked"';
 		$sel1 = '';
 
-		//description
-		if ( get_option( 'emol_job_search_desc' ) == 1 ) {
+		//description — default on for overviews when never configured
+		if ( emol_jobtext::descriptionVisible( emol_jobtext::CONTEXT_LIST ) ) {
 			$sel1 = 'checked="checked"';
 			$sel2 = '';
 		}
@@ -561,6 +565,28 @@ function eazymatch_plugin_job() {
 						$currentLabelData = unserialize( $eazymatchOptions['emol_job_texts'] );
 					}
 					$currentDisplayData = emol_jobtext::normalizeMap( $eazymatchOptions['emol_job_text_display'] );
+					$descFlags          = emol_jobtext::descriptionFlags( $eazymatchOptions['emol_job_description_display'] );
+					?>
+                        <tr>
+                            <td>Meta-omschrijving</td>
+                            <td colspan="2">
+                                <p class="emol-job-text-display-label">Apart veld, geen tekstblok. Standaard alleen zichtbaar in het vacatureoverzicht.</p>
+                                <div class="emol-job-text-display">
+                                    <span class="emol-job-text-display-label">Toon dit veld op:</span>
+                                    <label>
+                                        <input type="hidden" name="emol_job_description_display[detail]" value="0"/>
+                                        <input type="checkbox" name="emol_job_description_display[detail]" value="1"<?php echo $descFlags['detail'] ? ' checked="checked"' : ''; ?> />
+                                        Vacature detailpagina
+                                    </label>
+                                    <label>
+                                        <input type="hidden" name="emol_job_description_display[list]" value="0"/>
+                                        <input type="checkbox" name="emol_job_description_display[list]" value="1"<?php echo $descFlags['list'] ? ' checked="checked"' : ''; ?> />
+                                        Vacature overzicht (zoekresultaten)
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+					<?php
 					foreach ( $jobTexts as $textarea ) {
 						$blockLabel = $textarea['label'];
 						$detailOn   = emol_jobtext::isVisible( $blockLabel, emol_jobtext::CONTEXT_DETAIL, $currentDisplayData );

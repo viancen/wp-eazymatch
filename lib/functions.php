@@ -514,7 +514,7 @@ function emol_parse_html_jobresult($job, $class = '', $teaserText = null, $listT
     global $trailingData;
 
     $picVisible = get_option('emol_job_search_logo');
-    $descVisible = get_option('emol_job_search_desc');
+    $descVisible = emol_jobtext::descriptionVisible(emol_jobtext::CONTEXT_LIST);
     $regioVisible = get_option('emol_job_search_region');
     $cityVisible = get_option('emol_job_search_city');
     $extraDate = get_option('emol_job_search_date');
@@ -588,7 +588,7 @@ function emol_parse_html_jobresult($job, $class = '', $teaserText = null, $listT
     $text .= '<div class="eazymatch_job_title"><a href="' . $job_url . '">' . $job['name'] . '</a> </div>';
     $text .= $competence_section;
 
-    if ($descVisible == 1) {
+    if ($descVisible) {
         $shortText = $job['description'];
         $bodyClass = 'eazymatch_job_body';
         if ($teaserText !== null && trim(strip_tags((string)$teaserText)) !== '') {

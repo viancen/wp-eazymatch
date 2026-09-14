@@ -10,13 +10,27 @@ if ( ! defined( 'EMOL_DIR' ) ) {
  *
  *     array( 'Functieomschrijving' => array( 'detail' => 1, 'list' => 0 ) )
  *
- * Missing option, missing block or missing context means "show" (default on).
+ * Defaults when nothing is saved yet:
+ * - detail page: text blocks on
+ * - overview: text blocks off, meta description on
  */
 class emol_jobtext {
 
 	const OPTION         = 'emol_job_text_display';
+	const DESC_OPTION    = 'emol_job_description_display';
 	const CONTEXT_DETAIL = 'detail';
 	const CONTEXT_LIST   = 'list';
+
+	/**
+	 * Default visibility when a flag was never stored.
+	 *
+	 * @param string $context
+	 *
+	 * @return bool
+	 */
+	public static function defaultOn( $context ) {
+		return $context === self::CONTEXT_DETAIL;
+	}
 
 	/**
 	 * @return array<string, array<string, mixed>>
@@ -54,7 +68,7 @@ class emol_jobtext {
 		}
 
 		if ( ! is_array( $map ) || count( $map ) === 0 ) {
-			return true;
+			return self::defaultOn( $context );
 		}
 
 		$wanted = self::normalizeTitle( $title );
@@ -65,13 +79,13 @@ class emol_jobtext {
 			}
 
 			if ( ! is_array( $flags ) || ! array_key_exists( $context, $flags ) ) {
-				return true;
+				return self::defaultOn( $context );
 			}
 
 			return ! empty( $flags[ $context ] );
 		}
 
-		return true;
+		return self::defaultOn( $context );
 	}
 
 	/**
@@ -87,16 +101,90 @@ class emol_jobtext {
 		}
 
 		if ( ! is_array( $map ) || count( $map ) === 0 ) {
-			return true;
+			return self::defaultOn( $context );
 		}
 
-		foreach ( $map as $flags ) {
-			if ( ! is_array( $flags ) || ! array_key_exists( $context, $flags ) || ! empty( $flags[ $context ] ) ) {
+		foreach ( $map as $label => $flags ) {
+			if ( self::isVisible( $label, $context, $map ) ) {
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	/**
+	 * Visibility of the separate job meta description (not a text block).
+	 *
+	 * Overview defaults on; detail defaults off unless explicitly enabled
+	 * or the legacy emol_job_search_desc switch was on.
+	 *
+	 * @param string $context
+	 *
+	 * @return bool
+	 */
+	public static function descriptionVisible( $context ) {
+		$saved = get_option( self::DESC_OPTION );
+		if ( is_string( $saved ) && $saved !== '' ) {
+			$decoded = @unserialize( $saved );
+			if ( is_array( $decoded ) ) {
+				$saved = $decoded;
+			}
+		}
+
+		if ( is_array( $saved ) && ( array_key_exists( 'detail', $saved ) || array_key_exists( 'list', $saved ) ) ) {
+			if ( ! array_key_exists( $context, $saved ) ) {
+				return $context === self::CONTEXT_LIST;
+			}
+
+			return ! empty( $saved[ $context ] );
+		}
+
+		$legacy = get_option( 'emol_job_search_desc' );
+		if ( $legacy === '1' || $legacy === 1 ) {
+			return true;
+		}
+		if ( $legacy === '0' || $legacy === 0 ) {
+			return false;
+		}
+
+		return $context === self::CONTEXT_LIST;
+	}
+
+	/**
+	 * Saved meta-description flags for the admin checkboxes.
+	 *
+	 * @param mixed $raw
+	 *
+	 * @return array{detail:bool,list:bool}
+	 */
+	public static function descriptionFlags( $raw = null ) {
+		if ( $raw === null ) {
+			$raw = get_option( self::DESC_OPTION );
+		}
+		if ( is_string( $raw ) && $raw !== '' ) {
+			$decoded = @unserialize( $raw );
+			if ( is_array( $decoded ) ) {
+				$raw = $decoded;
+			}
+		}
+
+		if ( is_array( $raw ) && ( array_key_exists( 'detail', $raw ) || array_key_exists( 'list', $raw ) ) ) {
+			return array(
+				'detail' => ! empty( $raw['detail'] ),
+				'list'   => ! array_key_exists( 'list', $raw ) || ! empty( $raw['list'] ),
+			);
+		}
+
+		$legacy = get_option( 'emol_job_search_desc' );
+		if ( $legacy === '1' || $legacy === 1 ) {
+			return array( 'detail' => true, 'list' => true );
+		}
+		if ( $legacy === '0' || $legacy === 0 ) {
+			return array( 'detail' => false, 'list' => false );
+		}
+
+		return array( 'detail' => false, 'list' => true );
 	}
 
 	/**

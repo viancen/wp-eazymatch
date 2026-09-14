@@ -29,8 +29,9 @@ require_once EMOL_DIR . '/lib/emol/jobtext.php';
 
 $empty = array();
 emol_test_assert_same( true, emol_jobtext::isVisible( 'Functieomschrijving', 'detail', $empty ), 'empty map: detail on' );
-emol_test_assert_same( true, emol_jobtext::isVisible( 'Functieomschrijving', 'list', $empty ), 'empty map: list on' );
-emol_test_assert_same( true, emol_jobtext::hasVisibleIn( 'list', $empty ), 'empty map: has list blocks' );
+emol_test_assert_same( false, emol_jobtext::isVisible( 'Functieomschrijving', 'list', $empty ), 'empty map: list off' );
+emol_test_assert_same( false, emol_jobtext::hasVisibleIn( 'list', $empty ), 'empty map: no list blocks' );
+emol_test_assert_same( true, emol_jobtext::hasVisibleIn( 'detail', $empty ), 'empty map: detail has blocks' );
 
 $map = array(
 	'Functieomschrijving' => array( 'detail' => 1, 'list' => 0 ),
@@ -41,7 +42,8 @@ emol_test_assert_same( true, emol_jobtext::isVisible( 'Functieomschrijving', 'de
 emol_test_assert_same( false, emol_jobtext::isVisible( 'Functieomschrijving', 'list', $map ), 'saved list off' );
 emol_test_assert_same( false, emol_jobtext::isVisible( 'Bedrijfsprofiel', 'detail', $map ), 'saved detail off' );
 emol_test_assert_same( true, emol_jobtext::isVisible( 'bedrijfsprofiel', 'list', $map ), 'title match is case insensitive' );
-emol_test_assert_same( true, emol_jobtext::isVisible( 'Afbeeldingen', 'detail', $map ), 'unknown block defaults on' );
+emol_test_assert_same( true, emol_jobtext::isVisible( 'Afbeeldingen', 'detail', $map ), 'unknown block defaults on for detail' );
+emol_test_assert_same( false, emol_jobtext::isVisible( 'Afbeeldingen', 'list', $map ), 'unknown block defaults off for list' );
 emol_test_assert_same( true, emol_jobtext::hasVisibleIn( 'list', $map ), 'one list flag on' );
 
 $allOff = array(
