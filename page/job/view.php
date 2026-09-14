@@ -119,11 +119,8 @@ class emol_page_job_view extends emol_page
             $jobHtml .= '<div class="emol-job-picture"><img src="data:image/png;base64,' . $this->job['Company']['Logo']['content'] . '" /></div>';
         }
 
-        $descVisible = emol_jobtext::descriptionVisible(emol_jobtext::CONTEXT_DETAIL);
-        if ($descVisible) {
-            if ($this->job['description'] != '') {
-                $jobHtml .= '<div id="emol-job-page-description">' . emol_firstWords($this->job['description']) . '</div>';
-            }
+        if (emol_jobtext::descriptionVisible(emol_jobtext::CONTEXT_DETAIL) && !empty($this->job['description'])) {
+            $jobHtml .= emol_jobtext::renderDescriptionHtml($this->job['description']);
         }
         $jobHtml .= '<table>';
 

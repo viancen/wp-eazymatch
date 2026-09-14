@@ -132,9 +132,12 @@ class emol_require
         // if style.css exists the user has defined his own stylesheets
         function load_emol_css_basic()
         {
+            $ver = defined('EMOL_VERSION') ? EMOL_VERSION : false;
+
             wp_deregister_style('emol-css');
-            wp_register_style('emol-css', (plugins_url('wp-eazymatch') . '/assets/css/style.default.css'), false);
+            wp_register_style('emol-css', (plugins_url('wp-eazymatch') . '/assets/css/style.default.css'), array(), $ver);
             wp_enqueue_style('emol-css');
+            wp_add_inline_style('emol-css', emol_jobtext::frontCss());
         }
 
         add_action('wp_enqueue_scripts', 'load_emol_css_basic');

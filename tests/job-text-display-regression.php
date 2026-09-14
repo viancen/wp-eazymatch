@@ -25,6 +25,26 @@ if ( ! defined( 'EMOL_DIR' ) ) {
 	define( 'EMOL_DIR', dirname( __DIR__ ) );
 }
 
+if ( ! function_exists( 'get_option' ) ) {
+	function get_option( $name, $default = false ) {
+		return $default;
+	}
+}
+
+if ( ! function_exists( 'emol_firstWords' ) ) {
+	function emol_firstWords( $text ) {
+		return $text;
+	}
+}
+
+if ( ! class_exists( 'emol_markdown', false ) ) {
+	class emol_markdown {
+		public static function parseLists( $text ) {
+			return $text;
+		}
+	}
+}
+
 require_once EMOL_DIR . '/lib/emol/jobtext.php';
 
 $empty = array();
@@ -65,5 +85,21 @@ emol_test_assert_same( 1, count( $filtered ), 'list filter keeps one block' );
 emol_test_assert_same( 'Bedrijfsprofiel', $filtered[0]['title'], 'list filter keeps bedrijfsprofiel' );
 
 emol_test_assert_same( 'Functieomschrijving', emol_jobtext::blockTitle( array( 'label' => 'Functieomschrijving', 'value' => 'x' ) ), 'title fallback to label' );
+
+$html = emol_jobtext::renderHtml( $blocks, 'detail' );
+if ( strpos( $html, 'emol-job-textblocks' ) === false || strpos( $html, 'emol-job-textblock-heading' ) === false ) {
+	throw new RuntimeException( 'detail HTML must wrap text blocks independently of the theme' );
+}
+if ( strpos( $html, 'class="emol-job-heading"' ) !== false ) {
+	throw new RuntimeException( 'text block titles must not reuse emol-job-heading' );
+}
+if ( strpos( emol_jobtext::frontCss(), 'display:block!important' ) === false ) {
+	throw new RuntimeException( 'plugin CSS must force text blocks visible' );
+}
+
+$desc = emol_jobtext::renderDescriptionHtml( 'Korte meta tekst' );
+if ( strpos( $desc, 'emol-job-meta-description' ) === false || strpos( $desc, 'emol-job-page-description' ) !== false ) {
+	throw new RuntimeException( 'meta description must use a plugin class that themes do not hide' );
+}
 
 echo "job-text-display regression test passed.\n";

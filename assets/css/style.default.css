@@ -601,26 +601,36 @@ altcha-widget.emol-altcha,
     display: none;
 }
 
+.emol-job-textblocks,
+.emol-job-textblock,
+.emol-job-textblock-heading,
+.emol-job-textblock-body,
+.emol-job-meta-description {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+}
+
 .emol-job-textblocks {
-    display: block;
     clear: both;
     margin: 1.5em 0;
 }
 
 .emol-job-textblock {
-    display: block;
     margin: 0 0 1.5em;
 }
 
 .emol-job-textblock-heading {
-    display: block;
     font-size: 1.2em;
     font-weight: 700;
     margin: 0 0 .4em;
 }
 
-.emol-job-textblock-body {
-    display: block;
+.emol-job-meta-description {
+    margin: 0 0 1em;
 }
 
 .emol-manager-bottom {

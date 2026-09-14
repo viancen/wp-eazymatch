@@ -333,7 +333,43 @@ class emol_jobtext {
 	}
 
 	/**
+	 * CSS that keeps plugin job content visible on every theme.
+	 *
+	 * @return string
+	 */
+	public static function frontCss() {
+		return '#emol-job-container .emol-job-textblocks,'
+			. '#emol-job-container .emol-job-textblock,'
+			. '#emol-job-container .emol-job-textblock-heading,'
+			. '#emol-job-container .emol-job-textblock-body,'
+			. '#emol-job-container .emol-job-meta-description{display:block!important;visibility:visible!important;height:auto!important;max-height:none!important;overflow:visible!important;opacity:1!important}';
+	}
+
+	/**
+	 * Theme-independent HTML for the optional meta description.
+	 *
+	 * @param string $description
+	 *
+	 * @return string
+	 */
+	public static function renderDescriptionHtml( $description ) {
+		$description = trim( (string) $description );
+		if ( $description === '' ) {
+			return '';
+		}
+
+		return '<div class="emol-job-meta-description" style="display:block!important;visibility:visible!important;margin:0 0 1em">'
+			. emol_firstWords( $description )
+			. '</div>';
+	}
+
+	/**
 	 * Theme-independent HTML for job text blocks.
+	 *
+	 * Headings are never a direct child of #emol-job-container and never use
+	 * emol-job-heading, so theme rules that hide the duplicate job title
+	 * cannot hide these blocks. Inline CSS keeps them visible even when a
+	 * cached plugin stylesheet still hides older markup.
 	 *
 	 * @param mixed  $blocks
 	 * @param string $context
@@ -347,18 +383,23 @@ class emol_jobtext {
 		}
 
 		$strip = (string) get_option( 'emol_strip_html' ) === '1';
-		$html  = '<div class="emol-job-textblocks">';
+		$html  = '<div class="emol-job-textblocks" style="display:block!important;visibility:visible!important;clear:both;margin:1.5em 0">';
+		$html .= '<style type="text/css">' . self::frontCss() . '</style>';
 
 		foreach ( $filtered as $block ) {
 			$value = $block['value'];
 			if ( $strip ) {
-				$value = strip_tags( $value, '<ul><li><br><p><strong><em><ol>' );
+				$value = strip_tags( $value, '<ul><li><br><p><strong><em><ol><img>' );
 			}
 
-			$html .= '<section class="emol-job-textblock">';
-			$html .= '<h2 class="emol-job-textblock-heading">' . self::remapTitle( $block['title'] ) . '</h2>';
-			$html .= '<div class="emol-job-textblock-body">' . emol_markdown::parseLists( $value ) . '</div>';
-			$html .= '</section>';
+			$html .= '<div class="emol-job-textblock" style="display:block!important;margin:0 0 1.5em">';
+			$html .= '<h2 class="emol-job-textblock-heading" style="display:block!important;visibility:visible!important;font-size:1.2em;font-weight:700;margin:0 0 .4em">'
+				. self::remapTitle( $block['title'] )
+				. '</h2>';
+			$html .= '<div class="emol-job-paragraph emol-job-textblock-body" style="display:block!important;visibility:visible!important">'
+				. emol_markdown::parseLists( nl2br( $value ) )
+				. '</div>';
+			$html .= '</div>';
 		}
 
 		$html .= '</div>';

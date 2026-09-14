@@ -94,7 +94,7 @@ class emol_shortcode_job
                 $jobHtml .= '<div class="emol-job-picture"><img src="data:image/png;base64,' . $this->job['Company']['Logo']['content'] . '" /></div>';
             }
             if (emol_jobtext::descriptionVisible(emol_jobtext::CONTEXT_DETAIL) && !empty($this->job['description'])) {
-                $jobHtml .= '<div id="emol-job-page-description">' . emol_firstWords($this->job['description']) . '</div>';
+                $jobHtml .= emol_jobtext::renderDescriptionHtml($this->job['description']);
             }
             $jobHtml .= '<table>';
 
