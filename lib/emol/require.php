@@ -110,19 +110,32 @@ class emol_require
 
     static public function recaptcha()
     {
+        self::altcha();
+    }
 
-        // add jquery from the google CDN for speed
-        function load_emol_recaptcha()
-        {
-            wp_deregister_script('recaptcha');
-            wp_register_script('recaptcha', ('//www.google.com/recaptcha/api.js'));
-            wp_enqueue_script('recaptcha');
+    static public function altcha()
+    {
+        if (self::hasInclude('altcha')) {
+            return;
         }
 
-        add_action('wp_enqueue_scripts', 'load_emol_recaptcha');
+        if (!function_exists('load_emol_altcha')) {
+            function load_emol_altcha()
+            {
+                wp_register_script(
+                    'emol-altcha',
+                    plugins_url('wp-eazymatch') . '/assets/scripts/altcha.min.js',
+                    array(),
+                    '1.4.2',
+                    true
+                );
+                wp_enqueue_script('emol-altcha');
+            }
+        }
 
-        self::registerInclude('recaptcha');
+        add_action('wp_enqueue_scripts', 'load_emol_altcha');
 
+        self::registerInclude('altcha');
     }
 
     static public function jqueryUi()

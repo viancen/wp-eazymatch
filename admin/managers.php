@@ -93,8 +93,9 @@ function eazymatch_plugin_manager() {
     <form name="form1" method="post">
         <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
 
-        <div align="right"><a href="http://www.eazymatch.nl" target="_new"><img
-                        src="http://www.eazymatch.nl/wordpress_logo.png"/></a></div>
+        <div align="right"><a href="https://www.eazymatch-online.nl" target="_new"><img
+                        src="<?php echo esc_url( plugins_url( 'assets/img/eazymatch-logo.png', EMOL_DIR . '/wp-eazymatch.php' ) ); ?>"
+                        alt="EazyMatch" /></a></div>
         <div id="emol-admin-table">
 			<?php //emol_dump($wordpressManagerSettings)
 			?>

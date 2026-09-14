@@ -557,6 +557,12 @@ a.emol-button,
     width: 35%;
 }
 
+altcha-widget.emol-altcha,
+.emol-altcha {
+    display: block;
+    margin: 1rem 0;
+}
+
 .error-captcha {
     border: solid 1px red;
     padding: 3px;

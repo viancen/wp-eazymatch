@@ -71,10 +71,11 @@ function eazymatch_plugin_form() {
 			'emol_frm_com_job'                => get_option( 'emol_frm_com_job' ),
 			//'emol_frm_com_captcha'         => get_option('emol_frm_com_captcha'),
 			'emol_frm_com_logo'               => get_option( 'emol_frm_com_logo' ),
-			'emol_frm_google_captcha_sitekey' => get_option( 'emol_frm_google_captcha_sitekey' ),
-			'emol_frm_google_captcha_secret'  => get_option( 'emol_frm_google_captcha_secret' ),
 			'emol_frm_avg'                    => get_option( 'emol_frm_avg' ),
 		);
+
+		delete_option( 'emol_frm_google_captcha_sitekey' );
+		delete_option( 'emol_frm_google_captcha_secret' );
 
 
 		// See if the user has posted us some information
@@ -165,24 +166,15 @@ function eazymatch_plugin_form() {
                     </colgroup>
 
                     <tr>
-                        <td valign="top"
-                            colspan="2"><strong>Google re-captcha</strong></td>
+                        <td valign="top" colspan="2"><strong>ALTCHA</strong></td>
                     </tr>
                     <tr>
-                    <tr>
-                        <td>Sitekey</td>
-                        <td><input type="text" name="emol_frm_google_captcha_sitekey"
-                                   value="<?php echo $eazymatchOptions['emol_frm_google_captcha_sitekey']; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td>Secret</td>
-                        <td><input type="text" name="emol_frm_google_captcha_secret"
-                                   value="<?php echo $eazymatchOptions['emol_frm_google_captcha_secret']; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td valign="top"
-                            colspan="2">&nbsp;
+                        <td colspan="2">
+                            <?php esc_html_e( 'Sollicitatie- en reactieformulieren worden beschermd met ALTCHA (proof-of-work). Er zijn geen Google-sleutels nodig.', 'Emol-3.0-identifier' ); ?>
                         </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" colspan="2">&nbsp;</td>
                     </tr>
                     <tr>
                         <td><?php _e( EMOL_ACCOUNT_APP_FIRSTNAME . '/' . EMOL_ACCOUNT_APP_LASTNAME, 'Emol-3.0-identifier' ); ?> </td>

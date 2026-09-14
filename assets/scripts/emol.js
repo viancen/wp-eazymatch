@@ -369,8 +369,32 @@ var navProtect = {
 
 window.onbeforeunload = navProtect.unloadCheck;
 
+function emolEnableCaptchaSubmit() {
+    var btn = document.getElementById('emol-apply-submit-button');
+    if (btn) {
+        btn.removeAttribute('disabled');
+    }
+}
+
 function emolRecaptchaCallback() {
-    document.getElementById('emol-apply-submit-button').removeAttribute('disabled');
+    emolEnableCaptchaSubmit();
+}
+
+function emolBindAltcha() {
+    var widgets = document.querySelectorAll('altcha-widget');
+    for (var i = 0; i < widgets.length; i++) {
+        widgets[i].addEventListener('statechange', function (ev) {
+            if (ev.detail && ev.detail.state === 'verified') {
+                emolEnableCaptchaSubmit();
+            }
+        });
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', emolBindAltcha);
+} else {
+    emolBindAltcha();
 }
 
 function emol_connect_linkedin(url, instance) {

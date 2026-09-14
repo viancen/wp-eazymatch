@@ -43,17 +43,14 @@ class emol_shortcode_react
         if (emol_post_exists('EMOL_apply')) {
 
             $secure = false;
-            if (emol_post_exists('emol_captcha_code')) {
-                if ($this->captcha->isValid() || emol_session::isValidId('applicant_id')) {
-                    $secure = true;
-                }
+            if (emol_session::isValidId('applicant_id')) {
+                $secure = true;
             }
-
-            if (emol_post_exists('g-recaptcha-response')) {
-
-                if (emol_verify_recaptcha(emol_post('g-recaptcha-response'))) {
-                    $secure = true;
-                }
+            if (emol_post_exists('emol_captcha_code') && $this->captcha->isValid()) {
+                $secure = true;
+            }
+            if (emol_verify_altcha()) {
+                $secure = true;
             }
 
             if ($secure == true) {

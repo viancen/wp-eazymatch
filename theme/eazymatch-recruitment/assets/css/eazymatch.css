@@ -603,7 +603,8 @@
 	border: 1px solid rgba(31, 94, 255, .2);
 }
 
-.g-recaptcha { margin: 1rem 0; }
+altcha-widget.emol-altcha,
+.emol-altcha { display: block; margin: 1rem 0; }
 
 .emol_grid {
 	width: 100%;

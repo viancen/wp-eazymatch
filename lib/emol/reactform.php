@@ -456,28 +456,23 @@ if (!empty($data['captcha-error'])) {
     $reactHtml .= '<div class="emol-apply-row" id="captcha-error"><div class="emol-input-wrapper">' . EMOL_CAPTCHA_INCORRECT . '</div></div>';
 }
 
-if (get_option('emol_frm_google_captcha_sitekey') && get_option('emol_frm_google_captcha_secret')) {
+$showAltcha = !emol_session::isValidId('company_id') && !emol_session::isValidId('applicant_id');
 
+if ($showAltcha) {
     $reactHtml .= '
         <div class="emol-apply-row" id="emol-captcha-row">
         <div class="emol-input-wrapper">&nbsp;</div>
-        <div class="emol-input-wrapper"><div class="g-recaptcha" data-sitekey="' . get_option('emol_frm_google_captcha_sitekey') . '"></div></div>
-        </div>';
-} else {
-
-    $reactHtml .= '
-        <div class="emol-apply-row" id="emol-captcha-row">
-
-        <div class="emol-input-wrapper">' . $this->captcha->getImageTag() . '</div>
-        <div class="emol-input-wrapper">' . $this->captcha->getFormFields() . '</div>
+        <div class="emol-input-wrapper">' . emol_altcha::widgetHtml() . '</div>
         </div>';
 }
+
+$reactSubmitDisabled = $showAltcha ? ' disabled' : '';
 
 $reactHtml .= '<div class="emol-react-row" id="emol-submit-row">
                 <div class="emol-label-wrapper">
                     &nbsp;
                 </div>
                 <div class="emol-input-wrapper">
-                    <input type="submit" class="emol-button emol-button-submit emol-button-react" value="' . EMOL_REACT_SEND . '" />
+                    <input type="submit" class="emol-button emol-button-submit emol-button-react" id="emol-apply-submit-button"' . $reactSubmitDisabled . ' value="' . EMOL_REACT_SEND . '" />
                 </div>
             </div>';

@@ -200,9 +200,8 @@ function emol_widget_init()
 
 // prepare client resources
 emol_require::jqueryUi();
-if (get_option('emol_frm_google_captcha_sitekey') && get_option('emol_frm_google_captcha_secret')) {
-    emol_require::recaptcha();
-}
+require_once EMOL_DIR . '/lib/emol/altcha.php';
+emol_require::altcha();
 
 add_action('widgets_init', 'emol_widget_init');
 

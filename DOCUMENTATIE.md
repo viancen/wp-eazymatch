@@ -230,7 +230,7 @@ onder **EazyMatch > Shortcodes**. Dit overzicht wordt gegenereerd uit
 `lib/emol/shortcoderegistry.php`; een nieuwe shortcode of parameter hoeft alleen
 daar te worden toegevoegd.
 
-## 9. Formulieren en reCAPTCHA instellen
+## 9. Formulieren en spambeveiliging instellen
 
 Ga naar **EazyMatch > Formulieren** om per invoerveld te bepalen of het:
 
@@ -238,10 +238,8 @@ Ga naar **EazyMatch > Formulieren** om per invoerveld te bepalen of het:
 - optioneel wordt getoond;
 - verplicht wordt getoond.
 
-Op dit scherm kunnen ook de Google reCAPTCHA-sitekey en het bijbehorende secret
-worden ingevuld. Vul altijd beide waarden in en zorg dat het websitedomein bij
-de reCAPTCHA-configuratie is toegestaan. Laat beide velden leeg als reCAPTCHA
-niet wordt gebruikt.
+Sollicitatie- en reactieformulieren worden automatisch beschermd met ALTCHA
+(proof-of-work). Daarvoor zijn geen Google-sleutels of extra instellingen nodig.
 
 Controleer onder **EazyMatch > Vacatures** daarnaast:
 
@@ -286,7 +284,7 @@ Controleer na de configuratie minimaal het volgende:
 3. Zoeken en het wissen van filters werken.
 4. Een vacature opent op de pagina **Vacature** en geeft geen 404-fout.
 5. De sollicitatieknop opent het juiste formulier.
-6. Verplichte velden en reCAPTCHA worden correct gevalideerd.
+6. Verplichte velden en de ALTCHA-controle worden correct gevalideerd.
 7. Een testsollicitatie komt in de juiste EazyMatch-omgeving binnen.
 8. De bedankpagina of succesmelding verschijnt na verzenden.
 9. De weergave werkt op mobiel en desktop.
@@ -326,8 +324,9 @@ Styling** opnieuw op en leeg vervolgens de WordPress-, server- en browsercache.
 
 ### Het formulier wordt niet verzonden
 
-Test zonder cache en controleer de verplichte velden. Als reCAPTCHA actief is,
-controleer dan de combinatie van sitekey, secret en toegestaan domein.
+Test zonder cache en controleer de verplichte velden. Als het formulier niet
+verstuurt, controleer dan of de ALTCHA-widget laadt (JavaScript niet geblokkeerd)
+en of `admin-ajax.php` bereikbaar is.
 
 ## Ondersteuning
 

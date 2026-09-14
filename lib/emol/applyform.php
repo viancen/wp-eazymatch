@@ -862,19 +862,15 @@ if (!empty($data['captcha-error'])) {
 				</div>';
 }
 
-if (get_option('emol_frm_google_captcha_sitekey') && get_option('emol_frm_google_captcha_secret')) {
-
-	$applyHtml .= '
+$applyHtml .= '
         <div class="emol-apply-row" id="emol-captcha-row">
 			<div class="emol-input-wrapper">&nbsp;</div>
-			
 			<div class="emol-input-wrapper">
-				<div class="g-recaptcha" data-callback="emolRecaptchaCallback" data-sitekey="' . get_option('emol_frm_google_captcha_sitekey') . '"></div>
+				' . emol_altcha::widgetHtml() . '
 			</div>
-			
         </div>';
 
-	$applyHtml .= '
+$applyHtml .= '
     <div class="emol-apply-row" id="emol-submit-row">
 		<div class="emol-input-wrapper">
 		&nbsp;
@@ -884,7 +880,3 @@ if (get_option('emol_frm_google_captcha_sitekey') && get_option('emol_frm_google
 			<input type="button" class="emol-button" id="emol-apply-back-button" value="' . EMOL_BACK . '" onclick="history.go(-1)" />
 		</div>
     </div>';
-
-} else {
-	$applyHtml = 'Stel eerst de google Captcha Keys in.';
-}

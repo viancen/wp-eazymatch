@@ -21,7 +21,7 @@ add_action( 'admin_menu', 'eazymatch_admin_menu' );
  *
  */
 function eazymatch_admin_menu() {
-	add_menu_page( 'EazyMatch', EMOL_ADMIN_GLOBAL, 'manage_options', 'emol-admin', 'eazymatch_plugin_options', 'https://emol.eazymatch.cloud/favicon-16x16.png' );
+	add_menu_page( 'EazyMatch', EMOL_ADMIN_GLOBAL, 'manage_options', 'emol-admin', 'eazymatch_plugin_options', plugins_url( 'assets/img/eazymatch-icon.png', EMOL_DIR . '/wp-eazymatch.php' ) );
 
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_JOB, EMOL_ADMIN_JOB, 'manage_options', 'emol-job', 'eazymatch_plugin_job' );
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_MANAGER, EMOL_ADMIN_MANAGER, 'manage_options', 'emol-manager', 'eazymatch_plugin_manager' );

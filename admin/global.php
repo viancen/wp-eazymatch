@@ -94,7 +94,8 @@ function eazymatch_plugin_options() {
         <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
 
         <div align="right"><a href="https://www.eazymatch-online.nl" target="_new"><img
-                        src="https://base.eazymatch.cloud/images/login-img/EazyMatch-vector.svg"/></a></div>
+                        src="<?php echo esc_url( plugins_url( 'assets/img/eazymatch-logo.png', EMOL_DIR . '/wp-eazymatch.php' ) ); ?>"
+                        alt="EazyMatch" /></a></div>
         <div id="emol-admin-table">
             <table class="emol-welcome-panel" style="width: 100%;">
                 <tr>

@@ -1058,40 +1058,7 @@ function emol_post_application()
         if (!filter_var($emailValidate, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
-        $resultCaptcha = false;
-        if (emol_post_exists('g-recaptcha-response')) {
-
-            $data_google = array(
-                'secret' => get_option('emol_frm_google_captcha_secret'),
-                'response' => emol_post('g-recaptcha-response'),
-                'remoteip' => $_SERVER['REMOTE_ADDR']
-            );
-
-            $options = array(
-                'http' => array(
-                    'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                    'method' => 'POST',
-                    'content' => http_build_query($data_google),
-                ),
-                "ssl" => array(
-                    "verify_peer" => false,
-                    "verify_peer_name" => false,
-                )
-            );
-
-            $context = stream_context_create($options);
-            $result = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
-            $result = json_decode($result, true);
-
-            if (isset ($result['success']) && $result['success'] == true) {
-                $resultCaptcha = true;
-            }
-
-        } else {
-            return false;
-        }
-
-        if (!$resultCaptcha) {
+        if (!emol_verify_altcha()) {
             return false;
         }
 
@@ -1382,42 +1349,15 @@ function emol_post_exists($keyName)
 }
 
 /**
- * Validate a Google reCAPTCHA response through the WordPress HTTP API.
+ * @deprecated Use emol_verify_altcha(). Kept so older call sites still work.
  *
- * @param string $response Client response token.
+ * @param mixed $response Unused; the posted altcha field is used instead.
+ *
  * @return bool
  */
-function emol_verify_recaptcha($response)
+function emol_verify_recaptcha($response = null)
 {
-    $secret = get_option('emol_frm_google_captcha_secret');
-    if (empty($secret) || empty($response)) {
-        return false;
-    }
-
-    $body = array(
-        'secret' => $secret,
-        'response' => $response,
-    );
-
-    if (!empty($_SERVER['REMOTE_ADDR'])) {
-        $body['remoteip'] = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
-    }
-
-    $request = wp_remote_post(
-        'https://www.google.com/recaptcha/api/siteverify',
-        array(
-            'timeout' => 10,
-            'body' => $body,
-        )
-    );
-
-    if (is_wp_error($request) || 200 !== wp_remote_retrieve_response_code($request)) {
-        return false;
-    }
-
-    $result = json_decode(wp_remote_retrieve_body($request), true);
-
-    return is_array($result) && !empty($result['success']);
+    return emol_verify_altcha();
 }
 
 function emol_post_set($keyName, $value)
