@@ -49,6 +49,9 @@ class emol_shortcode_jobs
 
             $jobs = $wsJob->getPublished($limit, $filterOptions);
 
+            // optional: use one of the job text blocks as short text (job-teaser-text attribute)
+            $teaserTexts = emol_jobteaser::fetchForJobs($jobs, emol_jobteaser::fromAtts($atts));
+
             //navigation
             $total = count($jobs);
 
@@ -69,7 +72,8 @@ class emol_shortcode_jobs
                     } else {
                         $emolRowColor = 'emol-odd';
                     }
-                    $text .= emol_parse_html_jobresult($job, $emolRowColor);
+                    $teaserText = isset($teaserTexts[$job['id']]) ? $teaserTexts[$job['id']] : null;
+                    $text .= emol_parse_html_jobresult($job, $emolRowColor, $teaserText);
                 }
 
                 //$text .= '<div class="emol-pagnation-readmore"><a href="'.get_bloginfo( 'wpurl').'/'.get_option( 'emol_job_search_url' ).'/all'.$trailingData.'">'.EMOL_JOBSEARCH_MORE.'</a></div>';

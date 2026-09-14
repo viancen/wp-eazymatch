@@ -1,0 +1,399 @@
+/**
+ * EazyMatch admin styling.
+ *
+ * Loaded only on the EazyMatch admin pages (body.emol-admin-page). It restyles
+ * the existing markup of every EazyMatch menu item into one consistent, calm
+ * layout. It changes presentation only; no field names, values or saved
+ * behaviour are touched.
+ *
+ * A number of the plugin screens print inline <style> blocks in the page body.
+ * Because those come after this stylesheet in the document, some rules here are
+ * intentionally scoped with the body class + #emol-admin-table id (and a few
+ * !important flags) so the shared look wins.
+ */
+
+:root {
+	--emol-brand: #1f5eff;
+	--emol-brand-dark: #1544bd;
+	--emol-brand-soft: #eef3ff;
+	--emol-ink: #1d2433;
+	--emol-body: #48505f;
+	--emol-muted: #6b7280;
+	--emol-line: #e3e7ef;
+	--emol-surface: #ffffff;
+	--emol-surface-alt: #f6f8fc;
+	--emol-radius: 10px;
+	--emol-radius-sm: 7px;
+	--emol-shadow: 0 1px 2px rgba(16, 23, 42, .04), 0 8px 24px rgba(16, 23, 42, .05);
+}
+
+/* -------------------------------------------------------------------------
+   1. Page frame
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page.wp-admin #wpcontent {
+	background: var(--emol-surface-alt);
+}
+
+.emol-admin-page .wrap {
+	max-width: 1080px;
+	margin: 24px 20px 40px 2px;
+}
+
+.emol-admin-page .wrap > h2:first-of-type,
+.emol-admin-page .wrap > h1:first-of-type {
+	font-size: 23px;
+	font-weight: 600;
+	line-height: 1.3;
+	color: var(--emol-ink);
+	margin: 0 0 4px;
+	padding: 0 0 16px;
+	border-bottom: 1px solid var(--emol-line);
+}
+
+/* The brand logo that the overview screen floats to the right. */
+.emol-admin-page .wrap > div[align="right"] {
+	margin-top: -8px;
+}
+.emol-admin-page .wrap > div[align="right"] img {
+	max-height: 40px;
+	width: auto;
+}
+
+.emol-admin-page h2,
+.emol-admin-page h3 {
+	color: var(--emol-ink);
+}
+
+.emol-admin-page hr {
+	border: 0;
+	border-top: 1px solid var(--emol-line);
+	margin: 20px 0;
+}
+
+/* -------------------------------------------------------------------------
+   2. Panels
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page #emol-admin-table {
+	background: var(--emol-surface);
+	border: 1px solid var(--emol-line);
+	border-radius: var(--emol-radius);
+	box-shadow: var(--emol-shadow);
+	padding: 8px 24px 20px;
+	margin-top: 16px;
+}
+
+.emol-admin-page #emol-admin-table > h2 {
+	font-size: 16px;
+	font-weight: 600;
+	margin: 20px 0 6px;
+}
+
+.emol-admin-page .emol-welcome-panel,
+.emol-admin-page #emol-admin-table table {
+	width: 100%;
+	border: 0;
+	border-collapse: collapse;
+	background: transparent;
+	box-shadow: none;
+	margin: 0 0 8px;
+}
+
+/* Rows: quiet separators instead of the old hard borders. */
+.emol-admin-page #emol-admin-table table td,
+.emol-admin-page #emol-admin-table tr td {
+	background: transparent !important;
+	border: 0 !important;
+	border-bottom: 1px solid var(--emol-line) !important;
+	padding: 11px 10px !important;
+	vertical-align: middle;
+	color: var(--emol-body);
+}
+
+.emol-admin-page #emol-admin-table table tr:last-child td {
+	border-bottom: 0 !important;
+}
+
+/* First column reads as a label. */
+.emol-admin-page #emol-admin-table td:first-child {
+	color: var(--emol-ink);
+	font-weight: 500;
+}
+
+/* Nested tables (e.g. the match-profile matrix in Formulieren) stay compact. */
+.emol-admin-page #emol-admin-table td table td {
+	border-bottom: 1px solid var(--emol-line) !important;
+	padding: 6px 8px !important;
+}
+.emol-admin-page #emol-admin-table td table th {
+	text-align: left;
+	font-size: 11px;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	color: var(--emol-muted);
+	padding: 6px 8px;
+	border-bottom: 1px solid var(--emol-line);
+}
+
+/* -------------------------------------------------------------------------
+   3. Section header rows (.cTdh)
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page #emol-admin-table .cTdh {
+	background: var(--emol-surface-alt) !important;
+	border: 0 !important;
+	border-bottom: 1px solid var(--emol-line) !important;
+	border-radius: var(--emol-radius-sm);
+	padding: 4px 14px !important;
+}
+
+.emol-admin-page #emol-admin-table .cTdh br {
+	display: none;
+}
+
+.emol-admin-page #emol-admin-table .cTdh h2 {
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: .03em;
+	text-transform: uppercase;
+	color: var(--emol-brand-dark);
+	margin: 10px 0;
+}
+
+/* -------------------------------------------------------------------------
+   4. Form controls
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page #emol-admin-table input[type="text"],
+.emol-admin-page #emol-admin-table input[type="url"],
+.emol-admin-page #emol-admin-table input[type="email"],
+.emol-admin-page #emol-admin-table input[type="password"],
+.emol-admin-page #emol-admin-table input[type="number"],
+.emol-admin-page #emol-admin-table select,
+.emol-admin-page #emol-admin-table textarea {
+	max-width: 460px;
+	border: 1px solid #c8cdd7 !important;
+	border-radius: var(--emol-radius-sm) !important;
+	padding: 7px 10px !important;
+	background: #fff;
+	color: var(--emol-ink);
+	box-shadow: none;
+	line-height: 1.4;
+	transition: border-color .12s ease, box-shadow .12s ease;
+}
+
+.emol-admin-page #emol-admin-table textarea {
+	max-width: 100%;
+}
+
+.emol-admin-page #emol-admin-table input[type="text"]:focus,
+.emol-admin-page #emol-admin-table input[type="url"]:focus,
+.emol-admin-page #emol-admin-table input[type="email"]:focus,
+.emol-admin-page #emol-admin-table input[type="password"]:focus,
+.emol-admin-page #emol-admin-table input[type="number"]:focus,
+.emol-admin-page #emol-admin-table select:focus,
+.emol-admin-page #emol-admin-table textarea:focus {
+	border-color: var(--emol-brand) !important;
+	box-shadow: 0 0 0 3px var(--emol-brand-soft) !important;
+	outline: none;
+}
+
+/* Radio pairs (On/Off, Yes/No) read as inline options. */
+.emol-admin-page #emol-admin-table input[type="radio"] {
+	margin: 0 6px 0 2px;
+}
+.emol-admin-page #emol-admin-table input[type="radio"]:first-child {
+	margin-left: 0;
+}
+
+/* The code editor on the Styling screen. */
+.emol-admin-page #emol_stylesheet {
+	max-width: 100%;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+	font-size: 13px !important;
+	line-height: 1.6 !important;
+	border-radius: var(--emol-radius-sm) !important;
+	background: #0f172a !important;
+	color: #e2e8f0 !important;
+}
+
+/* -------------------------------------------------------------------------
+   5. Buttons
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page .button-primary,
+.emol-admin-page #emol-admin-table button:not(.emol-plain) {
+	background: var(--emol-brand);
+	border-color: var(--emol-brand-dark);
+	border-radius: 999px;
+	padding: 4px 18px;
+	height: auto;
+	min-height: 34px;
+	font-weight: 600;
+	box-shadow: none;
+	text-shadow: none;
+}
+
+.emol-admin-page .button-primary:hover,
+.emol-admin-page .button-primary:focus,
+.emol-admin-page #emol-admin-table button:not(.emol-plain):hover {
+	background: var(--emol-brand-dark);
+	border-color: var(--emol-brand-dark);
+}
+
+.emol-admin-page p.submit {
+	margin-top: 8px;
+	padding-top: 0;
+}
+
+/* Connection buttons on the overview screen. */
+.emol-admin-page #emol-admin-table button[onclick] {
+	margin: 4px 0;
+	background: #fff;
+	color: var(--emol-brand-dark);
+	border: 1px solid #c8cdd7;
+	border-radius: 999px;
+	padding: 6px 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: border-color .12s ease, color .12s ease, background .12s ease;
+}
+.emol-admin-page #emol-admin-table button[onclick]:hover {
+	border-color: var(--emol-brand);
+	color: var(--emol-brand-dark);
+	background: var(--emol-brand-soft);
+}
+
+/* -------------------------------------------------------------------------
+   6. Notices
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page .updated {
+	border-left-color: var(--emol-brand);
+	border-radius: var(--emol-radius-sm);
+}
+
+/* -------------------------------------------------------------------------
+   7. Shortcodes screen
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page .emol-shortcode-card {
+	border: 1px solid var(--emol-line) !important;
+	border-radius: var(--emol-radius) !important;
+	box-shadow: var(--emol-shadow) !important;
+	padding: 18px 20px !important;
+	margin: 16px 0 !important;
+}
+
+.emol-admin-page .emol-shortcode-card h3 code {
+	background: var(--emol-brand-soft);
+	color: var(--emol-brand-dark);
+	padding: 3px 8px;
+	border-radius: 6px;
+}
+
+.emol-admin-page code {
+	background: var(--emol-surface-alt);
+	border-radius: 5px;
+	padding: 2px 6px;
+	color: #b91c6b;
+}
+
+.emol-admin-page .widefat {
+	border-radius: var(--emol-radius-sm);
+	overflow: hidden;
+	border-color: var(--emol-line);
+}
+.emol-admin-page .widefat thead th {
+	background: var(--emol-surface-alt);
+	color: var(--emol-ink);
+}
+
+/* -------------------------------------------------------------------------
+   8. Feeds / social logos (Connectiviteit screen)
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page #emol-admin-table td[bgcolor] {
+	background: var(--emol-surface-alt) !important;
+	border-radius: var(--emol-radius-sm);
+}
+.emol-admin-page #emol-admin-table td img {
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+/* -------------------------------------------------------------------------
+   9. Theme download card (overview screen)
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page .emol-card {
+	background: var(--emol-surface);
+	border: 1px solid var(--emol-line);
+	border-radius: var(--emol-radius);
+	box-shadow: var(--emol-shadow);
+	padding: 24px 26px;
+	margin: 22px 0;
+}
+
+.emol-admin-page .emol-theme-card {
+	position: relative;
+	overflow: hidden;
+	background:
+		linear-gradient(120deg, rgba(31, 94, 255, .06), rgba(31, 94, 255, 0) 60%),
+		var(--emol-surface);
+	border-color: #d4defb;
+}
+
+.emol-admin-page .emol-theme-card h2 {
+	margin: 0 0 6px;
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.emol-admin-page .emol-theme-card p {
+	max-width: 640px;
+	color: var(--emol-body);
+	margin: 0 0 14px;
+}
+
+.emol-admin-page .emol-theme-card .button-primary {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 22px;
+}
+.emol-admin-page .emol-theme-card .button-primary .dashicons {
+	line-height: 1;
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+}
+
+.emol-admin-page .emol-theme-card__hint {
+	font-size: 12.5px;
+	color: var(--emol-muted);
+	margin: 0;
+}
+
+.emol-admin-page .emol-theme-card__badge {
+	display: inline-block;
+	margin-bottom: 12px;
+	padding: 3px 11px;
+	border-radius: 999px;
+	background: var(--emol-brand-soft);
+	color: var(--emol-brand-dark);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------------------
+   10. Misc cleanup
+   ---------------------------------------------------------------------- */
+
+/* The "first setup your credentials" warning box on the Forms screen. */
+.emol-admin-page .wrap > div[style*="ffebeb"] {
+	border-radius: var(--emol-radius-sm);
+}

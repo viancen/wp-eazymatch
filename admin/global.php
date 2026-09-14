@@ -276,6 +276,35 @@ function eazymatch_plugin_options() {
 
     </form>
 
+	<?php
+	// Download of the bundled recruitment theme.
+	if ( function_exists( 'eazymatch_theme_is_available' ) && eazymatch_theme_is_available() ) {
+		$emol_theme_download_url = wp_nonce_url(
+			admin_url( 'admin-post.php?action=emol_download_theme' ),
+			'emol_download_theme'
+		);
+		?>
+        <div class="emol-card emol-theme-card">
+            <span class="emol-theme-card__badge">WordPress thema</span>
+            <h2>Recruitment-website thema</h2>
+            <p>
+                Download het kant-en-klare <strong>EazyMatch Recruitment</strong>-thema. Het is gebouwd op de
+                shortcodes van deze plugin en levert een moderne vacaturewebsite met een homepage, zoek-,
+                overzicht-, detail- en sollicitatieweergaven. Een installatieassistent in het thema maakt de
+                benodigde EazyMatch-pagina's aan en koppelt ze automatisch.
+            </p>
+            <p>
+                <a class="button button-primary button-hero" href="<?php echo esc_url( $emol_theme_download_url ); ?>">
+                    <span class="dashicons dashicons-download"></span> Thema downloaden (.zip)
+                </a>
+            </p>
+            <p class="emol-theme-card__hint">
+                Installeer daarna via <em>Weergave &gt; Thema's &gt; Nieuw thema toevoegen &gt; Thema uploaden</em>.
+            </p>
+        </div>
+		<?php
+	}
+	?>
 
 	<?php
 

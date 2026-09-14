@@ -21,12 +21,17 @@ class emol_shortcode_jobpage {
 		'province'
 	);
 
-	function getContent() {
+	/**
+	 * @param array $atts shortcode attributes, e.g. job-teaser-text
+	 *
+	 * @return string
+	 */
+	function getContent( $atts = array() ) {
 
 		$reqvars =( get_query_var( 'emol_query' ) );
 
 
-		return emol_get_job_search_results( $reqvars, get_option('emol_job_search_page'), $this->searchCriteria );
+		return emol_get_job_search_results( $reqvars, get_option('emol_job_search_page'), $this->searchCriteria, $atts );
 
 	}
 }

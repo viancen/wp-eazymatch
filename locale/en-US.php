@@ -254,6 +254,7 @@ define( 'EMOL_ADMIN_MANAGER', 'Managers' );
 
 define( 'EMOL_ADMIN_STYLESHEET', 'Styling' );
 define( 'EMOL_ADMIN_SHARING', 'Connectivity' );
+define( 'EMOL_ADMIN_SHORTCODES', 'Shortcodes' );
 define( 'EMOL_ADMIN_FORM', 'Forms' );
 define( 'EMOL_ADMIN_FORM_APP_BIRTH', "Date of birth" );
 define( 'EMOL_ADMIN_FORM_APP_PHOTO', "Photo" );

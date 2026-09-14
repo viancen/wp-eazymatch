@@ -31,9 +31,63 @@ function eazymatch_admin_menu() {
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_ACC_FORM, EMOL_ADMIN_ACC_FORM, 'manage_options', 'emol-applicant-account', 'eazymatch_formmanager_applicant_account' );
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_STYLESHEET, EMOL_ADMIN_STYLESHEET, 'manage_options', 'emol-stylesheet', 'eazymatch_plugin_stylesheet' );
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_SHARING, EMOL_ADMIN_SHARING, 'manage_options', 'emol-sharing', 'eazymatch_plugin_sharing' );
+	add_submenu_page( 'emol-admin', EMOL_ADMIN_SHORTCODES, EMOL_ADMIN_SHORTCODES, 'manage_options', 'emol-shortcodes', 'eazymatch_plugin_shortcodes' );
 
 	// add_submenu_page( 'emol-admin', EMOL_ADMIN_SHARING, EMOL_ADMIN_SHARING, 'manage_options', 'emol-sharing', 'eazymatch_plugin_sharing');
 	// add_submenu_page( 'emol-admin', EMOL_ADMIN_ACCOUNT, EMOL_ADMIN_ACCOUNT, 'manage_options', 'emol-cv', 'eazymatch_plugin_account');
+}
+
+/**
+ * Load the EazyMatch admin stylesheet on the plugin's own screens only.
+ *
+ * Presentation only: this restyles the existing markup of every EazyMatch menu
+ * item into one consistent look, without changing any field or saved value.
+ *
+ * @param string $hook Current admin page hook suffix.
+ */
+function eazymatch_admin_assets( $hook ) {
+	if ( ! eazymatch_is_admin_screen() ) {
+		return;
+	}
+
+	$css_path = EMOL_DIR . '/assets/css/admin.css';
+	$version  = file_exists( $css_path ) ? filemtime( $css_path ) : EMOL_VERSION;
+
+	wp_enqueue_style( 'emol-admin-ui', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), $version );
+	wp_enqueue_style( 'dashicons' );
+}
+
+add_action( 'admin_enqueue_scripts', 'eazymatch_admin_assets' );
+
+/**
+ * Add a body class on the EazyMatch admin screens so the stylesheet can scope
+ * itself and win from the inline styles some screens still print.
+ *
+ * @param string $classes Space separated body classes.
+ *
+ * @return string
+ */
+function eazymatch_admin_body_class( $classes ) {
+	if ( eazymatch_is_admin_screen() ) {
+		$classes .= ' emol-admin-page';
+	}
+
+	return $classes;
+}
+
+add_filter( 'admin_body_class', 'eazymatch_admin_body_class' );
+
+/**
+ * Are we on one of the EazyMatch admin screens?
+ *
+ * @return bool
+ */
+function eazymatch_is_admin_screen() {
+	if ( ! isset( $_GET['page'] ) ) {
+		return false;
+	}
+
+	return strpos( sanitize_key( wp_unslash( $_GET['page'] ) ), 'emol-' ) === 0;
 }
 
 /**
@@ -55,4 +109,6 @@ include( EMOL_DIR . '/admin/avg.php' );
 include( EMOL_DIR . '/admin/stylesheet.php' );
 include( EMOL_DIR . '/admin/sharing.php' );
 include( EMOL_DIR . '/admin/applicant-account.php' );
+include( EMOL_DIR . '/admin/shortcodes.php' );
+include( EMOL_DIR . '/admin/theme-download.php' );
 ?>

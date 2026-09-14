@@ -496,7 +496,18 @@ function emol_301($newUrl)
 }
 
 //returns nice html for a jobrecord
-function emol_parse_html_jobresult($job, $class = '')
+/**
+ * Renders one job in a job overview (jobs shortcode / jobpage search results).
+ *
+ * @param array       $job
+ * @param string      $class      odd/even css class
+ * @param string|null $teaserText text block value selected with the job-teaser-text
+ *                                shortcode attribute; null/empty falls back to the
+ *                                job description
+ *
+ * @return string
+ */
+function emol_parse_html_jobresult($job, $class = '', $teaserText = null)
 {
 
     global $trailingData;
@@ -577,7 +588,13 @@ function emol_parse_html_jobresult($job, $class = '')
     $text .= $competence_section;
 
     if ($descVisible == 1) {
-        $text .= '<div class="eazymatch_job_body"> ' . emol_firstWords(clear_newline(strip_tags(nl2br($job['description'])))) . '... </div>';
+        $shortText = $job['description'];
+        $bodyClass = 'eazymatch_job_body';
+        if ($teaserText !== null && trim(strip_tags((string)$teaserText)) !== '') {
+            $shortText = $teaserText;
+            $bodyClass .= ' eazymatch_job_body-teaser';
+        }
+        $text .= '<div class="' . $bodyClass . '"> ' . emol_firstWords(clear_newline(strip_tags(nl2br($shortText)))) . '... </div>';
     }
     if ($regioVisible == 1 && isset($job['Address']['Region'])) {
         $text .= '<div class="eazymatch_job_region">' . $job['Address']['Region']['name'] . ' </div>';
@@ -656,7 +673,15 @@ function emol_get_job_url($jobdata)
     return $job_url;
 }
 
-function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
+/**
+ * @param string $reqVars
+ * @param string $page_slug
+ * @param array  $searchCriteria
+ * @param array  $atts  shortcode attributes (jobpage), e.g. job-teaser-text
+ *
+ * @return string
+ */
+function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria, $atts = array())
 {
 
     //slaslehs html etc
@@ -814,6 +839,9 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
 
         $emolRowColor = '';
 
+        // optional: use one of the job text blocks as short text (job-teaser-text attribute)
+        $teaserTexts = emol_jobteaser::fetchForJobs($searchQuery['result'], emol_jobteaser::fromAtts($atts));
+
         foreach ($searchQuery['result'] as $job) {
 
             if ($emolRowColor == 'emol-odd') {
@@ -821,7 +849,8 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria)
             } else {
                 $emolRowColor = 'emol-odd';
             }
-            $searchHtml .= emol_parse_html_jobresult($job, $emolRowColor);
+            $teaserText = isset($teaserTexts[$job['id']]) ? $teaserTexts[$job['id']] : null;
+            $searchHtml .= emol_parse_html_jobresult($job, $emolRowColor, $teaserText);
 
         }
         $searchHtml .= '<div class="emol-page-navigation emol-page-navigation-bottom">' . $nav . '</div>';

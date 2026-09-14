@@ -12,8 +12,12 @@ class emol_shortcodehandler {
 	 * [eazymatch view="apply"]
 	 * [eazymatch view="react"]
 	 * [eazymatch view="searchjobs" settings="title=search,button=zoek"]
+	 * [eazymatch view="jobs" job-teaser-text="12"]
 	 *
 	 * in contentpages
+	 *
+	 * The complete list of views and parameters lives in emol_shortcoderegistry
+	 * (and is shown in the CMS under EazyMatch > Shortcodes).
 	 */
 	static public function apply( $atts ) {
 
@@ -27,7 +31,7 @@ class emol_shortcodehandler {
 
 		$return = '';
 
-		if ( in_array( $view, array( 'cv', 'job', 'jobs', 'jobpage', 'apply', 'react', 'searchjobs' ) ) ) {
+		if ( emol_shortcoderegistry::isView( $view ) ) {
 
 			if ( $view === 'jobs' ) {
 				// get the shortcode content for jobs

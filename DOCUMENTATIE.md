@@ -183,6 +183,24 @@ Filteren op competentie-ID's kan als volgt:
 
 Gebruik alleen numerieke competentie-ID's uit het EazyMatch-matchprofiel.
 
+### Een tekstblok als korte tekst in het overzicht
+
+Standaard toont het overzicht de omschrijving van de vacature als korte tekst
+(mits **Korte omschrijving in zoekresultaat?** onder **EazyMatch > Vacatures**
+aan staat). Met `job-teaser-text` wijs je in plaats daarvan één van de
+tekstblokken van de vacature aan:
+
+```text
+[eazymatch view="jobs" limit="5" job-teaser-text="12"]
+[eazymatch view="jobpage" job-teaser-text="12"]
+```
+
+De waarde is het id van het tekstblok, of de originele EazyMatch-titel van het
+blok (bijvoorbeeld `job-teaser-text="Wij bieden"`). De beschikbare tekstblokken
+met hun id's staan onderaan **EazyMatch > Shortcodes**. Is het blok bij een
+vacature leeg of bestaat het niet, dan wordt voor die vacature de gewone
+omschrijving getoond.
+
 Een los zoekformulier kan ook elders worden geplaatst:
 
 ```text
@@ -194,17 +212,23 @@ een verticale streep (`|`).
 
 ## 8. Overzicht van beschikbare shortcodes
 
-| Shortcode | Functie |
-| --- | --- |
-| `[eazymatch view="jobs"]` | Compacte lijst met vacatures |
-| `[eazymatch view="searchjobs" settings="..."]` | Zoekformulier voor vacatures |
-| `[eazymatch view="jobpage"]` | Volledige vacaturezoekresultaten |
-| `[eazymatch view="job"]` | Eén vacature |
-| `[eazymatch view="apply"]` | Sollicitatieformulier |
-| `[eazymatch view="cv"]` | Compacte lijst uit de CV-database |
-| `[eazymatch view="react"]` | Reactieformulier voor een kandidaat |
+| Shortcode | Functie | Parameters |
+| --- | --- | --- |
+| `[eazymatch view="jobs"]` | Compacte lijst met vacatures | `limit`, `competences`, `job-teaser-text` |
+| `[eazymatch view="searchjobs" settings="..."]` | Zoekformulier voor vacatures | `settings` (verplicht) |
+| `[eazymatch view="jobpage"]` | Volledige vacaturezoekresultaten | `job-teaser-text` |
+| `[eazymatch view="job"]` | Eén vacature | – |
+| `[eazymatch view="apply"]` | Sollicitatieformulier | – |
+| `[eazymatch view="cv"]` | Compacte lijst uit de CV-database | – |
+| `[eazymatch view="react"]` | Reactieformulier voor een kandidaat | `applicant_id` |
 
 Voor de normale vacaturewebsite zijn de eerste vijf shortcodes voldoende.
+
+Een volledig overzicht van alle shortcodes, hun parameters (type, standaardwaarde,
+voorbeeld) en de beschikbare tekstblokken voor `job-teaser-text` staat in het CMS
+onder **EazyMatch > Shortcodes**. Dit overzicht wordt gegenereerd uit
+`lib/emol/shortcoderegistry.php`; een nieuwe shortcode of parameter hoeft alleen
+daar te worden toegevoegd.
 
 ## 9. Formulieren en reCAPTCHA instellen
 

@@ -1,0 +1,608 @@
+/**
+ * Styling for the markup rendered by the EazyMatch plugin.
+ *
+ * Class names follow the plugin output:
+ *  - .eazymatch-job-list / .emol-job-result-item  (view="jobs" and view="jobpage")
+ *  - .emol_widget#emol_search_widget              (view="searchjobs")
+ *  - .emol-job-*                                  (view="job")
+ *  - .emol_form_row / .emol-text-input            (view="apply", "react", accounts)
+ *  - .emol-cv-*                                   (view="cv")
+ */
+
+/* -------------------------------------------------------------------------
+   1. Search widget
+   ---------------------------------------------------------------------- */
+
+.emol_widget {
+	padding: 1.75rem;
+	background: var(--emr-surface-alt);
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius);
+}
+
+.emol_widget form {
+	display: grid;
+	gap: 1.1rem;
+	grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+	align-items: end;
+}
+
+.emol_widget label {
+	display: block;
+	margin-bottom: .35rem;
+	font-size: .85rem;
+	font-weight: 700;
+	letter-spacing: .02em;
+	color: var(--emr-ink);
+}
+
+.emol-free-search,
+.emol-location-search,
+.emol-province-search,
+.emol_widget .emol-select {
+	min-width: 0;
+}
+
+#emol-location-input {
+	display: grid;
+	grid-template-columns: 1fr 108px;
+	gap: .5rem;
+}
+
+.emol_widget input[type="text"],
+.emol_widget select,
+.emol-text-input,
+.emol-province-search-input,
+.emol-select-input {
+	width: 100%;
+	padding: .7rem .9rem;
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius-sm);
+	background: #fff;
+	font-size: 1rem;
+	font-family: inherit;
+	color: var(--emr-ink);
+}
+
+.emol_widget input[type="text"]:focus,
+.emol_widget select:focus {
+	border-color: var(--emr-brand);
+	box-shadow: 0 0 0 3px var(--emr-brand-soft);
+	outline: none;
+}
+
+.emol-search-part-label {
+	display: block;
+	margin-bottom: .35rem;
+	font-size: .85rem;
+	font-weight: 700;
+	color: var(--emr-ink);
+}
+
+.emol-search-checkbox-label {
+	display: inline-flex;
+	align-items: center;
+	gap: .4rem;
+	margin: 0 1rem .4rem 0;
+	font-weight: 500;
+	color: var(--emr-body);
+}
+
+.emol_widget input[type="checkbox"],
+.emol_widget input[type="radio"] { width: auto; margin-right: .35rem; }
+
+.emol-submit-wrapper,
+.emol-submit-button-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .75rem;
+	grid-column: 1 / -1;
+}
+
+.emol-button,
+.emol-button-search,
+.emol-button-apply,
+.emol-form-submit,
+.emol-account-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: .85rem 1.7rem;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	background: var(--emr-brand);
+	color: #fff;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.2;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+.emol-button:hover,
+.emol-button:focus {
+	background: var(--emr-brand-dark);
+	color: #fff;
+	text-decoration: none;
+	transform: translateY(-1px);
+	box-shadow: 0 8px 20px rgba(31, 94, 255, .25);
+}
+
+.emol-altbutton,
+.emol-button-reset {
+	display: inline-flex;
+	align-items: center;
+	padding: .8rem 1.4rem;
+	border: 1px solid var(--emr-line);
+	border-radius: 999px;
+	background: #fff;
+	color: var(--emr-ink);
+	font-weight: 600;
+	text-decoration: none;
+}
+.emol-altbutton:hover,
+.emol-button-reset a:hover {
+	border-color: var(--emr-brand);
+	color: var(--emr-brand-dark);
+	text-decoration: none;
+}
+
+.emol-reset-button a { text-decoration: none; }
+
+/* -------------------------------------------------------------------------
+   2. Job result list
+   ---------------------------------------------------------------------- */
+
+.eazymatch-job-list {
+	display: grid;
+	gap: 1.25rem;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.emol-job-result-item {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	padding: 1.75rem;
+	background: #fff;
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius);
+	box-shadow: var(--emr-shadow);
+	transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.emol-job-result-item:hover {
+	transform: translateY(-3px);
+	border-color: rgba(31, 94, 255, .35);
+	box-shadow: var(--emr-shadow-hover);
+}
+
+.emol-job-result-logo {
+	margin-bottom: 1rem;
+}
+.emol-job-result-logo img {
+	max-height: 46px;
+	max-width: 140px;
+	width: auto;
+	object-fit: contain;
+}
+
+.eazymatch_job_title {
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1.25;
+	letter-spacing: -.01em;
+	margin-bottom: .6rem;
+}
+.eazymatch_job_title a { color: var(--emr-ink); text-decoration: none; }
+.eazymatch_job_title a:hover { color: var(--emr-brand); }
+
+.eazymatch_job_body {
+	color: var(--emr-body);
+	font-size: .97rem;
+	margin-bottom: 1rem;
+}
+
+.eazymatch_job_body-teaser { color: var(--emr-body); }
+
+/* Meta chips: region, city, hours, dates */
+.eazymatch_job_region,
+.eazymatch_job_city,
+.eazymatch_job_hours,
+.eazymatch_job_date,
+.eazymatch_job_startdate,
+.eazymatch_job_enddate {
+	display: inline-flex;
+	align-items: center;
+	gap: .35rem;
+	margin: 0 .4rem .4rem 0;
+	padding: .3rem .7rem;
+	border-radius: 999px;
+	background: var(--emr-surface-alt);
+	color: var(--emr-body);
+	font-size: .85rem;
+	font-weight: 600;
+}
+
+.eazymatch_job_region::before { content: "\1F4CD"; }
+.eazymatch_job_city::before { content: "\1F3E2"; }
+.eazymatch_job_hours::before { content: "\23F1"; }
+.eazymatch_job_date::before,
+.eazymatch_job_startdate::before,
+.eazymatch_job_enddate::before { content: "\1F4C5"; }
+
+.emol-search-label { color: var(--emr-muted); font-weight: 500; }
+
+.emol-job-result-competence { margin-bottom: 1rem; }
+.emol-job-result-competence-row { margin-bottom: .5rem; }
+.emol-job-result-competence-header {
+	font-size: .75rem;
+	font-weight: 700;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+	color: var(--emr-muted);
+}
+.emol-job-result-competence-items { font-size: .93rem; color: var(--emr-ink); }
+.emol-job-result-competence-empty { color: var(--emr-muted); font-style: italic; }
+
+.eazymatch_job_toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .6rem;
+	margin-top: auto;
+	padding-top: 1.1rem;
+	font-size: 0; /* removes the &nbsp; between the plugin links */
+}
+
+.eazymatch_job_toolbar a {
+	display: inline-flex;
+	align-items: center;
+	padding: .6rem 1.25rem;
+	border-radius: 999px;
+	font-size: .95rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.eazymatch_job_toolbar a:first-child {
+	background: var(--emr-brand);
+	color: #fff;
+}
+.eazymatch_job_toolbar a:first-child:hover { background: var(--emr-brand-dark); color: #fff; }
+
+.eazymatch_job_toolbar a + a {
+	border: 1px solid var(--emr-line);
+	color: var(--emr-ink);
+	background: #fff;
+}
+.eazymatch_job_toolbar a + a:hover { border-color: var(--emr-brand); color: var(--emr-brand); }
+
+.emol-result-seperator { display: none; }
+
+.emol-no-results {
+	grid-column: 1 / -1;
+	padding: 2.5rem;
+	background: var(--emr-surface-alt);
+	border: 1px dashed var(--emr-line);
+	border-radius: var(--emr-radius);
+	color: var(--emr-muted);
+	text-align: center;
+}
+
+/* -------------------------------------------------------------------------
+   3. Pagination
+   ---------------------------------------------------------------------- */
+
+.emol-page-navigation {
+	margin: 2rem 0;
+}
+.emol-pagination-table { width: auto; border: 0; }
+.emol-pagination-table td { border: 0; padding: 0; }
+
+.emol-pagnation {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 40px;
+	height: 40px;
+	padding: 0 .55rem;
+	margin: 0 .25rem .25rem 0;
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius-sm);
+	font-weight: 600;
+	color: var(--emr-ink);
+	text-decoration: none;
+}
+.emol-pagnation a { color: inherit; text-decoration: none; }
+.emol-pagnation:hover { border-color: var(--emr-brand); color: var(--emr-brand); }
+.emol-pagnation-selected { background: var(--emr-brand); border-color: var(--emr-brand); color: #fff; }
+.emol-pagnation-selected a { color: #fff; }
+
+.emol-pagnation-readmore { margin-top: 1.5rem; text-align: center; }
+.emol-pagnation-readmore a {
+	display: inline-flex;
+	padding: .8rem 1.6rem;
+	border: 1px solid var(--emr-line);
+	border-radius: 999px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+/* -------------------------------------------------------------------------
+   4. Single job view
+   ---------------------------------------------------------------------- */
+
+.emol-job-picture { margin-bottom: 1.5rem; }
+.emol-job-picture img { max-height: 70px; width: auto; }
+
+.emol-job-heading {
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: var(--emr-ink);
+	margin: 2rem 0 .6rem;
+	letter-spacing: -.01em;
+}
+.emol-job-heading:first-child { margin-top: 0; }
+
+.emol-job-paragraph,
+.emol-job-textblock { margin-bottom: 1.4rem; }
+
+/* Property table of a single job: code, location and publication date. */
+#emol-job-body {
+	padding: 1.25rem 1.5rem;
+	margin-bottom: 1.75rem;
+	background: var(--emr-surface-alt);
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius);
+}
+
+#emol-job-body table { width: auto; border: 0; }
+#emol-job-body td { border: 0; padding: .3rem 1.25rem .3rem 0; vertical-align: top; }
+
+.emol-job-body-col1 {
+	font-size: .8rem;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	color: var(--emr-muted);
+	white-space: nowrap;
+}
+
+.emol-job-body-col2 { font-weight: 600; color: var(--emr-ink); }
+
+#emol-job-container > .emol-job-heading:first-of-type,
+#emol-job-container h2.emol-job-heading:first-of-type {
+	font-size: clamp(1.8rem, 1.3rem + 1.8vw, 2.6rem);
+	margin-bottom: 1.25rem;
+}
+
+.emol-job-competences { margin: 1.5rem 0; }
+.emol-job-competences table { width: 100%; }
+.emol-job-competences th { font-size: .85rem; color: var(--emr-muted); text-transform: uppercase; letter-spacing: .06em; }
+
+.competence-level-0,
+.competence-level-1 {
+	display: inline-block;
+	padding: .25rem .65rem;
+	margin: 0 .3rem .3rem 0;
+	border-radius: 999px;
+	background: var(--emr-brand-soft);
+	color: var(--emr-brand-dark);
+	font-size: .85rem;
+	font-weight: 600;
+}
+.competence-level-1 { background: var(--emr-surface-alt); color: var(--emr-body); }
+
+.emol-job-apply { margin: 2rem 0; }
+.emol-job-apply-top { margin-top: 0; }
+.emol-apply-button-email { margin-left: .5rem; }
+
+.eazymatch-view-job-404 {
+	padding: 3rem 2rem;
+	background: var(--emr-surface-alt);
+	border-radius: var(--emr-radius);
+	text-align: center;
+	color: var(--emr-muted);
+}
+
+.emol-sharing-section {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .5rem;
+	margin: 2rem 0;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--emr-line);
+}
+.emol-sharing-section img { max-height: 28px; width: auto; }
+
+/* -------------------------------------------------------------------------
+   5. Manager / contact block
+   ---------------------------------------------------------------------- */
+
+.emol-manager-contact-table {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	width: 100%;
+	margin-top: 1rem;
+	border: 0;
+}
+.emol-manager-contact-table td { border: 0; padding: 0; }
+
+.emol-manager-photo-container { flex: 0 0 auto; }
+.emol-manager-picture {
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 2px solid #fff;
+	box-shadow: var(--emr-shadow);
+}
+
+.emol-manager-name { font-weight: 700; color: var(--emr-ink); }
+.emol-manager-phone,
+.emol-manager-email { font-size: .95rem; }
+.emol-manager-contact-text { margin-bottom: .75rem; color: var(--emr-body); }
+.emol-manager-bottom { margin-top: 2rem; }
+
+/* -------------------------------------------------------------------------
+   6. Forms: apply, react, accounts
+   ---------------------------------------------------------------------- */
+
+.emol-form-div,
+.emol-form-table { width: 100%; }
+
+.emol_form_rows { display: grid; gap: 1.1rem; }
+
+.emol_form_row,
+.emol-apply-row,
+.emol-react-row {
+	display: grid;
+	gap: .35rem;
+}
+
+@media (min-width: 720px) {
+	.emol_form_row,
+	.emol-apply-row,
+	.emol-react-row {
+		grid-template-columns: 240px minmax(0, 1fr);
+		gap: 1.25rem;
+		align-items: start;
+	}
+}
+
+.emol-label-wrapper,
+.emol-label-row { padding-top: .6rem; }
+
+.emol-label-wrapper label,
+.emol-label-row label { font-weight: 600; color: var(--emr-ink); }
+
+.emol-required-asterix { color: #d6336c; margin-left: .15rem; }
+
+.emol-input-wrapper { min-width: 0; }
+
+.emol-text-input,
+.emol-textarea,
+.emol-select-input {
+	width: 100%;
+	padding: .7rem .9rem;
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius-sm);
+	background: #fff;
+	font-family: inherit;
+	font-size: 1rem;
+	color: var(--emr-ink);
+}
+
+.emol-text-input:focus,
+.emol-textarea:focus,
+.emol-select-input:focus {
+	border-color: var(--emr-brand);
+	box-shadow: 0 0 0 3px var(--emr-brand-soft);
+	outline: none;
+}
+
+.emol-textarea { min-height: 160px; resize: vertical; }
+.emol-small { max-width: 220px; }
+
+.emol-file {
+	padding: .55rem;
+	background: var(--emr-surface-alt);
+	border-style: dashed;
+}
+
+.emol-radio-input { width: auto; margin-right: .4rem; }
+
+.emol-account-table { width: 100%; }
+.emol-account-table-header {
+	font-size: 1.1rem;
+	font-weight: 700;
+	color: var(--emr-ink);
+	padding-top: 1.5rem;
+}
+.emol-account-input { width: 100%; }
+
+.emol-account-message {
+	padding: 1rem 1.25rem;
+	margin-bottom: 1.5rem;
+	border-radius: var(--emr-radius-sm);
+	background: var(--emr-brand-soft);
+	color: var(--emr-brand-dark);
+	border: 1px solid rgba(31, 94, 255, .2);
+}
+
+.g-recaptcha { margin: 1rem 0; }
+
+.emol_grid {
+	width: 100%;
+	margin: 1rem 0;
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius);
+	overflow: hidden;
+}
+.emol_grid_header { background: var(--emr-surface-alt); font-weight: 700; color: var(--emr-ink); }
+.emol_grid_row { display: flex; flex-wrap: wrap; gap: .75rem; padding: .75rem 1rem; border-bottom: 1px solid var(--emr-line); }
+.emol_grid_row:last-child { border-bottom: 0; }
+.emol_grid_col { flex: 1 1 160px; min-width: 0; }
+.emol_grid_nav, .emol_grid_row_nav { flex: 0 0 auto; }
+.emol_grid_template { display: none; }
+
+.button-grid-add,
+.button-grid-remove { padding: .45rem 1rem; font-size: .9rem; }
+
+/* -------------------------------------------------------------------------
+   7. CV database
+   ---------------------------------------------------------------------- */
+
+.emol-cv-block {
+	padding: 1.75rem;
+	margin-bottom: 1.25rem;
+	background: #fff;
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius);
+	box-shadow: var(--emr-shadow);
+}
+
+.emol-cv-title { font-size: 1.2rem; font-weight: 700; color: var(--emr-ink); margin-bottom: .3rem; }
+.emol-cv-slogan { color: var(--emr-brand); font-weight: 600; margin-bottom: .6rem; }
+.emol-cv-city { color: var(--emr-muted); font-size: .92rem; }
+.emol-cv-heading { font-weight: 700; color: var(--emr-ink); margin: 1.25rem 0 .4rem; }
+.emol-cv-paragraph { margin-bottom: 1rem; }
+.emol-cv-result-picture { border-radius: 50%; width: 64px; height: 64px; object-fit: cover; }
+.emol-cv-toolbar { margin-top: 1rem; display: flex; gap: .6rem; flex-wrap: wrap; }
+
+@media (min-width: 900px) {
+	.emol-cv-body { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 2rem; }
+}
+
+/* -------------------------------------------------------------------------
+   8. Modal & utilities
+   ---------------------------------------------------------------------- */
+
+.eazymatch-modal {
+	padding: 1.5rem;
+	background: #fff;
+	border-radius: var(--emr-radius);
+	box-shadow: var(--emr-shadow-hover);
+}
+
+.clear { clear: both; }
+
+/* jQuery UI autocomplete used by the location search */
+.ui-autocomplete {
+	z-index: 200;
+	background: #fff;
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius-sm);
+	box-shadow: var(--emr-shadow);
+	padding: .3rem;
+	list-style: none;
+}
+.ui-autocomplete .ui-menu-item { padding: .45rem .7rem; border-radius: 6px; cursor: pointer; }
+.ui-autocomplete .ui-menu-item:hover,
+.ui-autocomplete .ui-state-active { background: var(--emr-brand-soft); color: var(--emr-brand-dark); }
