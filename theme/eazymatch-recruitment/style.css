@@ -484,6 +484,9 @@ label { display: inline-block; font-weight: 600; color: var(--emr-ink); margin-b
 	border-bottom: 1px solid var(--emr-line);
 }
 .emr-page-hero h1 { margin-bottom: .4rem; }
+
+/* The plugin also prints the job name as an h2; the hero already shows it. */
+.emr-eazymatch-page #emol-job-container > h2.emol-job-heading { display: none; }
 .emr-page-hero__meta { color: var(--emr-muted); font-size: .95rem; margin: 0; }
 
 .emr-breadcrumbs { font-size: .88rem; color: var(--emr-muted); margin-bottom: .9rem; }

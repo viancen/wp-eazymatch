@@ -380,22 +380,89 @@
 	margin-bottom: 1.25rem;
 }
 
-.emol-job-competences { margin: 1.5rem 0; }
-.emol-job-competences table { width: 100%; }
-.emol-job-competences th { font-size: .85rem; color: var(--emr-muted); text-transform: uppercase; letter-spacing: .06em; }
+.emol-job-competences {
+	margin: 2.75rem 0 2rem;
+	padding-top: 2rem;
+	border-top: 1px solid var(--emr-line);
+}
 
-.competence-level-0,
-.competence-level-1 {
-	display: inline-block;
-	padding: .25rem .65rem;
-	margin: 0 .3rem .3rem 0;
+.emol-job-competences > .emol-job-heading {
+	font-size: 1.35rem;
+	margin: 0 0 1.35rem;
+}
+
+.emol-job-competences .competence-level-0 {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 1rem;
+	padding: 0;
+	margin: 0;
+	background: none;
+	border-radius: 0;
+	color: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+.emol-job-competences .competence-level-1 {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: .85rem;
+	margin: 0;
+	padding: 1.2rem 1.3rem 1.3rem;
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid var(--emr-line);
+	border-radius: var(--emr-radius);
+	box-shadow: var(--emr-shadow);
+	color: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+.emol-job-competences .competence-level-1::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 4px;
+	background: var(--emr-brand);
+}
+
+.emol-job-competences .competence-level-1 h4 {
+	margin: 0;
+	padding-left: .15rem;
+	font-size: .75rem;
+	font-weight: 700;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	color: var(--emr-brand);
+}
+
+.emol-job-competences .competence-level-1 ul {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .4rem;
+	margin: 0;
+	padding: 0;
+}
+
+.emol-job-competences .competence-level-1 li,
+.emol-job-competences .competence-level-2,
+.emol-job-competences [class^="competence-level-"]:not(.competence-level-0):not(.competence-level-1) {
+	display: inline-flex;
+	align-items: center;
+	padding: .4rem .8rem;
 	border-radius: 999px;
 	background: var(--emr-brand-soft);
 	color: var(--emr-brand-dark);
-	font-size: .85rem;
+	font-size: .92rem;
 	font-weight: 600;
+	line-height: 1.3;
 }
-.competence-level-1 { background: var(--emr-surface-alt); color: var(--emr-body); }
 
 .emol-job-apply { margin: 2rem 0; }
 .emol-job-apply-top { margin-top: 0; }

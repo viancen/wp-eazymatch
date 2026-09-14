@@ -59,20 +59,6 @@ function emr_setup_pages() {
 }
 
 /**
- * Register the setup screen under Appearance.
- */
-function emr_register_setup_page() {
-	add_theme_page(
-		__( 'EazyMatch thema-installatie', 'eazymatch-recruitment' ),
-		__( 'EazyMatch installatie', 'eazymatch-recruitment' ),
-		'manage_options',
-		'emr-setup',
-		'emr_render_setup_page'
-	);
-}
-add_action( 'admin_menu', 'emr_register_setup_page' );
-
-/**
  * Which of the required pages already exist and are linked?
  *
  * @return array<string, array<string, mixed>>
@@ -227,15 +213,15 @@ function emr_handle_setup_submit() {
 
 	set_transient( 'emr_setup_result', $result, 60 );
 
-	wp_safe_redirect( admin_url( 'themes.php?page=emr-setup&done=1' ) );
+	wp_safe_redirect( admin_url( 'admin.php?page=emol-theme&done=1' ) );
 	exit;
 }
 add_action( 'admin_init', 'emr_handle_setup_submit' );
 
 /**
- * Render the setup screen.
+ * Render the page-setup block (used on EazyMatch > EazyTheme).
  */
-function emr_render_setup_page() {
+function emr_render_setup_section() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
@@ -248,8 +234,8 @@ function emr_render_setup_page() {
 		delete_transient( 'emr_setup_result' );
 	}
 	?>
-	<div class="wrap">
-		<h1><?php esc_html_e( 'EazyMatch thema-installatie', 'eazymatch-recruitment' ); ?></h1>
+	<div class="emol-card">
+		<h2><?php esc_html_e( 'Pagina\'s aanmaken', 'eazymatch-recruitment' ); ?></h2>
 
 		<p>
 			<?php esc_html_e( 'Dit thema gebruikt de shortcodes van de EazyMatch-plugin. Hieronder maak je in één keer de vier pagina\'s aan die de plugin nodig heeft en koppel je ze aan de juiste instellingen.', 'eazymatch-recruitment' ); ?>
@@ -354,7 +340,7 @@ function emr_render_setup_page() {
 		<h2><?php esc_html_e( 'Daarna', 'eazymatch-recruitment' ); ?></h2>
 		<ol>
 			<li><?php esc_html_e( 'Vul onder EazyMatch de API-gegevens in en maak verbinding.', 'eazymatch-recruitment' ); ?></li>
-			<li><?php esc_html_e( 'Stel onder Weergave > Customizer de kleuren, hero en homepagevacatures in.', 'eazymatch-recruitment' ); ?></li>
+			<li><?php esc_html_e( 'Stel hierboven de primaire kleur en het logo in. Hero-teksten staan onder Weergave > Customizer.', 'eazymatch-recruitment' ); ?></li>
 			<li><?php esc_html_e( 'Maak onder Weergave > Menu\'s een hoofdmenu en koppel dat aan de menupositie "Hoofdmenu".', 'eazymatch-recruitment' ); ?></li>
 			<li><?php esc_html_e( 'Sluit de sollicitatiepagina uit van paginacache.', 'eazymatch-recruitment' ); ?></li>
 		</ol>
@@ -372,7 +358,7 @@ function emr_setup_notice() {
 
 	$screen = get_current_screen();
 
-	if ( $screen && 'appearance_page_emr-setup' === $screen->id ) {
+	if ( $screen && isset( $_GET['page'] ) && 'emol-theme' === $_GET['page'] ) {
 		return;
 	}
 
@@ -384,7 +370,7 @@ function emr_setup_notice() {
 		<p>
 			<strong><?php esc_html_e( 'EazyMatch Recruitment', 'eazymatch-recruitment' ); ?></strong> &mdash;
 			<?php esc_html_e( 'De vacaturepagina\'s van dit thema zijn nog niet volledig ingesteld.', 'eazymatch-recruitment' ); ?>
-			<a href="<?php echo esc_url( admin_url( 'themes.php?page=emr-setup' ) ); ?>"><?php esc_html_e( 'Installatie afronden', 'eazymatch-recruitment' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=emol-theme' ) ); ?>"><?php esc_html_e( 'Installatie afronden', 'eazymatch-recruitment' ); ?></a>
 		</p>
 	</div>
 	<?php

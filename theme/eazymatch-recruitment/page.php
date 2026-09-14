@@ -20,7 +20,7 @@ $emr_is_eazymatch = emr_page_has_eazymatch_view( get_the_ID() );
 <div class="emr-page-hero">
 	<div class="emr-container">
 		<?php emr_breadcrumbs(); ?>
-		<h1><?php the_title(); ?></h1>
+		<h1><?php echo esc_html( emr_page_heading() ); ?></h1>
 	</div>
 </div>
 

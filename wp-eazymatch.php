@@ -4,7 +4,7 @@ Plugin Name: EazyMatch
 Plugin URI: https://github.com/viancen/wp-eazymatch
 Description: De EazyMatch Wordpress plugin. Bij twijfel over de instellingen mail naar support@eazymatch.nl
 Name: EazyMatch
-Version: 6.3.0
+Version: 7.0.1
 Requires at least: 4.3
 Requires PHP: 7.4
 Update URI: https://github.com/viancen/wp-eazymatch
@@ -13,7 +13,7 @@ Author URI: https://eazymatch-online.nl
 */
 
 #php
-$globalVersion = '6.3.0';
+$globalVersion = '7.0.1';
 define('EMOL_VERSION', $globalVersion);
 
 //eazymatch directory on server

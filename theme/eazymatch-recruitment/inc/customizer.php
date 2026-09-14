@@ -52,6 +52,14 @@ function emr_option( $key ) {
 	$defaults = emr_defaults();
 	$default  = isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
 
+	if ( 'emr_brand_color' === $key ) {
+		$plugin_color = get_option( 'emol_theme_brand_color' );
+
+		if ( is_string( $plugin_color ) && '' !== $plugin_color ) {
+			return $plugin_color;
+		}
+	}
+
 	return (string) get_theme_mod( $key, $default );
 }
 

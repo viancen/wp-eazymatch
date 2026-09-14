@@ -376,6 +376,21 @@
 	margin: 0;
 }
 
+.emol-admin-page .emol-theme-logo__preview {
+	display: flex;
+	align-items: center;
+	min-height: 56px;
+	margin-bottom: 10px;
+}
+.emol-admin-page .emol-theme-logo__preview img {
+	max-height: 64px;
+	width: auto;
+	background: var(--emol-surface-alt);
+	border: 1px solid var(--emol-line);
+	border-radius: var(--emol-radius-sm);
+	padding: 8px 12px;
+}
+
 .emol-admin-page .emol-theme-card__badge {
 	display: inline-block;
 	margin-bottom: 12px;

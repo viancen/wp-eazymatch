@@ -100,3 +100,49 @@ jQuery(document).delegate('.tab_text', 'keydown', function (e) {
             jQuery(this).get(0).selectionEnd = start + 1;
     }
 });
+
+jQuery(function ($) {
+    if ($.fn.wpColorPicker) {
+        $('.emol-color-field').wpColorPicker();
+    }
+
+    var $logoId = $('#emol_theme_logo_id');
+    var $preview = $('#emol-theme-logo-preview');
+    var $clear = $('#emol-theme-logo-clear');
+    var frame;
+
+    $('#emol-theme-logo-upload').on('click', function (event) {
+        event.preventDefault();
+
+        if (frame) {
+            frame.open();
+            return;
+        }
+
+        frame = wp.media({
+            title: 'Logo kiezen',
+            button: { text: 'Dit logo gebruiken' },
+            multiple: false
+        });
+
+        frame.on('select', function () {
+            var attachment = frame.state().get('selection').first().toJSON();
+            var url = (attachment.sizes && attachment.sizes.medium)
+                ? attachment.sizes.medium.url
+                : attachment.url;
+
+            $logoId.val(attachment.id);
+            $preview.html('<img src="' + url + '" alt="" />');
+            $clear.show();
+        });
+
+        frame.open();
+    });
+
+    $clear.on('click', function (event) {
+        event.preventDefault();
+        $logoId.val('');
+        $preview.empty();
+        $clear.hide();
+    });
+});

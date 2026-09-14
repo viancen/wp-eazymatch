@@ -14,9 +14,15 @@ plugin via de `[eazymatch]`-shortcodes.
 2. Ga naar **Weergave > Thema's > Nieuw thema toevoegen > Thema uploaden** en
    upload `eazymatch-recruitment.zip`.
 3. Activeer het thema.
-4. Ga naar **Weergave > EazyMatch installatie** en klik op
-   **Pagina's aanmaken en koppelen**.
+4. Ga naar **EazyMatch > EazyTheme** voor de primaire kleur, het logo en
+   klik op **Pagina's aanmaken en koppelen**.
 5. Zet **Instellingen > Permalinks** op **Berichtnaam** en sla op.
+
+## EazyTheme
+
+Onder **EazyMatch > EazyTheme** stel je de primaire kleur en het logo in. Die
+waarden gelden voor het recruitmentthema. Het hoofdmenu wijs je zelf toe via
+**Weergave > Menu's** (menupositie **Hoofdmenu**).
 
 ## Wat de installatieassistent doet
 

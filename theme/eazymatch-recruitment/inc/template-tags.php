@@ -135,13 +135,40 @@ function emr_hero_stats() {
 }
 
 /**
+ * Attachment id of the logo set under EazyMatch > EazyTheme, or the Customizer.
+ *
+ * @return int
+ */
+function emr_logo_id() {
+	$plugin_logo = absint( get_option( 'emol_theme_logo_id' ) );
+
+	if ( $plugin_logo ) {
+		return $plugin_logo;
+	}
+
+	return absint( get_theme_mod( 'custom_logo' ) );
+}
+
+/**
  * Print the site logo or, when none is set, the site title.
  */
 function emr_branding() {
-	if ( has_custom_logo() ) {
-		echo '<div class="emr-branding__logo">';
-		the_custom_logo();
-		echo '</div>';
+	$logo_id = emr_logo_id();
+
+	if ( $logo_id ) {
+		printf(
+			'<div class="emr-branding__logo"><a href="%s" rel="home">%s</a></div>',
+			esc_url( home_url( '/' ) ),
+			wp_get_attachment_image(
+				$logo_id,
+				'full',
+				false,
+				array(
+					'class' => 'custom-logo',
+					'alt'   => get_bloginfo( 'name', 'display' ),
+				)
+			)
+		);
 
 		return;
 	}
@@ -160,6 +187,47 @@ function emr_branding() {
 	if ( $tagline ) {
 		echo '<p class="emr-branding__tagline">' . esc_html( $tagline ) . '</p>';
 	}
+}
+
+/**
+ * Vacaturetitel van de huidige detailpagina, of een lege string.
+ *
+ * De plugin haalt de vacature al op voor de documenttitel (wp_head);
+ * die data hergebruiken we hier.
+ *
+ * @return string
+ */
+function emr_current_job_title() {
+	global $emol_job, $jobInfo;
+
+	if ( is_array( $emol_job ) && ! empty( $emol_job['job']['name'] ) ) {
+		return (string) $emol_job['job']['name'];
+	}
+
+	if ( is_array( $jobInfo ) && ! empty( $jobInfo['name'] ) ) {
+		return (string) $jobInfo['name'];
+	}
+
+	return '';
+}
+
+/**
+ * Heading for the grey page hero.
+ *
+ * On a job detail page this is the vacancy name, not the WordPress page title.
+ *
+ * @return string
+ */
+function emr_page_heading() {
+	if ( is_page() && emr_page_has_eazymatch_view( get_the_ID(), 'job' ) ) {
+		$job_title = emr_current_job_title();
+
+		if ( '' !== $job_title ) {
+			return $job_title;
+		}
+	}
+
+	return get_the_title();
 }
 
 /**
@@ -200,7 +268,13 @@ function emr_breadcrumbs() {
 			}
 		}
 
-		echo '<span>' . esc_html( wp_trim_words( get_the_title(), 8, '&hellip;' ) ) . '</span>';
+		$heading = emr_page_heading();
+
+		if ( '' !== emr_current_job_title() ) {
+			echo '<span>' . esc_html( $heading ) . '</span>';
+		} else {
+			echo '<span>' . esc_html( wp_trim_words( $heading, 8, '&hellip;' ) ) . '</span>';
+		}
 	} elseif ( is_search() ) {
 		echo '<span>' . esc_html__( 'Zoekresultaten', 'eazymatch-recruitment' ) . '</span>';
 	} elseif ( is_404() ) {

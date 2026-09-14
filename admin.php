@@ -32,6 +32,7 @@ function eazymatch_admin_menu() {
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_STYLESHEET, EMOL_ADMIN_STYLESHEET, 'manage_options', 'emol-stylesheet', 'eazymatch_plugin_stylesheet' );
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_SHARING, EMOL_ADMIN_SHARING, 'manage_options', 'emol-sharing', 'eazymatch_plugin_sharing' );
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_SHORTCODES, EMOL_ADMIN_SHORTCODES, 'manage_options', 'emol-shortcodes', 'eazymatch_plugin_shortcodes' );
+	add_submenu_page( 'emol-admin', EMOL_ADMIN_THEME, EMOL_ADMIN_THEME, 'manage_options', 'emol-theme', 'eazymatch_plugin_theme' );
 
 	// add_submenu_page( 'emol-admin', EMOL_ADMIN_SHARING, EMOL_ADMIN_SHARING, 'manage_options', 'emol-sharing', 'eazymatch_plugin_sharing');
 	// add_submenu_page( 'emol-admin', EMOL_ADMIN_ACCOUNT, EMOL_ADMIN_ACCOUNT, 'manage_options', 'emol-cv', 'eazymatch_plugin_account');
@@ -55,6 +56,12 @@ function eazymatch_admin_assets( $hook ) {
 
 	wp_enqueue_style( 'emol-admin-ui', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), $version );
 	wp_enqueue_style( 'dashicons' );
+
+	if ( isset( $_GET['page'] ) && 'emol-theme' === sanitize_key( wp_unslash( $_GET['page'] ) ) ) {
+		wp_enqueue_media();
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
+	}
 }
 
 add_action( 'admin_enqueue_scripts', 'eazymatch_admin_assets' );
@@ -111,4 +118,5 @@ include( EMOL_DIR . '/admin/sharing.php' );
 include( EMOL_DIR . '/admin/applicant-account.php' );
 include( EMOL_DIR . '/admin/shortcodes.php' );
 include( EMOL_DIR . '/admin/theme-download.php' );
+include( EMOL_DIR . '/admin/theme.php' );
 ?>
