@@ -494,12 +494,42 @@
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: .5rem;
+	gap: .65rem 1rem;
 	margin: 2rem 0;
 	padding-top: 1.5rem;
 	border-top: 1px solid var(--emr-line);
 }
-.emol-sharing-section img { max-height: 28px; width: auto; }
+.emol-share-label {
+	font-size: .82rem;
+	font-weight: 700;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	color: var(--emr-muted);
+}
+.emol-share-btns {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .45rem;
+}
+.emol-share-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: .45rem .8rem;
+	border: 1px solid var(--emr-line);
+	border-radius: 999px;
+	background: var(--emr-surface);
+	color: var(--emr-ink);
+	font-size: .86rem;
+	font-weight: 600;
+	text-decoration: none;
+	cursor: pointer;
+	line-height: 1.2;
+}
+.emol-share-btn:hover {
+	border-color: var(--emr-brand);
+	color: var(--emr-brand);
+}
 
 /* -------------------------------------------------------------------------
    5. Manager / contact block

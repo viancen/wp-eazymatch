@@ -42,54 +42,6 @@ class emol_require
         self::registerInclude('admin');
     }
 
-    static public function jsSocials()
-    {
-        if (self::hasInclude('js-socials')) {
-            return;
-        }
-
-        if (!function_exists('emol_load_jsSocials')) {
-            function emol_load_jsSocials()
-            {
-                wp_register_script('jsSocials', '//cdnjs.cloudflare.com/ajax/libs/jsSocials/1.4.0/jssocials.min.js', false, '1.4.0');
-                wp_enqueue_script('jsSocials');
-            }
-        }
-        add_action('wp_enqueue_scripts', 'emol_load_jsSocials');
-
-        if (!function_exists('emol_load_cssSocials')) {
-            function emol_load_cssSocials()
-            {
-                wp_register_style('cssSocials1', '//cdnjs.cloudflare.com/ajax/libs/jsSocials/1.4.0/jssocials.min.css', false, '1.4.0');
-                wp_register_style('cssSocials2', '//cdnjs.cloudflare.com/ajax/libs/jsSocials/1.4.0/jssocials-theme-flat.min.css', false, '1.4.0');
-                wp_enqueue_style('cssSocials1');
-                wp_enqueue_style('cssSocials2');
-            }
-        }
-        add_action('wp_enqueue_scripts', 'emol_load_cssSocials');
-
-        self::registerInclude('js-socials');
-    }
-
-    static public function font_awesome()
-    {
-        if (self::hasInclude('font-awesome')) {
-            return;
-        }
-
-        if (!function_exists('emol_load_fa')) {
-            function emol_load_fa()
-            {
-                wp_register_style('fontawesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', false, '4.7.0');
-                wp_enqueue_style('fontawesome');
-            }
-        }
-
-        add_action('wp_enqueue_scripts', 'emol_load_fa');
-
-        self::registerInclude('font-awesome');
-    }
-
     static public function jquery()
     {
         // the jquery library will conflict when wordpress is in admin mode
@@ -231,11 +183,6 @@ class emol_require
     {
         self::basicCss();
         self::basicJavascript();
-
-        if (get_option('emol_sharing_links')) {
-            self::jsSocials();
-            self::font_awesome();
-        }
     }
 
     /**

@@ -220,12 +220,7 @@ class emol_shortcode_job
 
             $jobHtml .= '</div>'; //job-container
 
-            $sc = get_option('emol_sharing_links');
-
-            if ($sc != 0) {
-                //sharethis
-                $jobHtml .= '<div class="emol-sharing-section"><div id="emol-share-btns"></div></div> ';
-            }
+            $jobHtml .= emol_sharing::buttonsHtml($this->job['name'], emol_get_job_url($this->job));
 
             $jobHtml .= emol_get_google_jobs($this->job);
 

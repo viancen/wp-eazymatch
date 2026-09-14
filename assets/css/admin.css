@@ -349,16 +349,38 @@
 }
 
 /* -------------------------------------------------------------------------
-   8. Feeds / social logos (Connectiviteit screen)
+   8. Connectiviteit cards
    ---------------------------------------------------------------------- */
 
-.emol-admin-page #emol-admin-table td[bgcolor] {
-	background: var(--emol-surface-alt) !important;
-	border-radius: var(--emol-radius-sm);
+.emol-admin-page .emol-sharing-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 14px;
+	margin: 12px 0 24px;
 }
-.emol-admin-page #emol-admin-table td img {
-	border-radius: 4px;
-	vertical-align: middle;
+.emol-admin-page .emol-sharing-card {
+	background: var(--emol-surface-alt);
+	border: 1px solid var(--emol-line);
+	border-radius: var(--emol-radius);
+	padding: 16px 18px;
+}
+.emol-admin-page .emol-sharing-card__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 8px;
+}
+.emol-admin-page .emol-sharing-card p {
+	margin: 0 0 8px;
+	font-size: 13px;
+	color: var(--emol-body);
+}
+.emol-admin-page .emol-sharing-card__url {
+	word-break: break-all;
+}
+.emol-admin-page .emol-sharing-card__url a {
+	color: var(--emol-brand-dark);
 }
 
 /* -------------------------------------------------------------------------

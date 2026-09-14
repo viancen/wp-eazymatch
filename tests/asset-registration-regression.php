@@ -52,9 +52,6 @@ $expectedCallbacks = array(
 	'load_emol_css_basic',
 	'load_emol_js_jquery',
 	'load_emol_js_basic',
-	'emol_load_jsSocials',
-	'emol_load_cssSocials',
-	'emol_load_fa',
 	'load_emol_js_jqueryui',
 );
 $actualCallbacks = array_column( $GLOBALS['emol_test_actions'], 1 );

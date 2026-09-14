@@ -885,68 +885,126 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria, $att
 
 function emol_get_google_jobs($job)
 {
-    $googleJobs = get_option('emol_sharing_googlejobs');
-    $googleJobsSnippet = '';
-    if ($googleJobs != 0) {
+    if (!emol_sharing::isOn('emol_sharing_googlejobs') || !is_array($job)) {
+        return '';
+    }
 
-        //--lijst moet worden aangemaakt in Categorieen : Vacature -soort
-        //--eerste hit wordt hier weergegeven
-        if (!empty($job['Statusses'])) {
-            foreach ($job['Statusses'] as $status) {
-                if (!isset($lft) && !isset($rgt) && $status['Jobstatus']['name'] == 'employmentType') {
-                    $lft = $status['Jobstatus']['lft'];
-                    $rgt = $status['Jobstatus']['rgt'];
-                } elseif (isset($lft) && isset($rgt)) {
-                    if ($status['Jobstatus']['lft'] > $lft && $status['Jobstatus']['rgt'] < $rgt) {
-                        $contractType[] = $status['Jobstatus']['name'];
-
+    $employment = array();
+    if (!empty($job['Statusses'])) {
+        $lft = null;
+        $rgt = null;
+        foreach ($job['Statusses'] as $status) {
+            if ($lft === null && $rgt === null && isset($status['Jobstatus']['name']) && $status['Jobstatus']['name'] == 'employmentType') {
+                $lft = $status['Jobstatus']['lft'];
+                $rgt = $status['Jobstatus']['rgt'];
+            } elseif ($lft !== null && $rgt !== null && isset($status['Jobstatus']['lft'], $status['Jobstatus']['rgt'])) {
+                if ($status['Jobstatus']['lft'] > $lft && $status['Jobstatus']['rgt'] < $rgt) {
+                    $mapped = emol_map_google_employment_type($status['Jobstatus']['name']);
+                    if ($mapped !== '') {
+                        $employment[] = $mapped;
                     }
                 }
             }
         }
-        if (!isset($contractType)) {
-            $contractType = 'OTHER';
-        }
-        $jobObject = [
-            '@context' => 'https://schema.org/',
-            '@type' => "JobPosting",
-            'title' => $job['name'],
-            'description' => emol_firstWords(strip_tags($job['description'])),
-            'datePosted' => date('Y-m-d', strtotime($job['startpublished'])),
-            'employmentType' => $contractType,
-            'identifier' => [
-                '@type' => "PropertyValue",
-                "name" => get_bloginfo('name'),
-                "value" => $job['id']
-            ],
-            'jobLocation' => [
-                '@type' => 'Place',
-                'address' => [
-                    '@type' => "PostalAddress",
-                    'streetAddress' => get_option('emol_base_address'),
-                    'addressLocality' => get_option('emol_base_city'),
-                    'addressRegion' => get_option('emol_base_region'),
-                    'Postalcode' => get_option('emol_base_zipcode'),
-                    'addressCountry' => get_option('emol_base_country'),
-                ]
-            ],
-            'hiringOrganization' => [
-                '@type' => 'Organization',
-                'name' => get_bloginfo('name'),
-                'sameAs' => get_bloginfo('wpurl'),
-            ]
-        ];
-
-        //'validThrough' => date('Y-m-d', strtotime($job['startpublished'])) . 'T00:00',
-        if (!empty($job['endpublished']) && strtotime($job['startpublished']) !== strtotime($job['endpublished'])) {
-            $jobObject['validThrough'] = date('Y-m-d', strtotime($job['endpublished'])) . 'T00:00';
-        }
-
-        $googleJobsSnippet = '<script type="application/ld+json">';
-        $googleJobsSnippet .= json_encode($jobObject, JSON_PRETTY_PRINT);
-        $googleJobsSnippet .= '</script>';
     }
-    return $googleJobsSnippet;
+    if (count($employment) === 0) {
+        $employment = array('OTHER');
+    }
+
+    $description = isset($job['description']) ? (string) $job['description'] : '';
+    $description = trim($description) !== '' ? $description : (isset($job['name']) ? $job['name'] : '');
+
+    $country = get_option('emol_base_country');
+    if (!is_string($country) || $country === '') {
+        $country = 'NL';
+    }
+
+    $org = array(
+        '@type'  => 'Organization',
+        'name'   => get_bloginfo('name'),
+        'sameAs' => get_bloginfo('wpurl'),
+    );
+    $logo = function_exists('get_site_icon_url') ? get_site_icon_url(512) : '';
+    if ($logo) {
+        $org['logo'] = $logo;
+    }
+
+    $jobObject = array(
+        '@context'    => 'https://schema.org/',
+        '@type'       => 'JobPosting',
+        'title'       => isset($job['name']) ? $job['name'] : '',
+        'description' => $description,
+        'datePosted'  => !empty($job['startpublished']) ? date('c', strtotime($job['startpublished'])) : date('c'),
+        'employmentType' => count($employment) === 1 ? $employment[0] : $employment,
+        'identifier'  => array(
+            '@type' => 'PropertyValue',
+            'name'  => get_bloginfo('name'),
+            'value' => isset($job['id']) ? (string) $job['id'] : '',
+        ),
+        'jobLocation' => array(
+            '@type'   => 'Place',
+            'address' => array(
+                '@type'           => 'PostalAddress',
+                'streetAddress'   => get_option('emol_base_address'),
+                'addressLocality' => get_option('emol_base_city'),
+                'addressRegion'   => get_option('emol_base_region'),
+                'postalCode'      => get_option('emol_base_zipcode'),
+                'addressCountry'  => $country,
+            ),
+        ),
+        'hiringOrganization' => $org,
+        'directApply' => true,
+    );
+
+    if (!empty($job['endpublished']) && !empty($job['startpublished']) && strtotime($job['startpublished']) !== strtotime($job['endpublished'])) {
+        $jobObject['validThrough'] = date('c', strtotime($job['endpublished']));
+    }
+
+    if (!empty($job['hours'])) {
+        $jobObject['workHours'] = $job['hours'] . ' hours';
+    }
+
+    return '<script type="application/ld+json">' . wp_json_encode($jobObject, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+}
+
+/**
+ * Map a free-text employment type to a schema.org JobPosting value.
+ *
+ * @param string $name
+ *
+ * @return string
+ */
+function emol_map_google_employment_type($name)
+{
+    $key = function_exists('mb_strtolower') ? mb_strtolower((string) $name, 'UTF-8') : strtolower((string) $name);
+    $key = trim($key);
+
+    $map = array(
+        'fulltime'     => 'FULL_TIME',
+        'full-time'    => 'FULL_TIME',
+        'full time'    => 'FULL_TIME',
+        'vast'         => 'FULL_TIME',
+        'parttime'     => 'PART_TIME',
+        'part-time'    => 'PART_TIME',
+        'part time'    => 'PART_TIME',
+        'tijdelijk'    => 'TEMPORARY',
+        'temporary'    => 'TEMPORARY',
+        'interim'      => 'TEMPORARY',
+        'freelance'    => 'CONTRACTOR',
+        'zzp'          => 'CONTRACTOR',
+        'contractor'   => 'CONTRACTOR',
+        'stage'        => 'INTERN',
+        'intern'       => 'INTERN',
+        'internship'   => 'INTERN',
+        'volunteer'    => 'VOLUNTEER',
+        'vrijwillig'   => 'VOLUNTEER',
+    );
+
+    if (isset($map[$key])) {
+        return $map[$key];
+    }
+
+    return $name !== '' ? $name : 'OTHER';
 }
 
 function emol_get($name = null)

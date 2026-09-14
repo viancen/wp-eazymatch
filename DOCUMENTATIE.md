@@ -258,7 +258,9 @@ De overige menuonderdelen zijn alleen nodig als de website deze functies gebruik
 - **Accountformulieren:** velden voor kandidaat- en bedrijfsaccounts;
 - **AVG wet:** privacyvelden en toestemmingen;
 - **Styling:** aanvullende CSS en het verwijderen van HTML uit omschrijvingen;
-- **Connectiviteit:** social sharing en externe vacaturefeeds.
+- **Connectiviteit:** deelknoppen (LinkedIn, Facebook, X, WhatsApp, e-mail),
+  Google for Jobs (JSON-LD) en XML/RSS/JSON-feeds voor Indeed, Jooble, Adzuna
+  en Trovit.
 
 De styling wordt opgeslagen als `eazymatch.style.css` in de WordPress-uploadmap.
 Die map moet daarom beschrijfbaar zijn voor WordPress. Schakel feed- en

@@ -14,14 +14,34 @@ var EazyWP = {
 
         }
 
-        if (jQuery("#emol-share-btns").length) {
-            jQuery("#emol-share-btns").jsSocials({
-                showLabel: false,
-                showCount: "inside",
-                shareIn: "popup",
-                shares: ["whatsapp", "messenger", "email", "linkedin", "twitter", "facebook"]
-            });
+        if (!navigator.share) {
+            jQuery('.emol-share-btn-native').hide();
         }
+
+        jQuery(document).on('click', '.emol-share-btn', function (e) {
+            var mode = this.getAttribute('data-share');
+            var section = jQuery(this).closest('.emol-sharing-section');
+            var shareTitle = section.attr('data-share-title') || document.title;
+            var shareUrl = section.attr('data-share-url') || window.location.href;
+
+            if (mode === 'native') {
+                e.preventDefault();
+                if (navigator.share) {
+                    navigator.share({ title: shareTitle, url: shareUrl }).catch(function () {});
+                } else {
+                    var first = section.find('.emol-share-btn[data-share="popup"]').get(0);
+                    if (first) {
+                        window.open(first.getAttribute('href'), 'emol-share', 'noopener,noreferrer,width=640,height=560');
+                    }
+                }
+                return;
+            }
+
+            if (mode === 'popup') {
+                e.preventDefault();
+                window.open(this.getAttribute('href'), 'emol-share', 'noopener,noreferrer,width=640,height=560');
+            }
+        });
 
         if (!jQuery('#emol-free-search-input').hasClass('noautosubmit')) {
             jQuery('#emol-free-search-input').keyup(function (event) {
