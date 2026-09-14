@@ -108,7 +108,7 @@ class emol_page_job_view extends emol_page
 
         $jobHtml .= '<div class="' . $class2 . '"></div>';
 
-        $jobHtml .= '<h2 class="emol-job-heading">' . $this->job['name'] . '</h2>';
+        $jobHtml .= '<h2 class="emol-job-heading emol-job-title">' . $this->job['name'] . '</h2>';
 
         $jobHtml .= '<div id="emol-job-body">';
 
@@ -172,29 +172,7 @@ class emol_page_job_view extends emol_page
          * @var mixed
          */
 
-        $cust = $this->jobTexts;
-
-        if (is_array($cust) && count($cust) > 0) {
-            foreach ($cust as $custom) {
-                if (get_option('emol_strip_html') == 1) {
-                    $contentText = strip_tags($custom['value'], '<ul><li><br>');
-                } else {
-                    $contentText = $custom['value'];
-                }
-                if (strlen($custom['value']) == 0) {
-                    continue;
-                }
-
-                if (!emol_jobtext::isVisible($custom['title'], emol_jobtext::CONTEXT_DETAIL)) {
-                    continue;
-                }
-
-                $custom['title'] = emol_jobtext::remapTitle($custom['title']);
-
-                $jobHtml .= '<h2 class="emol-job-heading">' . $custom['title'] . '</h2>';
-                $jobHtml .= '<div class="emol-job-textblock"><p class="emol-job-paragraph">' . emol_markdown::parseLists($contentText) . '</p></div>';
-            }
-        }
+        $jobHtml .= emol_jobtext::renderHtml($this->jobTexts, emol_jobtext::CONTEXT_DETAIL);
 
         /**
          * Add Competences

@@ -597,9 +597,30 @@ altcha-widget.emol-altcha,
     color: red;
 }
 
-#eazymatch-wait-modal,
-#emol-job-page-description {
+#eazymatch-wait-modal {
     display: none;
+}
+
+.emol-job-textblocks {
+    display: block;
+    clear: both;
+    margin: 1.5em 0;
+}
+
+.emol-job-textblock {
+    display: block;
+    margin: 0 0 1.5em;
+}
+
+.emol-job-textblock-heading {
+    display: block;
+    font-size: 1.2em;
+    font-weight: 700;
+    margin: 0 0 .4em;
+}
+
+.emol-job-textblock-body {
+    display: block;
 }
 
 .emol-manager-bottom {

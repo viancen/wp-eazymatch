@@ -241,11 +241,12 @@ class emol_jobtext {
 		}
 
 		foreach ( $blocks as $block ) {
-			if ( ! is_array( $block ) || ! isset( $block['title'] ) ) {
+			if ( ! is_array( $block ) ) {
 				continue;
 			}
 
-			if ( ! self::isVisible( $block['title'], $context, $map ) ) {
+			$title = self::blockTitle( $block );
+			if ( $title === '' || ! self::isVisible( $title, $context, $map ) ) {
 				continue;
 			}
 
@@ -255,7 +256,7 @@ class emol_jobtext {
 			}
 
 			$result[] = array(
-				'title' => (string) $block['title'],
+				'title' => $title,
 				'value' => $value,
 			);
 		}
@@ -329,6 +330,57 @@ class emol_jobtext {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Theme-independent HTML for job text blocks.
+	 *
+	 * @param mixed  $blocks
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public static function renderHtml( $blocks, $context ) {
+		$filtered = self::filterBlocks( $blocks, $context );
+		if ( count( $filtered ) === 0 ) {
+			return '';
+		}
+
+		$strip = (string) get_option( 'emol_strip_html' ) === '1';
+		$html  = '<div class="emol-job-textblocks">';
+
+		foreach ( $filtered as $block ) {
+			$value = $block['value'];
+			if ( $strip ) {
+				$value = strip_tags( $value, '<ul><li><br><p><strong><em><ol>' );
+			}
+
+			$html .= '<section class="emol-job-textblock">';
+			$html .= '<h2 class="emol-job-textblock-heading">' . self::remapTitle( $block['title'] ) . '</h2>';
+			$html .= '<div class="emol-job-textblock-body">' . emol_markdown::parseLists( $value ) . '</div>';
+			$html .= '</section>';
+		}
+
+		$html .= '</div>';
+
+		return $html;
+	}
+
+	/**
+	 * Title field as returned by job.getCustomTexts.
+	 *
+	 * @param array $block
+	 *
+	 * @return string
+	 */
+	public static function blockTitle( $block ) {
+		foreach ( array( 'title', 'label', 'name' ) as $key ) {
+			if ( isset( $block[ $key ] ) && trim( (string) $block[ $key ] ) !== '' ) {
+				return (string) $block[ $key ];
+			}
+		}
+
+		return '';
 	}
 
 	/**

@@ -59,8 +59,15 @@ class emol_shortcode_job
         } else {
 
             $this->job = $emol_job['job'];
-            $this->jobTexts = $emol_job['jobTexts'];
-            $this->jobCompetences = $emol_job['jobCompetences'];
+            $this->jobTexts = isset($emol_job['jobTexts']) ? $emol_job['jobTexts'] : array();
+            $this->jobCompetences = isset($emol_job['jobCompetences']) ? $emol_job['jobCompetences'] : array();
+
+            if ((!is_array($this->jobTexts) || count($this->jobTexts) === 0) && !empty($this->job['id'])) {
+                $api = eazymatch_connect();
+                if ($api) {
+                    $this->jobTexts = $api->get('job')->getCustomTexts($this->job['id']);
+                }
+            }
 
             $emol_side = 'applicant';
 
@@ -80,7 +87,7 @@ class emol_shortcode_job
 
             $jobHtml = '<div id="emol-job-container" class="' . $class . '">';
             $jobHtml .= '<div class="' . $class2 . '"></div>';
-            $jobHtml .= '<h2 class="emol-job-heading">' . $this->job['name'] . '</h2>';
+            $jobHtml .= '<h2 class="emol-job-heading emol-job-title">' . $this->job['name'] . '</h2>';
 
             $jobHtml .= '<div id="emol-job-body">';
             if (isset($this->job['Company']['Logo']) && $this->job['Company']['Logo']['content'] > '' && get_option('emol_job_search_logo') == 1) {
@@ -135,31 +142,7 @@ class emol_shortcode_job
              * @var mixed
              */
 
-            $cust = $this->jobTexts;
-
-
-            if (is_array($cust) && count($cust) > 0) {
-                foreach ($cust as $custom) {
-                    if (get_option('emol_strip_html') == 1) {
-                        $contentText = strip_tags($custom['value'], '<ul><li><br>');
-                    } else {
-                        $contentText = $custom['value'];
-                    }
-                    $contentText = nl2br($contentText);
-                    if (strlen($custom['value']) == 0) {
-                        continue;
-                    }
-
-                    if (!emol_jobtext::isVisible($custom['title'], emol_jobtext::CONTEXT_DETAIL)) {
-                        continue;
-                    }
-
-                    $custom['title'] = emol_jobtext::remapTitle($custom['title']);
-
-                    $jobHtml .= '<h2 class="emol-job-heading">' . $custom['title'] . '</h2>';
-                    $jobHtml .= '<p class="emol-job-paragraph">' . emol_markdown::parseLists($contentText) . '</p>';
-                }
-            }
+            $jobHtml .= emol_jobtext::renderHtml($this->jobTexts, emol_jobtext::CONTEXT_DETAIL);
 
             /**
              * Add Competences

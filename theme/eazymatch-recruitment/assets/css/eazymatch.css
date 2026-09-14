@@ -388,11 +388,20 @@
 
 .emol-job-body-col2 { font-weight: 600; color: var(--emr-ink); }
 
-#emol-job-container > .emol-job-heading:first-of-type,
-#emol-job-container h2.emol-job-heading:first-of-type {
+#emol-job-container > .emol-job-title {
 	font-size: clamp(1.8rem, 1.3rem + 1.8vw, 2.6rem);
 	margin-bottom: 1.25rem;
 }
+
+.emol-job-textblocks { margin: 2rem 0 1.5rem; }
+.emol-job-textblock { margin: 0 0 1.75rem; }
+.emol-job-textblock-heading {
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: var(--emr-ink);
+	margin: 0 0 .6rem;
+}
+.emol-job-textblock-body { color: var(--emr-body); }
 
 .emol-job-competences {
 	margin: 2.75rem 0 2rem;

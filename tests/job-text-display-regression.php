@@ -64,4 +64,6 @@ $filtered = emol_jobtext::filterBlocks( $blocks, 'list', $map );
 emol_test_assert_same( 1, count( $filtered ), 'list filter keeps one block' );
 emol_test_assert_same( 'Bedrijfsprofiel', $filtered[0]['title'], 'list filter keeps bedrijfsprofiel' );
 
+emol_test_assert_same( 'Functieomschrijving', emol_jobtext::blockTitle( array( 'label' => 'Functieomschrijving', 'value' => 'x' ) ), 'title fallback to label' );
+
 echo "job-text-display regression test passed.\n";
