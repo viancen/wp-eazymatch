@@ -504,10 +504,11 @@ function emol_301($newUrl)
  * @param string|null $teaserText text block value selected with the job-teaser-text
  *                                shortcode attribute; null/empty falls back to the
  *                                job description
+ * @param array|null  $listTextBlocks text blocks visible on overviews
  *
  * @return string
  */
-function emol_parse_html_jobresult($job, $class = '', $teaserText = null)
+function emol_parse_html_jobresult($job, $class = '', $teaserText = null, $listTextBlocks = null)
 {
 
     global $trailingData;
@@ -595,6 +596,21 @@ function emol_parse_html_jobresult($job, $class = '', $teaserText = null)
             $bodyClass .= ' eazymatch_job_body-teaser';
         }
         $text .= '<div class="' . $bodyClass . '"> ' . emol_firstWords(clear_newline(strip_tags(nl2br($shortText)))) . '... </div>';
+    }
+
+    if (is_array($listTextBlocks) && count($listTextBlocks) > 0) {
+        foreach ($listTextBlocks as $block) {
+            if (!is_array($block) || empty($block['value'])) {
+                continue;
+            }
+            $blockTitle = isset($block['title']) ? emol_jobtext::remapTitle($block['title']) : '';
+            $text .= '<div class="eazymatch_job_textblock">';
+            if ($blockTitle !== '') {
+                $text .= '<div class="eazymatch_job_textblock-title">' . $blockTitle . '</div>';
+            }
+            $text .= '<div class="eazymatch_job_textblock-body">' . emol_firstWords(clear_newline(strip_tags(nl2br($block['value'])))) . '...</div>';
+            $text .= '</div>';
+        }
     }
     if ($regioVisible == 1 && isset($job['Address']['Region'])) {
         $text .= '<div class="eazymatch_job_region">' . $job['Address']['Region']['name'] . ' </div>';
@@ -839,8 +855,14 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria, $att
 
         $emolRowColor = '';
 
-        // optional: use one of the job text blocks as short text (job-teaser-text attribute)
-        $teaserTexts = emol_jobteaser::fetchForJobs($searchQuery['result'], emol_jobteaser::fromAtts($atts));
+        $teaserRef = emol_jobteaser::fromAtts($atts);
+        $teaserTexts = array();
+        $listTexts = array();
+        if ($teaserRef !== '' || emol_jobtext::hasVisibleIn(emol_jobtext::CONTEXT_LIST)) {
+            $bundle = emol_jobtext::fetchBundle($searchQuery['result']);
+            $teaserTexts = emol_jobteaser::map($teaserRef, $bundle['definitions'], $bundle['texts']);
+            $listTexts = emol_jobtext::filterAll($bundle['texts'], emol_jobtext::CONTEXT_LIST);
+        }
 
         foreach ($searchQuery['result'] as $job) {
 
@@ -850,7 +872,8 @@ function emol_get_job_search_results($reqVars, $page_slug, $searchCriteria, $att
                 $emolRowColor = 'emol-odd';
             }
             $teaserText = isset($teaserTexts[$job['id']]) ? $teaserTexts[$job['id']] : null;
-            $searchHtml .= emol_parse_html_jobresult($job, $emolRowColor, $teaserText);
+            $listTextBlocks = isset($listTexts[$job['id']]) ? $listTexts[$job['id']] : array();
+            $searchHtml .= emol_parse_html_jobresult($job, $emolRowColor, $teaserText, $listTextBlocks);
 
         }
         $searchHtml .= '<div class="emol-page-navigation emol-page-navigation-bottom">' . $nav . '</div>';

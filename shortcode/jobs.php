@@ -49,8 +49,14 @@ class emol_shortcode_jobs
 
             $jobs = $wsJob->getPublished($limit, $filterOptions);
 
-            // optional: use one of the job text blocks as short text (job-teaser-text attribute)
-            $teaserTexts = emol_jobteaser::fetchForJobs($jobs, emol_jobteaser::fromAtts($atts));
+            $teaserRef = emol_jobteaser::fromAtts($atts);
+            $teaserTexts = array();
+            $listTexts = array();
+            if ($teaserRef !== '' || emol_jobtext::hasVisibleIn(emol_jobtext::CONTEXT_LIST)) {
+                $bundle = emol_jobtext::fetchBundle($jobs);
+                $teaserTexts = emol_jobteaser::map($teaserRef, $bundle['definitions'], $bundle['texts']);
+                $listTexts = emol_jobtext::filterAll($bundle['texts'], emol_jobtext::CONTEXT_LIST);
+            }
 
             //navigation
             $total = count($jobs);
@@ -73,7 +79,8 @@ class emol_shortcode_jobs
                         $emolRowColor = 'emol-odd';
                     }
                     $teaserText = isset($teaserTexts[$job['id']]) ? $teaserTexts[$job['id']] : null;
-                    $text .= emol_parse_html_jobresult($job, $emolRowColor, $teaserText);
+                    $listTextBlocks = isset($listTexts[$job['id']]) ? $listTexts[$job['id']] : array();
+                    $text .= emol_parse_html_jobresult($job, $emolRowColor, $teaserText, $listTextBlocks);
                 }
 
                 //$text .= '<div class="emol-pagnation-readmore"><a href="'.get_bloginfo( 'wpurl').'/'.get_option( 'emol_job_search_url' ).'/all'.$trailingData.'">'.EMOL_JOBSEARCH_MORE.'</a></div>';

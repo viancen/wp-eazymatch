@@ -232,6 +232,15 @@ a.emol-button,
     font-size: 1.25em;
 }
 
+.eazymatch_job_textblock {
+    margin: 0 0 .6em;
+}
+
+.eazymatch_job_textblock-title {
+    font-weight: bold;
+    margin: 0 0 .15em;
+}
+
 .eazymatch_job_toolbar {
     text-align: right;
 }

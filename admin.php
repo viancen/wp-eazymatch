@@ -21,7 +21,14 @@ add_action( 'admin_menu', 'eazymatch_admin_menu' );
  *
  */
 function eazymatch_admin_menu() {
-	add_menu_page( 'EazyMatch', EMOL_ADMIN_GLOBAL, 'manage_options', 'emol-admin', 'eazymatch_plugin_options', plugins_url( 'assets/img/eazymatch-icon.png', EMOL_DIR . '/wp-eazymatch.php' ) );
+	add_menu_page(
+		'EazyMatch',
+		EMOL_ADMIN_GLOBAL,
+		'manage_options',
+		'emol-admin',
+		'eazymatch_plugin_options',
+		plugins_url( 'assets/img/eazymatch-menu-icon.png', __FILE__ )
+	);
 
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_JOB, EMOL_ADMIN_JOB, 'manage_options', 'emol-job', 'eazymatch_plugin_job' );
 	add_submenu_page( 'emol-admin', EMOL_ADMIN_MANAGER, EMOL_ADMIN_MANAGER, 'manage_options', 'emol-manager', 'eazymatch_plugin_manager' );
@@ -65,6 +72,18 @@ function eazymatch_admin_assets( $hook ) {
 }
 
 add_action( 'admin_enqueue_scripts', 'eazymatch_admin_assets' );
+
+/**
+ * Size the sidebar icon to the WordPress 20×20 menu slot on every admin screen.
+ */
+function eazymatch_admin_menu_icon_css() {
+	wp_add_inline_style(
+		'common',
+		'#adminmenu #toplevel_page_emol-admin .wp-menu-image img{padding:7px 0 0;width:20px;height:20px;max-width:20px;max-height:20px;object-fit:contain;}'
+	);
+}
+
+add_action( 'admin_enqueue_scripts', 'eazymatch_admin_menu_icon_css' );
 
 /**
  * Add a body class on the EazyMatch admin screens so the stylesheet can scope

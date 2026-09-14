@@ -185,6 +185,10 @@ class emol_page_job_view extends emol_page
                     continue;
                 }
 
+                if (!emol_jobtext::isVisible($custom['title'], emol_jobtext::CONTEXT_DETAIL)) {
+                    continue;
+                }
+
                 //check for own title
                 $textarea_labels = get_option('emol_job_texts');
                 if ($textarea_labels) {

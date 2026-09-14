@@ -207,6 +207,20 @@
 
 .eazymatch_job_body-teaser { color: var(--emr-body); }
 
+.eazymatch_job_textblock { margin: 0 0 .75rem; }
+.eazymatch_job_textblock-title {
+	font-size: .82rem;
+	font-weight: 700;
+	letter-spacing: .02em;
+	text-transform: uppercase;
+	color: var(--emr-muted);
+	margin: 0 0 .2rem;
+}
+.eazymatch_job_textblock-body {
+	color: var(--emr-body);
+	font-size: .95rem;
+}
+
 /* Meta chips: region, city, hours, dates */
 .eazymatch_job_region,
 .eazymatch_job_city,

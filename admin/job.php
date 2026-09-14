@@ -52,6 +52,7 @@ function eazymatch_plugin_job() {
 			'emol_apply_email_text'           => get_option( 'emol_apply_email_text' ),
 			'emol_apply_url_free'             => get_option( 'emol_apply_url_free' ),
 			'emol_job_texts'                  => get_option( 'emol_job_texts' ),
+			'emol_job_text_display'           => get_option( 'emol_job_text_display' ),
 			'emol_apply_page'                 => get_option( 'emol_apply_page' ),
 			'emol_job_competence_exclude'     => get_option( 'emol_job_competence_exclude' ),
 			//'emol_filter_options'           => get_option('emol_filter_options'),
@@ -106,7 +107,7 @@ function eazymatch_plugin_job() {
 					continue;
 				}
 
-				if ( $option == 'emol_job_texts' ) {
+				if ( $option == 'emol_job_texts' || $option == 'emol_job_text_display' ) {
 					$value = serialize( $value );
 				}
 
@@ -559,14 +560,31 @@ function eazymatch_plugin_job() {
 					if ( $eazymatchOptions['emol_job_texts'] != '' ) {
 						$currentLabelData = unserialize( $eazymatchOptions['emol_job_texts'] );
 					}
+					$currentDisplayData = emol_jobtext::normalizeMap( $eazymatchOptions['emol_job_text_display'] );
 					foreach ( $jobTexts as $textarea ) {
+						$blockLabel = $textarea['label'];
+						$detailOn   = emol_jobtext::isVisible( $blockLabel, emol_jobtext::CONTEXT_DETAIL, $currentDisplayData );
+						$listOn     = emol_jobtext::isVisible( $blockLabel, emol_jobtext::CONTEXT_LIST, $currentDisplayData );
 						?>
                         <tr>
-                            <td><?php echo $textarea['label']; ?></td>
+                            <td><?php echo esc_html( $blockLabel ); ?></td>
                             <td colspan="2">
-                                <input name="emol_job_texts[<?php echo $textarea['label']; ?>]"
-                                       value="<?php echo isset( $currentLabelData[ $textarea['label'] ] ) ? $currentLabelData[ $textarea['label'] ] : $textarea['label']; ?>"
+                                <input name="emol_job_texts[<?php echo esc_attr( $blockLabel ); ?>]"
+                                       value="<?php echo esc_attr( isset( $currentLabelData[ $blockLabel ] ) ? $currentLabelData[ $blockLabel ] : $blockLabel ); ?>"
                                        type="text"/>
+                                <div class="emol-job-text-display">
+                                    <span class="emol-job-text-display-label">Toon dit tekstblok op:</span>
+                                    <label>
+                                        <input type="hidden" name="emol_job_text_display[<?php echo esc_attr( $blockLabel ); ?>][detail]" value="0"/>
+                                        <input type="checkbox" name="emol_job_text_display[<?php echo esc_attr( $blockLabel ); ?>][detail]" value="1"<?php echo $detailOn ? ' checked="checked"' : ''; ?> />
+                                        Vacature detailpagina
+                                    </label>
+                                    <label>
+                                        <input type="hidden" name="emol_job_text_display[<?php echo esc_attr( $blockLabel ); ?>][list]" value="0"/>
+                                        <input type="checkbox" name="emol_job_text_display[<?php echo esc_attr( $blockLabel ); ?>][list]" value="1"<?php echo $listOn ? ' checked="checked"' : ''; ?> />
+                                        Vacature overzicht (zoekresultaten)
+                                    </label>
+                                </div>
                             </td>
                         </tr>
 						<?php

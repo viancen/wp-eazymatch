@@ -1,0 +1,62 @@
+<?php
+
+if ( 'cli' !== PHP_SAPI ) {
+	http_response_code( 404 );
+	exit;
+}
+
+/**
+ * Regression test for per-text-block visibility (detail / list).
+ *
+ * Run: php tests/job-text-display-regression.php
+ */
+
+function emol_test_assert_same( $expected, $actual, $message ) {
+	if ( $expected === $actual ) {
+		return;
+	}
+
+	throw new RuntimeException(
+		$message . "\nExpected: " . var_export( $expected, true ) . "\nActual: " . var_export( $actual, true )
+	);
+}
+
+if ( ! defined( 'EMOL_DIR' ) ) {
+	define( 'EMOL_DIR', dirname( __DIR__ ) );
+}
+
+require_once EMOL_DIR . '/lib/emol/jobtext.php';
+
+$empty = array();
+emol_test_assert_same( true, emol_jobtext::isVisible( 'Functieomschrijving', 'detail', $empty ), 'empty map: detail on' );
+emol_test_assert_same( true, emol_jobtext::isVisible( 'Functieomschrijving', 'list', $empty ), 'empty map: list on' );
+emol_test_assert_same( true, emol_jobtext::hasVisibleIn( 'list', $empty ), 'empty map: has list blocks' );
+
+$map = array(
+	'Functieomschrijving' => array( 'detail' => 1, 'list' => 0 ),
+	'Bedrijfsprofiel'     => array( 'detail' => 0, 'list' => 1 ),
+);
+
+emol_test_assert_same( true, emol_jobtext::isVisible( 'Functieomschrijving', 'detail', $map ), 'saved detail on' );
+emol_test_assert_same( false, emol_jobtext::isVisible( 'Functieomschrijving', 'list', $map ), 'saved list off' );
+emol_test_assert_same( false, emol_jobtext::isVisible( 'Bedrijfsprofiel', 'detail', $map ), 'saved detail off' );
+emol_test_assert_same( true, emol_jobtext::isVisible( 'bedrijfsprofiel', 'list', $map ), 'title match is case insensitive' );
+emol_test_assert_same( true, emol_jobtext::isVisible( 'Afbeeldingen', 'detail', $map ), 'unknown block defaults on' );
+emol_test_assert_same( true, emol_jobtext::hasVisibleIn( 'list', $map ), 'one list flag on' );
+
+$allOff = array(
+	'Functieomschrijving' => array( 'detail' => 0, 'list' => 0 ),
+);
+emol_test_assert_same( false, emol_jobtext::hasVisibleIn( 'list', $allOff ), 'all list flags off' );
+
+$blocks = array(
+	array( 'title' => 'Functieomschrijving', 'value' => 'Je gaat aan de slag.' ),
+	array( 'title' => 'Bedrijfsprofiel', 'value' => 'Wij zijn een bureau.' ),
+	array( 'title' => 'Functie eisen', 'value' => '' ),
+);
+
+$filtered = emol_jobtext::filterBlocks( $blocks, 'list', $map );
+emol_test_assert_same( 1, count( $filtered ), 'list filter keeps one block' );
+emol_test_assert_same( 'Bedrijfsprofiel', $filtered[0]['title'], 'list filter keeps bedrijfsprofiel' );
+
+echo "job-text-display regression test passed.\n";

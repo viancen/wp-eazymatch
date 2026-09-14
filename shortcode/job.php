@@ -148,6 +148,10 @@ class emol_shortcode_job
                         continue;
                     }
 
+                    if (!emol_jobtext::isVisible($custom['title'], emol_jobtext::CONTEXT_DETAIL)) {
+                        continue;
+                    }
+
                     //check for own title
                     $textarea_labels = get_option('emol_job_texts');
                     if ($textarea_labels) {

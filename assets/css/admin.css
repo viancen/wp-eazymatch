@@ -214,6 +214,29 @@
 	outline: none;
 }
 
+/* Per text-block visibility on Vacatures. */
+.emol-admin-page .emol-job-text-display {
+	margin-top: 8px;
+	font-size: 13px;
+	color: var(--emol-body);
+	line-height: 1.5;
+}
+.emol-admin-page .emol-job-text-display-label {
+	display: block;
+	margin: 0 0 6px;
+	color: var(--emol-muted);
+}
+.emol-admin-page .emol-job-text-display label {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 18px 4px 0;
+	white-space: nowrap;
+}
+.emol-admin-page .emol-job-text-display input[type="checkbox"] {
+	margin: 0;
+}
+
 /* Radio pairs (On/Off, Yes/No) read as inline options. */
 .emol-admin-page #emol-admin-table input[type="radio"] {
 	margin: 0 6px 0 2px;
