@@ -49,6 +49,9 @@ emol_test_assert_same( true, emol_jobtext::hasVisibleIn( 'list', $map ), 'one li
 $allOff = array(
 	'Functieomschrijving' => array( 'detail' => 0, 'list' => 0 ),
 );
+emol_test_assert_same( true, emol_jobtext::allFlagsOff( $allOff ), 'all-zero map is detected' );
+emol_test_assert_same( true, emol_jobtext::flagIsOn( array( '0', '1' ) ), 'array flag with 1 is on' );
+emol_test_assert_same( false, emol_jobtext::flagIsOn( array( '0', '0' ) ), 'array flag without 1 is off' );
 emol_test_assert_same( false, emol_jobtext::hasVisibleIn( 'list', $allOff ), 'all list flags off' );
 
 $blocks = array(

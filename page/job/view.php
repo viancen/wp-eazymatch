@@ -189,17 +189,7 @@ class emol_page_job_view extends emol_page
                     continue;
                 }
 
-                //check for own title
-                $textarea_labels = get_option('emol_job_texts');
-                if ($textarea_labels) {
-
-                    $textarea_labels = unserialize($textarea_labels);
-                    //emol_dump($textarea_labels);
-
-                    if (array_key_exists($custom['title'], $textarea_labels)) {
-                        $custom['title'] = $textarea_labels[$custom['title']];
-                    }
-                }
+                $custom['title'] = emol_jobtext::remapTitle($custom['title']);
 
                 $jobHtml .= '<h2 class="emol-job-heading">' . $custom['title'] . '</h2>';
                 $jobHtml .= '<div class="emol-job-textblock"><p class="emol-job-paragraph">' . emol_markdown::parseLists($contentText) . '</p></div>';

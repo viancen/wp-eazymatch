@@ -101,9 +101,30 @@ function eazymatch_plugin_job() {
 
 			update_option( 'emol_jobfilter_default', $filter );
 
-			if ( isset( $_POST['emol_job_description_display'] ) && is_array( $_POST['emol_job_description_display'] ) ) {
-				$_POST['emol_job_search_desc'] = ! empty( $_POST['emol_job_description_display']['list'] ) ? '1' : '0';
+			$postedDisplay = isset( $_POST['emol_job_text_display'] ) && is_array( $_POST['emol_job_text_display'] )
+				? $_POST['emol_job_text_display']
+				: array();
+			$rebuiltDisplay = array();
+			if ( is_array( $jobTexts ) ) {
+				foreach ( $jobTexts as $textarea ) {
+					$label = $textarea['label'];
+					$row   = isset( $postedDisplay[ $label ] ) && is_array( $postedDisplay[ $label ] ) ? $postedDisplay[ $label ] : array();
+					$rebuiltDisplay[ $label ] = array(
+						'detail' => emol_jobtext::flagIsOn( isset( $row['detail'] ) ? $row['detail'] : 0 ) ? 1 : 0,
+						'list'   => emol_jobtext::flagIsOn( isset( $row['list'] ) ? $row['list'] : 0 ) ? 1 : 0,
+					);
+				}
 			}
+			$_POST['emol_job_text_display'] = $rebuiltDisplay;
+
+			$postedDesc = isset( $_POST['emol_job_description_display'] ) && is_array( $_POST['emol_job_description_display'] )
+				? $_POST['emol_job_description_display']
+				: array();
+			$_POST['emol_job_description_display'] = array(
+				'detail' => emol_jobtext::flagIsOn( isset( $postedDesc['detail'] ) ? $postedDesc['detail'] : 0 ) ? 1 : 0,
+				'list'   => emol_jobtext::flagIsOn( isset( $postedDesc['list'] ) ? $postedDesc['list'] : 0 ) ? 1 : 0,
+			);
+			$_POST['emol_job_search_desc'] = $_POST['emol_job_description_display']['list'] ? '1' : '0';
 
 			// save all options defined earlier
 			foreach ( $_POST as $option => $value ) {
@@ -564,7 +585,7 @@ function eazymatch_plugin_job() {
 					if ( $eazymatchOptions['emol_job_texts'] != '' ) {
 						$currentLabelData = unserialize( $eazymatchOptions['emol_job_texts'] );
 					}
-					$currentDisplayData = emol_jobtext::normalizeMap( $eazymatchOptions['emol_job_text_display'] );
+					$currentDisplayData = emol_jobtext::displayMap();
 					$descFlags          = emol_jobtext::descriptionFlags( $eazymatchOptions['emol_job_description_display'] );
 					?>
                         <tr>
@@ -574,12 +595,10 @@ function eazymatch_plugin_job() {
                                 <div class="emol-job-text-display">
                                     <span class="emol-job-text-display-label">Toon dit veld op:</span>
                                     <label>
-                                        <input type="hidden" name="emol_job_description_display[detail]" value="0"/>
                                         <input type="checkbox" name="emol_job_description_display[detail]" value="1"<?php echo $descFlags['detail'] ? ' checked="checked"' : ''; ?> />
                                         Vacature detailpagina
                                     </label>
                                     <label>
-                                        <input type="hidden" name="emol_job_description_display[list]" value="0"/>
                                         <input type="checkbox" name="emol_job_description_display[list]" value="1"<?php echo $descFlags['list'] ? ' checked="checked"' : ''; ?> />
                                         Vacature overzicht (zoekresultaten)
                                     </label>
@@ -601,12 +620,10 @@ function eazymatch_plugin_job() {
                                 <div class="emol-job-text-display">
                                     <span class="emol-job-text-display-label">Toon dit tekstblok op:</span>
                                     <label>
-                                        <input type="hidden" name="emol_job_text_display[<?php echo esc_attr( $blockLabel ); ?>][detail]" value="0"/>
                                         <input type="checkbox" name="emol_job_text_display[<?php echo esc_attr( $blockLabel ); ?>][detail]" value="1"<?php echo $detailOn ? ' checked="checked"' : ''; ?> />
                                         Vacature detailpagina
                                     </label>
                                     <label>
-                                        <input type="hidden" name="emol_job_text_display[<?php echo esc_attr( $blockLabel ); ?>][list]" value="0"/>
                                         <input type="checkbox" name="emol_job_text_display[<?php echo esc_attr( $blockLabel ); ?>][list]" value="1"<?php echo $listOn ? ' checked="checked"' : ''; ?> />
                                         Vacature overzicht (zoekresultaten)
                                     </label>

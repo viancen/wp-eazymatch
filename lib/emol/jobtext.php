@@ -36,7 +36,40 @@ class emol_jobtext {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public static function displayMap() {
-		return self::normalizeMap( get_option( self::OPTION ) );
+		$map = self::normalizeMap( get_option( self::OPTION ) );
+
+		if ( self::allFlagsOff( $map ) ) {
+			return array();
+		}
+
+		return $map;
+	}
+
+	/**
+	 * All-zero maps come from the old hidden+checkbox save bug; treat as unset.
+	 *
+	 * @param array $map
+	 *
+	 * @return bool
+	 */
+	public static function allFlagsOff( $map ) {
+		if ( ! is_array( $map ) || count( $map ) === 0 ) {
+			return false;
+		}
+
+		foreach ( $map as $flags ) {
+			if ( ! is_array( $flags ) ) {
+				continue;
+			}
+			if ( self::flagIsOn( isset( $flags['detail'] ) ? $flags['detail'] : 0 ) ) {
+				return false;
+			}
+			if ( self::flagIsOn( isset( $flags['list'] ) ? $flags['list'] : 0 ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -82,7 +115,7 @@ class emol_jobtext {
 				return self::defaultOn( $context );
 			}
 
-			return ! empty( $flags[ $context ] );
+			return self::flagIsOn( $flags[ $context ] );
 		}
 
 		return self::defaultOn( $context );
@@ -137,7 +170,7 @@ class emol_jobtext {
 				return $context === self::CONTEXT_LIST;
 			}
 
-			return ! empty( $saved[ $context ] );
+			return self::flagIsOn( $saved[ $context ] );
 		}
 
 		$legacy = get_option( 'emol_job_search_desc' );
@@ -171,8 +204,8 @@ class emol_jobtext {
 
 		if ( is_array( $raw ) && ( array_key_exists( 'detail', $raw ) || array_key_exists( 'list', $raw ) ) ) {
 			return array(
-				'detail' => ! empty( $raw['detail'] ),
-				'list'   => ! array_key_exists( 'list', $raw ) || ! empty( $raw['list'] ),
+				'detail' => self::flagIsOn( isset( $raw['detail'] ) ? $raw['detail'] : 0 ),
+				'list'   => ! array_key_exists( 'list', $raw ) || self::flagIsOn( $raw['list'] ),
 			);
 		}
 
@@ -319,6 +352,30 @@ class emol_jobtext {
 		}
 
 		return $title;
+	}
+
+	/**
+	 * @param string $title
+	 *
+	 * @return string
+	 */
+	/**
+	 * @param mixed $value Posted or stored flag.
+	 *
+	 * @return bool
+	 */
+	public static function flagIsOn( $value ) {
+		if ( is_array( $value ) ) {
+			foreach ( $value as $item ) {
+				if ( self::flagIsOn( $item ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		return $value === 1 || $value === '1' || $value === true || $value === 'true';
 	}
 
 	/**
