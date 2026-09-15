@@ -16,6 +16,8 @@ class WP_EazyMatch_Updater {
 		add_filter( "pre_set_site_transient_update_plugins", array( $this, "EMOL_setTransitent" ) );
 		add_filter( "plugins_api", array( $this, "EMOL_setPluginInfo" ), 10, 3 );
 		add_filter( "upgrader_post_install", array( $this, "EMOL_postInstall" ), 10, 3 );
+		add_action( 'in_plugin_update_message-' . plugin_basename( $pluginFile ), array( $this, 'EMOL_pluginUpdateMessage' ), 10, 2 );
+		add_action( 'admin_notices', array( $this, 'EMOL_breakingAdminNotice' ) );
 
 		$this->pluginFile  = $pluginFile;
 
@@ -104,6 +106,9 @@ class WP_EazyMatch_Updater {
 			$obj->new_version                   = $this->githubAPIResult->tag_name;
 			$obj->url                           = isset( $this->pluginData['PluginURI'] ) ? $this->pluginData['PluginURI'] : '';
 			$obj->package                       = $package;
+			$obj->upgrade_notice                = $this->EMOL_parseBreakingChanges(
+				isset( $this->githubAPIResult->body ) ? $this->githubAPIResult->body : ''
+			);
 			$transient->response[ $this->slug ] = $obj;
 		}
 
@@ -151,35 +156,217 @@ class WP_EazyMatch_Updater {
 
 		// Create tabs in the lightbox
 		$releaseBody = isset( $this->githubAPIResult->body ) ? $this->githubAPIResult->body : '';
+		$breaking    = $this->EMOL_parseBreakingChanges( $releaseBody );
+		$changelog   = $this->EMOL_changelogBody( $releaseBody );
 		$pluginInfo->sections = array(
 			'description' => isset( $this->pluginData['Description'] ) ? $this->pluginData['Description'] : '',
 			'changelog'   => class_exists( "Parsedown" )
-				? Parsedown::instance()->parse( $releaseBody )
-				: $releaseBody
+				? Parsedown::instance()->parse( $changelog )
+				: $changelog,
 		);
-		// Gets the required version of WP if available
-		$matches = null;
-		preg_match( "/requires:\s([\d\.]+)/i", $releaseBody, $matches );
-		if ( ! empty( $matches ) ) {
-			if ( is_array( $matches ) ) {
-				if ( count( $matches ) > 1 ) {
-					$pluginInfo->requires = $matches[1];
-				}
-			}
+		if ( $breaking !== '' ) {
+			$pluginInfo->sections['upgrade_notice'] = '<p><strong>'
+				. esc_html( $this->EMOL_breakingLabel() )
+				. '</strong></p><p>'
+				. nl2br( esc_html( $breaking ) )
+				. '</p>';
+			$pluginInfo->upgrade_notice = $breaking;
 		}
 
-// Gets the tested version of WP if available
-		$matches = null;
-		preg_match( "/tested:\s([\d\.]+)/i", $releaseBody, $matches );
-		if ( ! empty( $matches ) ) {
-			if ( is_array( $matches ) ) {
-				if ( count( $matches ) > 1 ) {
-					$pluginInfo->tested = $matches[1];
-				}
-			}
+		$requires = $this->EMOL_parseReleaseField( $releaseBody, 'requires' );
+		if ( $requires !== '' ) {
+			$pluginInfo->requires = $requires;
+		}
+
+		$tested = $this->EMOL_parseReleaseField( $releaseBody, 'tested' );
+		if ( $tested !== '' ) {
+			$pluginInfo->tested = $tested;
 		}
 
 		return $pluginInfo;
+	}
+
+	/**
+	 * Extra warning under the plugin update row on Plugins.
+	 *
+	 * @param array  $plugin_data Plugin headers.
+	 * @param object $response    Update payload from the transient.
+	 */
+	public function EMOL_pluginUpdateMessage( $plugin_data, $response ) {
+		$breaking = ( is_object( $response ) && ! empty( $response->upgrade_notice ) )
+			? (string) $response->upgrade_notice
+			: '';
+
+		if ( $breaking === '' ) {
+			return;
+		}
+
+		echo '<br><span class="emol-breaking-update-notice" style="display:block;margin:.6em 0 0;padding:.6em .75em;border-left:4px solid #d63638;background:#fcf0f1;">';
+		echo '<strong>' . esc_html( $this->EMOL_breakingLabel() ) . '</strong> ';
+		echo esc_html( $breaking );
+		echo '</span>';
+	}
+
+	/**
+	 * Admin banner while a breaking update is available.
+	 */
+	public function EMOL_breakingAdminNotice() {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			return;
+		}
+
+		$breaking = $this->EMOL_pendingBreakingNotice();
+		if ( $breaking === '' ) {
+			return;
+		}
+
+		if ( ! $this->EMOL_shouldShowBreakingNotice() ) {
+			return;
+		}
+
+		$version = $this->EMOL_pendingUpdateVersion();
+
+		echo '<div class="notice notice-warning"><p><strong>';
+		echo esc_html( $this->EMOL_breakingLabel() );
+		if ( $version !== '' ) {
+			echo ' (' . esc_html( $version ) . ')';
+		}
+		echo '</strong> ' . esc_html( $breaking ) . '</p></div>';
+	}
+
+	/**
+	 * Single-line metadata from a GitHub/GitLab release body.
+	 *
+	 * Supports the same markers already used for WordPress compatibility:
+	 * `requires: 4.3`, `tested: 7.1`, `breaking: ...`
+	 *
+	 * @param string $body  Release notes.
+	 * @param string $field Field name without colon.
+	 *
+	 * @return string
+	 */
+	private function EMOL_parseReleaseField( $body, $field ) {
+		$matches = null;
+		$pattern = '/^' . preg_quote( $field, '/' ) . ':\s*(.+)$/im';
+		if ( ! preg_match( $pattern, (string) $body, $matches ) ) {
+			return '';
+		}
+
+		return trim( $matches[1] );
+	}
+
+	/**
+	 * Breaking-change text from the release notes.
+	 *
+	 * Prefers `breaking: ...`. Falls back to a `## Breaking changes` section.
+	 *
+	 * @param string $body Release notes.
+	 *
+	 * @return string
+	 */
+	private function EMOL_parseBreakingChanges( $body ) {
+		$body    = (string) $body;
+		$inline  = $this->EMOL_parseReleaseField( $body, 'breaking' );
+		if ( $inline !== '' ) {
+			return $inline;
+		}
+
+		if ( ! preg_match( '/^#{1,3}\s*breaking(?:\s+changes)?\s*$/im', $body, $heading, PREG_OFFSET_CAPTURE ) ) {
+			return '';
+		}
+
+		$start = $heading[0][1] + strlen( $heading[0][0] );
+		$rest  = substr( $body, $start );
+		if ( preg_match( '/^#{1,3}\s+/m', $rest, $next, PREG_OFFSET_CAPTURE ) ) {
+			$rest = substr( $rest, 0, $next[0][1] );
+		}
+
+		return trim( $rest );
+	}
+
+	/**
+	 * Release notes without machine fields, for the changelog tab.
+	 *
+	 * @param string $body Release notes.
+	 *
+	 * @return string
+	 */
+	private function EMOL_changelogBody( $body ) {
+		$lines = preg_split( '/\r\n|\r|\n/', (string) $body );
+		$kept  = array();
+
+		foreach ( $lines as $line ) {
+			if ( preg_match( '/^(requires|tested|breaking)\s*:/i', trim( $line ) ) ) {
+				continue;
+			}
+			$kept[] = $line;
+		}
+
+		return trim( implode( "\n", $kept ) );
+	}
+
+	/**
+	 * @return string
+	 */
+	private function EMOL_breakingLabel() {
+		if ( defined( 'EMOL_ADMIN_BREAKING_UPDATE' ) ) {
+			return EMOL_ADMIN_BREAKING_UPDATE;
+		}
+
+		return 'This update contains breaking changes:';
+	}
+
+	/**
+	 * @return string
+	 */
+	private function EMOL_pendingBreakingNotice() {
+		$update = $this->EMOL_pendingUpdate();
+
+		return ( $update && ! empty( $update->upgrade_notice ) )
+			? (string) $update->upgrade_notice
+			: '';
+	}
+
+	/**
+	 * @return string
+	 */
+	private function EMOL_pendingUpdateVersion() {
+		$update = $this->EMOL_pendingUpdate();
+
+		return ( $update && ! empty( $update->new_version ) )
+			? (string) $update->new_version
+			: '';
+	}
+
+	/**
+	 * @return object|null
+	 */
+	private function EMOL_pendingUpdate() {
+		$this->EMOL_initPluginData();
+		$transient = get_site_transient( 'update_plugins' );
+		if (
+			! is_object( $transient )
+			|| empty( $transient->response )
+			|| ! is_array( $transient->response )
+			|| empty( $transient->response[ $this->slug ] )
+			|| ! is_object( $transient->response[ $this->slug ] )
+		) {
+			return null;
+		}
+
+		return $transient->response[ $this->slug ];
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function EMOL_shouldShowBreakingNotice() {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( is_object( $screen ) && $screen->id === 'update-core' ) {
+			return true;
+		}
+
+		return isset( $_GET['page'] ) && strpos( sanitize_key( wp_unslash( $_GET['page'] ) ), 'emol-' ) === 0;
 	}
 
 	private function EMOL_getPluginSlug() {

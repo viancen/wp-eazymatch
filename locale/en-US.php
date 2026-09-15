@@ -274,6 +274,7 @@ define( 'EMOL_ADMIN_MSGJOBOFFLINE', 'Message on offline job' );
 define( 'EMOL_ADMIN_RESULTSPERPAGE', 'Amount of results per page' );
 define( 'EMOL_ADMIN_SAVEMSG', 'Settings saved. NOTE: if you changed your url structure, update your permalinks!' );
 define( 'EMOL_ADMIN_SAVED', 'Saved.' );
+define( 'EMOL_ADMIN_BREAKING_UPDATE', 'This update contains breaking changes:' );
 
 define( 'EMOL_ADMIN_FORM_APP', "Applicant subscription form" );
 define( 'EMOL_ADMIN_FORM_COMPANY', "Company subscription form" );

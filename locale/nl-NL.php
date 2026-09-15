@@ -275,6 +275,7 @@ define( 'EMOL_ADMIN_MSGJOBOFFLINE', 'Bericht bij opvragen verlopen vacature' );
 define( 'EMOL_ADMIN_RESULTSPERPAGE', 'Aantal resultaten per pagina' );
 define( 'EMOL_ADMIN_SAVEMSG', 'Instellingen opgeslagen. LET OP: Vergeet niet uw Permalinks bij te werken wanneer u de url structuur gewijzigd heeft!' );
 define( 'EMOL_ADMIN_SAVED', 'Opgeslagen.' );
+define( 'EMOL_ADMIN_BREAKING_UPDATE', 'Deze update bevat breaking changes:' );
 
 define( 'EMOL_ADMIN_FORM_APP', "Kandidaat formulier" );
 define( 'EMOL_ADMIN_FORM_COMPANY', "Bedrijven formulier" );
