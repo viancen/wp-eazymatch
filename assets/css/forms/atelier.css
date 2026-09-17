@@ -1,0 +1,105 @@
+/**
+ * Atelier — plugin-owned form theme.
+ *
+ * A typeset application dossier: stone desk, umber rules, serif labels.
+ * Independent of the customer WordPress theme.
+ */
+
+body.emol-form-theme-atelier {
+	--emol-form-font: "Iowan Old Style", Palatino, "Palatino Linotype", "Times New Roman", serif;
+	--emol-form-text: #2c261d;
+	--emol-form-muted: #6d6457;
+	--emol-form-label: #5a5144;
+	--emol-form-label-font: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+	--emol-form-label-size: 0.78rem;
+	--emol-form-label-weight: 700;
+	--emol-form-label-track: 0.08em;
+	--emol-form-label-transform: uppercase;
+	--emol-form-surface: #f3efe6;
+	--emol-form-field-bg: #fbf8f1;
+	--emol-form-border: transparent;
+	--emol-form-accent: #8a5a32;
+	--emol-form-on-accent: #fff8ef;
+	--emol-form-danger: #9b2c2c;
+	--emol-form-danger-bg: #f3d6d0;
+	--emol-form-radius: 0;
+	--emol-form-btn-radius: 0;
+	--emol-form-space: 1.35rem;
+	--emol-form-gap: 1.15rem;
+	--emol-form-pad: 1.6rem 1.7rem 1.8rem;
+	--emol-form-shell-border: 1px solid #d8d0c2;
+	--emol-form-shell-radius: 2px;
+	--emol-form-shadow: 0 1px 0 rgba(44, 38, 29, 0.04);
+	--emol-form-field-shadow: inset 0 -1px 0 #b9ad97;
+	--emol-form-ring: inset 0 -2px 0 #8a5a32;
+	--emol-form-row-pad: 0 0 0.15rem 0.85rem;
+}
+
+body.emol-form-theme-atelier .emol-form-div,
+body.emol-form-theme-atelier #emol-form-apply,
+body.emol-form-theme-atelier #emol-form-react,
+body.emol-form-theme-atelier .emol_widget {
+	background:
+		linear-gradient(90deg, #8a5a32 0 3px, transparent 3px),
+		var(--emol-form-surface);
+}
+
+body.emol-form-theme-atelier .emol-label-wrapper,
+body.emol-form-theme-atelier .emol_form_row > label {
+	padding-top: 0.85rem;
+}
+
+body.emol-form-theme-atelier .emol-text-input,
+body.emol-form-theme-atelier .emol-select-input,
+body.emol-form-theme-atelier .emol-textarea,
+body.emol-form-theme-atelier .emol-account-input,
+body.emol-form-theme-atelier .emol-form-div select,
+body.emol-form-theme-atelier .emol-form-div textarea,
+body.emol-form-theme-atelier .emol-form-div input[type="text"],
+body.emol-form-theme-atelier .emol-form-div input[type="email"],
+body.emol-form-theme-atelier .emol-form-div input[type="password"],
+body.emol-form-theme-atelier .emol_widget input[type="text"],
+body.emol-form-theme-atelier .emol_widget select {
+	font-family: Georgia, "Iowan Old Style", serif;
+	border: 0;
+	border-radius: 0;
+}
+
+body.emol-form-theme-atelier .emol-form-div input[type="file"],
+body.emol-form-theme-atelier .emol-file {
+	border: 1px dashed #b9ad97;
+	background: #efe8da;
+}
+
+body.emol-form-theme-atelier .emol-button,
+body.emol-form-theme-atelier .emol-form-submit,
+body.emol-form-theme-atelier .emol-account-button,
+body.emol-form-theme-atelier .ui-dialog .ui-button,
+body.emol-form-theme-atelier input.emol-button,
+body.emol-form-theme-atelier input.emol-form-submit {
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	font-size: 0.82rem;
+}
+
+body.emol-form-theme-atelier #emol-apply-back-button,
+body.emol-form-theme-atelier input#emol-apply-back-button,
+body.emol-form-theme-atelier .emol-altbutton {
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid #8a5a32;
+	border-radius: 0;
+	color: #8a5a32;
+}
+
+body.emol-form-theme-atelier .ui-datepicker {
+	background: #fbf8f1;
+	border-color: #d8d0c2;
+	border-radius: 2px;
+	font-family: Georgia, serif;
+}
+
+body.emol-form-theme-atelier .ui-datepicker td a:hover,
+body.emol-form-theme-atelier .ui-datepicker .ui-state-active {
+	border-radius: 0;
+}

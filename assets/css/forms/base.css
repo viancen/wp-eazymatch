@@ -1,0 +1,727 @@
+/**
+ * Shared form layout for plugin-owned themes (Native, Atelier, Harbor).
+ *
+ * Token values come from the selected theme stylesheet. This file only
+ * handles structure: stacked fields, grouped inputs, grids, datepicker
+ * and dialogs. Existing jQuery UI sites never load this file.
+ */
+
+body.emol-form-theme {
+	--emol-form-font: inherit;
+	--emol-form-text: inherit;
+	--emol-form-muted: color-mix(in srgb, currentColor 62%, transparent);
+	--emol-form-surface: transparent;
+	--emol-form-field-bg: color-mix(in srgb, currentColor 5%, transparent);
+	--emol-form-border: color-mix(in srgb, currentColor 18%, transparent);
+	--emol-form-accent: var(--wp--preset--color--primary, var(--emol-theme-brand, var(--emr-brand, currentColor)));
+	--emol-form-on-accent: #fff;
+	--emol-form-danger: #b42318;
+	--emol-form-danger-bg: color-mix(in srgb, #b42318 12%, transparent);
+	--emol-form-radius: 0.55rem;
+	--emol-form-space: 1rem;
+	--emol-form-gap: 0.85rem;
+	--emol-form-control-h: 2.75rem;
+	--emol-form-shadow: none;
+	--emol-form-ring: 0 0 0 3px color-mix(in srgb, var(--emol-form-accent) 22%, transparent);
+}
+
+body.emol-form-theme .emol-form-div,
+body.emol-form-theme .emol-form-table,
+body.emol-form-theme #emol-form-wrapper,
+body.emol-form-theme #emol-form-apply,
+body.emol-form-theme #emol-form-react,
+body.emol-form-theme #emol-apply-form,
+body.emol-form-theme #emol-react-form,
+body.emol-form-theme .emol_form_rows,
+body.emol-form-theme .emol_widget form {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	font-family: var(--emol-form-font);
+	color: var(--emol-form-text);
+}
+
+body.emol-form-theme .emol-form-div *,
+body.emol-form-theme .emol-form-table *,
+body.emol-form-theme #emol-form-wrapper *,
+body.emol-form-theme .emol_form_rows *,
+body.emol-form-theme .emol_grid *,
+body.emol-form-theme .emol_widget form * {
+	box-sizing: border-box;
+}
+
+body.emol-form-theme .emol-form-div,
+body.emol-form-theme #emol-form-apply,
+body.emol-form-theme #emol-form-react {
+	display: flex;
+	flex-direction: column;
+	gap: var(--emol-form-space);
+	padding: var(--emol-form-pad, 0);
+	background: var(--emol-form-surface);
+	border: var(--emol-form-shell-border, none);
+	border-radius: var(--emol-form-shell-radius, 0);
+	box-shadow: var(--emol-form-shadow);
+}
+
+body.emol-form-theme .emol_form_rows,
+body.emol-form-theme #emol-form-wrapper,
+body.emol-form-theme #emol-apply-form,
+body.emol-form-theme #emol-react-form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--emol-form-gap);
+}
+
+body.emol-form-theme .emol-apply-row,
+body.emol-form-theme .emol-react-row,
+body.emol-form-theme .emol_form_row,
+body.emol-form-theme .emol-label-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 0.4rem 1.25rem;
+	align-items: start;
+	width: 100%;
+	margin: 0;
+	padding: var(--emol-form-row-pad, 0);
+	border: var(--emol-form-row-border, none);
+	border-radius: var(--emol-form-row-radius, 0);
+	background: var(--emol-form-row-bg, transparent);
+}
+
+@media (min-width: 760px) {
+	body.emol-form-theme .emol-apply-row,
+	body.emol-form-theme .emol-react-row,
+	body.emol-form-theme .emol_form_row,
+	body.emol-form-theme .emol-label-row {
+		grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+	}
+
+	body.emol-form-theme #emol-submit-row,
+	body.emol-form-theme #emol-captcha-row,
+	body.emol-form-theme #emol-success-row,
+	body.emol-form-theme #emol-error-row {
+		grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+	}
+}
+
+body.emol-form-theme .emol-label-wrapper,
+body.emol-form-theme .emol-label-row .emol-label-wrapper,
+body.emol-form-theme .emol_form_row > label {
+	display: block;
+	padding-top: 0.7rem;
+	margin: 0;
+	font-family: var(--emol-form-label-font, inherit);
+	font-size: var(--emol-form-label-size, 0.92rem);
+	font-weight: var(--emol-form-label-weight, 600);
+	letter-spacing: var(--emol-form-label-track, 0);
+	line-height: 1.35;
+	color: var(--emol-form-label, inherit);
+	text-transform: var(--emol-form-label-transform, none);
+}
+
+body.emol-form-theme .emol_form_row > label span {
+	display: inline;
+}
+
+body.emol-form-theme .emol-required-asterix {
+	color: var(--emol-form-danger);
+	font-weight: 700;
+}
+
+body.emol-form-theme .emol-input-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+	width: 100%;
+}
+
+body.emol-form-theme .emol-text-input,
+body.emol-form-theme .emol-select-input,
+body.emol-form-theme .emol-textarea,
+body.emol-form-theme .emol-account-input,
+body.emol-form-theme .emol-date-day,
+body.emol-form-theme .emol-date-month,
+body.emol-form-theme .emol-date-year,
+body.emol-form-theme select.emol-date-day,
+body.emol-form-theme select.emol-date-month,
+body.emol-form-theme select.emol-date-year,
+body.emol-form-theme .emol_widget input[type="text"],
+body.emol-form-theme .emol_widget input[type="password"],
+body.emol-form-theme .emol_widget input[type="email"],
+body.emol-form-theme .emol_widget select,
+body.emol-form-theme .datepicker,
+body.emol-form-theme .emol-form-div input[type="text"],
+body.emol-form-theme .emol-form-div input[type="email"],
+body.emol-form-theme .emol-form-div input[type="password"],
+body.emol-form-theme .emol-form-div input[type="tel"],
+body.emol-form-theme .emol-form-div input[type="number"],
+body.emol-form-theme .emol-form-div input[type="ssn"],
+body.emol-form-theme .emol-form-div select,
+body.emol-form-theme .emol-form-div textarea,
+body.emol-form-theme .emol_form_row input[type="text"],
+body.emol-form-theme .emol_form_row select,
+body.emol-form-theme .emol_form_row textarea,
+body.emol-form-theme .emol_grid input[type="text"],
+body.emol-form-theme .emol_grid input[type="date"],
+body.emol-form-theme .emol_grid select,
+body.emol-form-theme .emol_grid textarea {
+	appearance: none;
+	width: 100%;
+	max-width: 100%;
+	min-height: var(--emol-form-control-h);
+	margin: 0;
+	padding: 0.65rem 0.85rem;
+	border: 1px solid var(--emol-form-border);
+	border-radius: var(--emol-form-radius);
+	background: var(--emol-form-field-bg);
+	color: inherit;
+	font: inherit;
+	font-size: 1rem;
+	line-height: 1.4;
+	box-shadow: var(--emol-form-field-shadow, none);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+body.emol-form-theme .emol-form-div select,
+body.emol-form-theme .emol_widget select,
+body.emol-form-theme .emol-select-input,
+body.emol-form-theme .emol-date-day,
+body.emol-form-theme .emol-date-month,
+body.emol-form-theme .emol-date-year,
+body.emol-form-theme .emol_form_row select,
+body.emol-form-theme .emol_grid select {
+	padding-right: 2.2rem;
+	background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+	background-position: calc(100% - 1.05rem) calc(50% - 0.12rem), calc(100% - 0.7rem) calc(50% - 0.12rem);
+	background-size: 0.35rem 0.35rem, 0.35rem 0.35rem;
+	background-repeat: no-repeat;
+}
+
+body.emol-form-theme textarea,
+body.emol-form-theme .emol-textarea {
+	min-height: 9rem;
+	resize: vertical;
+}
+
+body.emol-form-theme .emol-small,
+body.emol-form-theme input.emol-small,
+body.emol-form-theme .emol-date-day,
+body.emol-form-theme .emol-date-month {
+	width: auto;
+	flex: 1 1 5.5rem;
+	max-width: 8rem;
+}
+
+body.emol-form-theme .emol-date-year {
+	width: auto;
+	flex: 1 1 6.5rem;
+	max-width: 9rem;
+}
+
+body.emol-form-theme .emol-input-wrapper .emol-text-input,
+body.emol-form-theme .emol-input-wrapper .emol-select-input,
+body.emol-form-theme .emol-input-wrapper select,
+body.emol-form-theme .emol_form_row > input,
+body.emol-form-theme .emol_form_row > select,
+body.emol-form-theme .emol_form_row > textarea {
+	flex: 1 1 10rem;
+}
+
+body.emol-form-theme .emol-text-input:focus,
+body.emol-form-theme .emol-select-input:focus,
+body.emol-form-theme .emol-textarea:focus,
+body.emol-form-theme .emol-account-input:focus,
+body.emol-form-theme .datepicker:focus,
+body.emol-form-theme .emol-form-div input:focus,
+body.emol-form-theme .emol-form-div select:focus,
+body.emol-form-theme .emol-form-div textarea:focus,
+body.emol-form-theme .emol_widget input:focus,
+body.emol-form-theme .emol_widget select:focus,
+body.emol-form-theme .emol_form_row input:focus,
+body.emol-form-theme .emol_form_row select:focus,
+body.emol-form-theme .emol_form_row textarea:focus {
+	border-color: var(--emol-form-accent);
+	box-shadow: var(--emol-form-ring);
+	outline: none;
+}
+
+body.emol-form-theme .emol-form-div input[type="file"],
+body.emol-form-theme .emol-file {
+	padding: 0.85rem;
+	border-style: dashed;
+	background: color-mix(in srgb, var(--emol-form-field-bg) 70%, transparent);
+	cursor: pointer;
+}
+
+body.emol-form-theme .emol-form-div input[type="checkbox"],
+body.emol-form-theme .emol-form-div input[type="radio"],
+body.emol-form-theme .emol_widget input[type="checkbox"],
+body.emol-form-theme .emol_widget input[type="radio"],
+body.emol-form-theme .emol-radio-input,
+body.emol-form-theme .emol_checktree input[type="checkbox"] {
+	width: 1.1rem;
+	height: 1.1rem;
+	min-height: 0;
+	padding: 0;
+	flex: 0 0 auto;
+	accent-color: var(--emol-form-accent);
+	cursor: pointer;
+}
+
+body.emol-form-theme .emol-input-wrapper label,
+body.emol-form-theme #emol-avg-row .emol-input-wrapper label {
+	display: inline-flex;
+	align-items: flex-start;
+	gap: 0.55rem;
+	margin: 0;
+	font-weight: 500;
+	line-height: 1.45;
+}
+
+body.emol-form-theme .emol-button,
+body.emol-form-theme .emol-form-submit,
+body.emol-form-theme .emol-account-button,
+body.emol-form-theme .emol-button-search,
+body.emol-form-theme .emol-button-apply,
+body.emol-form-theme a.emol-button,
+body.emol-form-theme input.emol-button,
+body.emol-form-theme button.emol-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4rem;
+	min-height: var(--emol-form-control-h);
+	padding: 0.7rem 1.35rem;
+	border: 1px solid transparent;
+	border-radius: var(--emol-form-btn-radius, 999px);
+	background: var(--emol-form-accent);
+	color: var(--emol-form-on-accent);
+	font: inherit;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.2;
+	text-decoration: none;
+	cursor: pointer;
+	box-shadow: none;
+	transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+body.emol-form-theme .emol-button:hover,
+body.emol-form-theme .emol-form-submit:hover,
+body.emol-form-theme .emol-account-button:hover,
+body.emol-form-theme a.emol-button:hover {
+	color: var(--emol-form-on-accent);
+	text-decoration: none;
+	filter: brightness(0.94);
+}
+
+body.emol-form-theme .emol-button:focus,
+body.emol-form-theme .emol-form-submit:focus {
+	outline: none;
+	box-shadow: var(--emol-form-ring);
+}
+
+body.emol-form-theme .emol-button[disabled],
+body.emol-form-theme .emol-form-submit[disabled] {
+	opacity: 0.45;
+	cursor: not-allowed;
+	filter: none;
+	transform: none;
+}
+
+body.emol-form-theme #emol-apply-back-button,
+body.emol-form-theme .emol-altbutton,
+body.emol-form-theme .emol-button-reset,
+body.emol-form-theme .emol-reset-button a {
+	background: transparent;
+	border-color: var(--emol-form-border);
+	color: inherit;
+}
+
+body.emol-form-theme #emol-apply-back-button:hover,
+body.emol-form-theme .emol-altbutton:hover,
+body.emol-form-theme .emol-reset-button a:hover {
+	border-color: var(--emol-form-accent);
+	color: inherit;
+	filter: none;
+}
+
+body.emol-form-theme .emol-submit-wrapper,
+body.emol-form-theme .emol-submit-button-wrapper,
+body.emol-form-theme #emol-submit-row .emol-input-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	gap: 0.65rem;
+	text-align: left;
+}
+
+body.emol-form-theme .emol-linkedin-logo {
+	margin-bottom: 0.25rem;
+}
+
+body.emol-form-theme #emol-apply-job-summary {
+	margin: 0 0 0.25rem;
+	color: var(--emol-form-muted);
+}
+
+body.emol-form-theme .emol-error-label,
+body.emol-form-theme label.error,
+body.emol-form-theme .error-captcha,
+body.emol-form-theme #captcha-error .emol-input-wrapper {
+	display: block;
+	width: 100%;
+	margin-top: 0.35rem;
+	padding: 0.45rem 0.65rem;
+	border: 1px solid color-mix(in srgb, var(--emol-form-danger) 40%, transparent);
+	border-radius: var(--emol-form-radius);
+	background: var(--emol-form-danger-bg);
+	color: var(--emol-form-danger);
+	font-size: 0.85rem;
+}
+
+body.emol-form-theme input.error,
+body.emol-form-theme select.error,
+body.emol-form-theme textarea.error,
+body.emol-form-theme .emol-text-input.error {
+	border-color: var(--emol-form-danger);
+}
+
+body.emol-form-theme .emol_checktree .emol_checktree_map {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+body.emol-form-theme .emol_checktree .emol_checktree_map .emol_checktree_map {
+	margin: 0.35rem 0 0 1.1rem;
+}
+
+body.emol-form-theme .emol_checktree .emol_checktree_leaf {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0.2rem 0;
+	padding: 0.15rem 0;
+	line-height: 1.4;
+}
+
+body.emol-form-theme .emol_checktree .emol_checktree_leaf label {
+	display: inline;
+	height: auto;
+	padding: 0;
+	line-height: 1.4;
+}
+
+body.emol-form-theme .emol_grid {
+	width: 100%;
+	margin: 0.25rem 0;
+	border: 1px solid var(--emol-form-border);
+	border-radius: var(--emol-form-radius);
+	overflow: hidden;
+	background: var(--emol-form-field-bg);
+}
+
+body.emol-form-theme .emol_grid .emol_grid_header,
+body.emol-form-theme .emol_grid .emol_grid_row,
+body.emol-form-theme .emol_grid .emol_grid_nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 0.65rem;
+	width: 100%;
+	clear: none;
+	margin: 0;
+	padding: 0.75rem 0.9rem;
+}
+
+body.emol-form-theme .emol_grid .emol_grid_header {
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--emol-form-muted);
+	background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+body.emol-form-theme .emol_grid .emol_grid_row {
+	position: relative;
+	padding-top: 0.75rem;
+	border-top: 1px solid var(--emol-form-border);
+}
+
+body.emol-form-theme .emol_grid .emol_grid_col {
+	float: none;
+	flex: 1 1 9rem;
+	margin: 0;
+	min-width: 0;
+}
+
+body.emol-form-theme .emol_grid .emol_grid_row_nav {
+	position: static;
+	flex: 0 0 auto;
+	width: auto;
+	text-align: right;
+}
+
+body.emol-form-theme .emol_grid .emol_grid_nav {
+	justify-content: flex-end;
+}
+
+body.emol-form-theme .emol_grid .emol_grid_nav a,
+body.emol-form-theme .button-grid-add,
+body.emol-form-theme .button-grid-remove {
+	float: none;
+	margin: 0;
+	min-height: 2.2rem;
+	padding: 0.4rem 0.9rem;
+	font-size: 0.9rem;
+}
+
+body.emol-form-theme .emol_grid_experience .emol_grid_col_description,
+body.emol-form-theme .emol_form_row_address input {
+	width: 100%;
+	max-width: 100%;
+}
+
+body.emol-form-theme .emol_widget {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+body.emol-form-theme .emol_widget form {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	gap: 0.85rem 1rem;
+	align-items: end;
+}
+
+body.emol-form-theme .emol_widget label,
+body.emol-form-theme .emol-search-part-label {
+	display: block;
+	margin: 0 0 0.35rem;
+	font-size: var(--emol-form-label-size, 0.92rem);
+	font-weight: var(--emol-form-label-weight, 600);
+}
+
+body.emol-form-theme .emol-location-search,
+body.emol-form-theme #emol-location-input {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 7rem;
+	gap: 0.5rem;
+	width: 100%;
+}
+
+body.emol-form-theme .emol-location-search input,
+body.emol-form-theme .emol-location-search select,
+body.emol-form-theme #emol-zipcode-search-input,
+body.emol-form-theme #emol-range-search-input {
+	width: 100%;
+	max-width: none;
+}
+
+body.emol-form-theme .emol-submit-wrapper {
+	grid-column: 1 / -1;
+}
+
+body.emol-form-theme .ui-helper-hidden-accessible {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+body.emol-form-theme .ui-datepicker-trigger {
+	width: 2.75rem;
+	min-height: var(--emol-form-control-h);
+	margin: 0;
+	border: 1px solid var(--emol-form-border);
+	border-radius: var(--emol-form-radius);
+	background: var(--emol-form-field-bg);
+	cursor: pointer;
+}
+
+body.emol-form-theme .ui-datepicker {
+	width: 18.5rem;
+	padding: 0.75rem;
+	border: 1px solid var(--emol-form-border);
+	border-radius: var(--emol-form-radius);
+	background: var(--emol-form-field-bg, #fff);
+	color: inherit;
+	font: inherit;
+	box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+	z-index: 100100 !important;
+}
+
+body.emol-form-theme .ui-datepicker .ui-datepicker-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: relative;
+	padding: 0 0 0.6rem;
+	border: 0;
+	background: transparent;
+	font-weight: 650;
+}
+
+body.emol-form-theme .ui-datepicker .ui-datepicker-prev,
+body.emol-form-theme .ui-datepicker .ui-datepicker-next {
+	position: static;
+	width: 2rem;
+	height: 2rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	cursor: pointer;
+	text-indent: 0;
+	overflow: hidden;
+}
+
+body.emol-form-theme .ui-datepicker .ui-datepicker-prev span,
+body.emol-form-theme .ui-datepicker .ui-datepicker-next span,
+body.emol-form-theme .ui-datepicker .ui-icon {
+	display: none;
+}
+
+body.emol-form-theme .ui-datepicker .ui-datepicker-prev:before,
+body.emol-form-theme .ui-datepicker .ui-datepicker-next:before {
+	font-size: 1.25rem;
+	line-height: 1;
+}
+
+body.emol-form-theme .ui-datepicker .ui-datepicker-prev:before {
+	content: "‹";
+}
+
+body.emol-form-theme .ui-datepicker .ui-datepicker-next:before {
+	content: "›";
+}
+
+body.emol-form-theme .ui-datepicker .ui-datepicker-title {
+	flex: 1;
+	margin: 0 0.4rem;
+	text-align: center;
+}
+
+body.emol-form-theme .ui-datepicker .ui-datepicker-title select {
+	width: auto;
+	min-height: 2rem;
+	display: inline-block;
+	margin: 0 0.15rem;
+	padding: 0.2rem 1.6rem 0.2rem 0.45rem;
+}
+
+body.emol-form-theme .ui-datepicker table {
+	width: 100%;
+	margin: 0;
+	border: 0;
+	font-size: 0.85rem;
+}
+
+body.emol-form-theme .ui-datepicker th {
+	padding: 0.35rem 0;
+	border: 0;
+	font-weight: 650;
+	color: var(--emol-form-muted);
+	background: transparent;
+}
+
+body.emol-form-theme .ui-datepicker td {
+	padding: 0.1rem;
+	border: 0;
+}
+
+body.emol-form-theme .ui-datepicker td a,
+body.emol-form-theme .ui-datepicker td span {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	margin: 0 auto;
+	border: 0;
+	border-radius: 999px;
+	text-align: center;
+	text-decoration: none;
+	color: inherit;
+	background: transparent;
+}
+
+body.emol-form-theme .ui-datepicker td a:hover,
+body.emol-form-theme .ui-datepicker .ui-state-active,
+body.emol-form-theme .ui-datepicker .ui-state-highlight {
+	background: var(--emol-form-accent);
+	color: var(--emol-form-on-accent);
+}
+
+body.emol-form-theme .ui-widget-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(15, 23, 42, 0.45);
+}
+
+body.emol-form-theme .ui-dialog {
+	padding: 0;
+	border: 1px solid var(--emol-form-border);
+	border-radius: calc(var(--emol-form-radius) + 4px);
+	background: var(--emol-form-field-bg, #fff);
+	color: inherit;
+	box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+}
+
+body.emol-form-theme .ui-dialog .ui-dialog-titlebar {
+	display: none;
+}
+
+body.emol-form-theme .ui-dialog .ui-dialog-content {
+	padding: 1.4rem 1.5rem 0.4rem;
+}
+
+body.emol-form-theme .ui-dialog .ui-dialog-buttonpane {
+	margin: 0;
+	padding: 0.75rem 1.5rem 1.2rem;
+	border: 0;
+	background: transparent;
+}
+
+body.emol-form-theme .ui-dialog .ui-dialog-buttonset {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	justify-content: flex-end;
+}
+
+body.emol-form-theme .ui-dialog .ui-button {
+	min-height: 2.4rem;
+	padding: 0.5rem 1.1rem;
+	border: 1px solid transparent;
+	border-radius: var(--emol-form-btn-radius, 999px);
+	background: var(--emol-form-accent);
+	color: var(--emol-form-on-accent);
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+body.emol-form-theme #eazymatch-wait-modal {
+	font-size: 1.05rem;
+	line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.emol-form-theme .emol-button,
+	body.emol-form-theme .emol-text-input,
+	body.emol-form-theme select,
+	body.emol-form-theme textarea {
+		transition: none;
+	}
+}

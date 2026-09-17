@@ -465,7 +465,93 @@
 }
 
 /* -------------------------------------------------------------------------
-   10. Misc cleanup
+   10. Form appearance picker
+   ---------------------------------------------------------------------- */
+
+.emol-admin-page .emol-form-theme-picker {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+	gap: 10px;
+}
+
+.emol-admin-page .emol-form-theme-card {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 0;
+	padding: 10px;
+	border: 1px solid var(--emol-line);
+	border-radius: var(--emol-radius);
+	background: var(--emol-surface);
+	cursor: pointer;
+}
+
+.emol-admin-page .emol-form-theme-card input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.emol-admin-page .emol-form-theme-card:has(input:checked) {
+	border-color: var(--emol-brand);
+	box-shadow: 0 0 0 3px var(--emol-brand-soft);
+}
+
+.emol-admin-page .emol-form-theme-card__preview {
+	display: block;
+	height: 54px;
+	border-radius: 7px;
+	background:
+		linear-gradient(90deg, currentColor 0 28%, transparent 28%) 12px 16px / 34% 7px no-repeat,
+		linear-gradient(90deg, currentColor 0 100%, transparent 100%) 12px 30px / 72% 12px no-repeat;
+	opacity: .55;
+}
+
+.emol-admin-page .emol-form-theme-card--jquery .emol-form-theme-card__preview {
+	background-color: #e8e8e8;
+	color: #3a6ea5;
+	border: 1px solid #c5c5c5;
+}
+
+.emol-admin-page .emol-form-theme-card--native .emol-form-theme-card__preview {
+	background-color: #f7f8fb;
+	color: var(--emol-brand);
+	border: 1px solid #d9dee8;
+}
+
+.emol-admin-page .emol-form-theme-card--atelier .emol-form-theme-card__preview {
+	background-color: #f3efe6;
+	color: #8a5a32;
+	border: 1px solid #d8d0c2;
+	box-shadow: inset 3px 0 0 #8a5a32;
+}
+
+.emol-admin-page .emol-form-theme-card--harbor .emol-form-theme-card__preview {
+	background-color: #e8eef0;
+	color: #1f7a6c;
+	border: 2px solid #c5d0d4;
+	border-radius: 2px;
+}
+
+.emol-admin-page .emol-form-theme-card__body {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+.emol-admin-page .emol-form-theme-card__body strong {
+	color: var(--emol-ink);
+	font-size: 13.5px;
+}
+
+.emol-admin-page .emol-form-theme-card__body span {
+	color: var(--emol-muted);
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+/* -------------------------------------------------------------------------
+   11. Misc cleanup
    ---------------------------------------------------------------------- */
 
 /* The "first setup your credentials" warning box on the Forms screen. */

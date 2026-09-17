@@ -1,0 +1,93 @@
+/**
+ * Harbor — plugin-owned form theme.
+ *
+ * Port-authority ledger: mist panels, squared fields, verdigris focus.
+ * Independent of the customer WordPress theme.
+ */
+
+body.emol-form-theme-harbor {
+	--emol-form-font: ui-sans-serif, "Segoe UI", system-ui, sans-serif;
+	--emol-form-text: #16323a;
+	--emol-form-muted: #5b7178;
+	--emol-form-label: #16323a;
+	--emol-form-label-font: ui-sans-serif, "Segoe UI", system-ui, sans-serif;
+	--emol-form-label-size: 0.84rem;
+	--emol-form-label-weight: 700;
+	--emol-form-surface: #e8eef0;
+	--emol-form-field-bg: #ffffff;
+	--emol-form-border: #c5d0d4;
+	--emol-form-accent: #1f7a6c;
+	--emol-form-on-accent: #f3fffc;
+	--emol-form-danger: #9f2a2a;
+	--emol-form-danger-bg: #fde8e8;
+	--emol-form-radius: 2px;
+	--emol-form-btn-radius: 2px;
+	--emol-form-space: 1.2rem;
+	--emol-form-gap: 0.75rem;
+	--emol-form-pad: 1.25rem 1.3rem 1.4rem;
+	--emol-form-shell-border: 1px solid #c5d0d4;
+	--emol-form-shell-radius: 2px;
+	--emol-form-shadow: none;
+	--emol-form-ring: 0 0 0 2px #1f7a6c;
+	--emol-form-row-pad: 0.55rem 0.7rem;
+	--emol-form-row-radius: 2px;
+}
+
+body.emol-form-theme-harbor .emol-apply-row:focus-within,
+body.emol-form-theme-harbor .emol-react-row:focus-within,
+body.emol-form-theme-harbor .emol_form_row:focus-within {
+	background: #f3f8f8;
+	box-shadow: inset 3px 0 0 #1f7a6c;
+}
+
+body.emol-form-theme-harbor .emol-text-input,
+body.emol-form-theme-harbor .emol-select-input,
+body.emol-form-theme-harbor .emol-textarea,
+body.emol-form-theme-harbor .emol-account-input,
+body.emol-form-theme-harbor .emol-form-div select,
+body.emol-form-theme-harbor .emol-form-div textarea,
+body.emol-form-theme-harbor .emol-form-div input[type="text"],
+body.emol-form-theme-harbor .emol_widget input[type="text"],
+body.emol-form-theme-harbor .emol_widget select {
+	border-width: 2px;
+}
+
+body.emol-form-theme-harbor .emol-button,
+body.emol-form-theme-harbor .emol-form-submit,
+body.emol-form-theme-harbor .emol-account-button,
+body.emol-form-theme-harbor .ui-dialog .ui-button,
+body.emol-form-theme-harbor input.emol-button,
+body.emol-form-theme-harbor input.emol-form-submit {
+	background: #16323a;
+	border: 1px solid #16323a;
+	border-left: 4px solid #1f7a6c;
+	letter-spacing: 0.01em;
+}
+
+body.emol-form-theme-harbor .emol-button:hover,
+body.emol-form-theme-harbor .emol-form-submit:hover,
+body.emol-form-theme-harbor .emol-account-button:hover,
+body.emol-form-theme-harbor input.emol-button:hover,
+body.emol-form-theme-harbor input.emol-form-submit:hover {
+	background: #0f2429;
+	filter: none;
+}
+
+body.emol-form-theme-harbor #emol-apply-back-button,
+body.emol-form-theme-harbor input#emol-apply-back-button {
+	background: #fff;
+	border: 2px solid #c5d0d4;
+	border-left: 4px solid #c5d0d4;
+	color: #16323a;
+}
+
+body.emol-form-theme-harbor .ui-datepicker {
+	background: #fff;
+	border: 2px solid #c5d0d4;
+	border-radius: 2px;
+}
+
+body.emol-form-theme-harbor .ui-datepicker td a,
+body.emol-form-theme-harbor .ui-datepicker td span {
+	border-radius: 2px;
+}

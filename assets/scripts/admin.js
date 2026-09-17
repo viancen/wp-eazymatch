@@ -145,4 +145,17 @@ jQuery(function ($) {
         $preview.empty();
         $clear.hide();
     });
+
+    var $themeInputs = $('input[name="emol_form_theme"]');
+    var $jquerySkinRow = $('#emol-jquery-ui-skin-row');
+
+    if ($themeInputs.length && $jquerySkinRow.length) {
+        var syncJquerySkinRow = function () {
+            var selected = $themeInputs.filter(':checked').val();
+            $jquerySkinRow.toggle(selected === 'jquery');
+        };
+
+        $themeInputs.on('change', syncJquerySkinRow);
+        syncJquerySkinRow();
+    }
 });

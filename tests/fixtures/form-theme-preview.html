@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>EazyMatch form themes</title>
+	<link rel="stylesheet" href="../../assets/css/style.default.css">
+	<link rel="stylesheet" href="../../assets/css/forms/base.css">
+	<link id="theme-css" rel="stylesheet" href="../../assets/css/forms/native.css">
+	<style>
+		:root { --wp--preset--color--primary: #1f5eff; }
+		body { margin: 0; font-family: "Source Sans 3", "Segoe UI", sans-serif; color: #1d2433; background: #f4f6f8; }
+		.preview-bar { display: flex; gap: 8px; padding: 16px 20px; background: #fff; border-bottom: 1px solid #e3e7ef; }
+		.preview-bar button { padding: 8px 14px; border: 1px solid #d0d5dd; background: #fff; border-radius: 8px; cursor: pointer; }
+		.preview-bar button[aria-pressed="true"] { background: #1f5eff; color: #fff; border-color: #1f5eff; }
+		.wrap { max-width: 760px; margin: 32px auto; padding: 0 20px 60px; }
+		body.emol-form-theme-atelier { background: #e7e1d4; }
+		body.emol-form-theme-harbor { background: #d5dee1; }
+	</style>
+</head>
+<body class="emol-form-theme emol-form-theme-native">
+	<div class="preview-bar">
+		<button type="button" data-theme="native" aria-pressed="true">Native</button>
+		<button type="button" data-theme="atelier" aria-pressed="false">Atelier</button>
+		<button type="button" data-theme="harbor" aria-pressed="false">Harbor</button>
+	</div>
+	<div class="wrap">
+		<div id="emol-form-apply" class="emol-form-div emol-form-table">
+			<div id="emol-apply-job-summary">Sollicitatie voor <strong>Front-end developer</strong>.</div>
+			<form id="emol-apply-form">
+				<div id="emol-form-wrapper">
+					<div class="emol-apply-row" id="emol-firstname-row">
+						<div class="emol-label-wrapper"><label for="emol-firstname">Voornaam <strong class="emol-required-asterix">*</strong></label></div>
+						<div class="emol-input-wrapper"><input class="emol-text-input required" id="emol-firstname" placeholder="Voornaam"></div>
+					</div>
+					<div class="emol-apply-row" id="emol-lastname-row">
+						<div class="emol-label-wrapper"><label>Tussenvoegsel &amp; achternaam <strong class="emol-required-asterix">*</strong></label></div>
+						<div class="emol-input-wrapper">
+							<input class="emol-text-input emol-small" placeholder="van">
+							<input class="emol-text-input required" placeholder="Achternaam">
+						</div>
+					</div>
+					<div class="emol-apply-row">
+						<div class="emol-label-wrapper"><label>E-mail <strong class="emol-required-asterix">*</strong></label></div>
+						<div class="emol-input-wrapper"><input class="emol-text-input" type="email" placeholder="naam@bedrijf.nl"></div>
+					</div>
+					<div class="emol-apply-row">
+						<div class="emol-label-wrapper"><label>Geboortedatum</label></div>
+						<div class="emol-input-wrapper">
+							<select class="emol-date-day"><option>12</option></select>
+							<select class="emol-date-month"><option>03</option></select>
+							<select class="emol-date-year"><option>1994</option></select>
+						</div>
+					</div>
+					<div class="emol-apply-row">
+						<div class="emol-label-wrapper"><label>CV</label></div>
+						<div class="emol-input-wrapper"><input class="emol-text-input emol-file" type="file"></div>
+					</div>
+					<div class="emol-apply-row">
+						<div class="emol-label-wrapper"><label>Motivatie</label></div>
+						<div class="emol-input-wrapper"><textarea class="emol-text-input emol-textarea" placeholder="Korte toelichting"></textarea></div>
+					</div>
+					<div class="emol-apply-row" id="emol-avg-row">
+						<div class="emol-label-wrapper"><label>Privacyverklaring <strong class="emol-required-asterix">*</strong></label></div>
+						<div class="emol-input-wrapper">
+							<label><input type="checkbox"> Ik heb de privacy statement gelezen</label>
+						</div>
+					</div>
+					<div class="emol-apply-row" id="emol-submit-row">
+						<div class="emol-input-wrapper">&nbsp;</div>
+						<div class="emol-input-wrapper">
+							<input type="button" class="emol-button emol-form-submit" value="Sollicitatie versturen">
+							<input type="button" class="emol-button" id="emol-apply-back-button" value="Terug">
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script>
+		var buttons = document.querySelectorAll('.preview-bar button');
+		var themeCss = document.getElementById('theme-css');
+		buttons.forEach(function (button) {
+			button.addEventListener('click', function () {
+				var theme = button.getAttribute('data-theme');
+				document.body.className = 'emol-form-theme emol-form-theme-' + theme;
+				themeCss.href = '../../assets/css/forms/' + theme + '.css';
+				buttons.forEach(function (item) {
+					item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
+				});
+			});
+		});
+	</script>
+</body>
+</html>

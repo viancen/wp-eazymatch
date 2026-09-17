@@ -96,31 +96,86 @@ class emol_require
             return;
         }
 
+        self::ensureFormThemeClass();
+
+        $pluginTheme = class_exists('emol_form_theme', false) && emol_form_theme::isPluginTheme();
         $jqskin = get_option('emol_jquery_ui_skin');
-        if (!empty($jqskin)) {
-            // jquery is required for validation
-            self::jquery();
 
-            // add jquery-ui from the google CDN for speed
-            function load_emol_js_jqueryui()
-            {
+        if (!$pluginTheme && empty($jqskin)) {
+            return;
+        }
 
-                $jqskin = get_option('emol_jquery_ui_skin') ? get_option('emol_jquery_ui_skin') : 'base';
+        // jquery is required for datepickers and dialogs
+        self::jquery();
 
-                wp_deregister_script('jquery-ui');
-                wp_register_script('jquery-ui', (plugins_url('wp-eazymatch') . '/assets/jquery-ui/jquery-ui.min.js'), array('jquery'));
-                wp_enqueue_script('jquery-ui');
+        function load_emol_js_jqueryui()
+        {
+            $pluginTheme = class_exists('emol_form_theme', false) && emol_form_theme::isPluginTheme();
+            $jqskin = get_option('emol_jquery_ui_skin') ? get_option('emol_jquery_ui_skin') : 'base';
 
+            wp_deregister_script('jquery-ui');
+            wp_register_script('jquery-ui', (plugins_url('wp-eazymatch') . '/assets/jquery-ui/jquery-ui.min.js'), array('jquery'));
+            wp_enqueue_script('jquery-ui');
+
+            if (!$pluginTheme) {
                 wp_deregister_style('jquery-ui');
                 wp_register_style('jquery-ui', (plugins_url('wp-eazymatch') . '/assets/jquery-ui/themes/' . $jqskin . '/jquery-ui.min.css'), false);
                 wp_enqueue_style('jquery-ui');
-
             }
-
-            add_action('wp_enqueue_scripts', 'load_emol_js_jqueryui');
-
-            self::registerInclude('jquery-ui');
         }
+
+        add_action('wp_enqueue_scripts', 'load_emol_js_jqueryui');
+
+        self::registerInclude('jquery-ui');
+        self::formTheme();
+    }
+
+    static private function ensureFormThemeClass()
+    {
+        if (class_exists('emol_form_theme', false)) {
+            return;
+        }
+
+        $file = dirname(__FILE__) . '/form/theme.php';
+        if (is_readable($file)) {
+            require_once $file;
+        }
+    }
+
+    static public function formTheme()
+    {
+        if (self::hasInclude('emol-form-theme')) {
+            return;
+        }
+
+        self::ensureFormThemeClass();
+
+        if (!class_exists('emol_form_theme', false) || !emol_form_theme::isPluginTheme()) {
+            return;
+        }
+
+        emol_form_theme::boot();
+        self::basicCss();
+
+        function load_emol_css_form_theme()
+        {
+            $id = emol_form_theme::id();
+            $ver = defined('EMOL_VERSION') ? EMOL_VERSION : false;
+            $base = plugins_url('wp-eazymatch') . '/assets/css/forms/';
+
+            wp_register_style('emol-form-theme-base', $base . 'base.css', array('emol-css'), $ver);
+            wp_register_style('emol-form-theme', $base . $id . '.css', array('emol-form-theme-base'), $ver);
+            wp_enqueue_style('emol-form-theme');
+
+            $inline = emol_form_theme::inlineCss();
+            if ($inline !== '') {
+                wp_add_inline_style('emol-form-theme', $inline);
+            }
+        }
+
+        add_action('wp_enqueue_scripts', 'load_emol_css_form_theme', 15);
+
+        self::registerInclude('emol-form-theme');
     }
 
     static public function basicCss()
@@ -151,12 +206,16 @@ class emol_require
             function load_emol_css_user()
             {
                 $uploadinfo = wp_upload_dir();
+                $deps = array('emol-css');
+                if (class_exists('emol_form_theme', false) && emol_form_theme::isPluginTheme()) {
+                    $deps[] = 'emol-form-theme';
+                }
                 wp_deregister_style('emol-css-user');
-                wp_register_style('emol-css-user', ($uploadinfo['baseurl'] . '/eazymatch.style.css'), false);
+                wp_register_style('emol-css-user', ($uploadinfo['baseurl'] . '/eazymatch.style.css'), $deps);
                 wp_enqueue_style('emol-css-user');
             }
 
-            add_action('wp_enqueue_scripts', 'load_emol_css_user');
+            add_action('wp_enqueue_scripts', 'load_emol_css_user', 20);
         }
     }
 
@@ -172,8 +231,13 @@ class emol_require
         function load_emol_js_basic()
         {
             wp_deregister_script('emol-js');
-            wp_register_script('emol-js', (plugins_url('wp-eazymatch') . '/assets/scripts/emol.js'), 'jquery');
+            wp_register_script('emol-js', (plugins_url('wp-eazymatch') . '/assets/scripts/emol.js'), array('jquery'));
             wp_enqueue_script('emol-js');
+            wp_localize_script('emol-js', 'EmolForm', array(
+                'required' => defined('EMOL_ERR_REQUIRED') ? EMOL_ERR_REQUIRED : 'Dit veld is niet of incorrect ingevuld',
+                'email' => defined('EMOL_ERR_VALID_EMAIL') ? EMOL_ERR_VALID_EMAIL : 'Dit is een ongeldig e-mailadres',
+                'wait' => defined('EMOL_FORM_WAIT') ? EMOL_FORM_WAIT : 'Een moment geduld',
+            ));
         }
 
         add_action('wp_enqueue_scripts', 'load_emol_js_basic');
@@ -199,6 +263,7 @@ class emol_require
     {
         self::basic();
         self::jqueryUi();
+        self::formTheme();
 
 		return true;
     }

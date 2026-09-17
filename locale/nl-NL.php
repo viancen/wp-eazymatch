@@ -184,6 +184,7 @@ define( 'EMOL_ERR_REQUIRED', 'verplicht veld' );
 define( 'EMOL_ERR_VALID_EMAIL', 'gebruik een geldig mailadres' );
 define( 'EMOL_ERR_MIN_CHAR_ZIPCODE', 'minimaal 6 karakters' );
 define( 'EMOL_ERR_MIN_CHAR_PASSWORD', 'minimaal 5 karakters' );
+define( 'EMOL_FORM_WAIT', 'Een moment geduld' );
 
 /**global things**/
 define( 'EMOL_ACCOUNT_EMPTY', '<i>Geen omschrijving</i>' );
@@ -319,6 +320,15 @@ define( 'EMOL_ADMIN_MSGAFTERREACT', "Bedankt voor uw aanmelding." );
 define( 'EMOL_AVG_TITLE', "Privacyverklaring / Wet AVG" );
 define( 'EMOL_AVG_READ_CONFIRM', "Ik heb de privacy statement gelezen en ga hiermee akkoord" );
 define( 'EMOL_ADMIN_FORM_AVG', 'AVG wet' );
+define( 'EMOL_ADMIN_FORM_THEME', 'Formulierweergave' );
+define( 'EMOL_ADMIN_FORM_THEME_JQUERY', 'jQuery UI' );
+define( 'EMOL_ADMIN_FORM_THEME_JQUERY_HINT', 'Huidige implementatie. Formulieren gebruiken het gekozen jQuery UI-thema.' );
+define( 'EMOL_ADMIN_FORM_THEME_NATIVE', 'Native' );
+define( 'EMOL_ADMIN_FORM_THEME_NATIVE_HINT', 'Moderne layout die lettertype, kleur en knopstijl van je WordPress-thema volgt.' );
+define( 'EMOL_ADMIN_FORM_THEME_ATELIER', 'Atelier' );
+define( 'EMOL_ADMIN_FORM_THEME_ATELIER_HINT', 'Eigen EazyMatch-thema: warm dossier, onafhankelijk van je website-thema.' );
+define( 'EMOL_ADMIN_FORM_THEME_HARBOR', 'Harbor' );
+define( 'EMOL_ADMIN_FORM_THEME_HARBOR_HINT', 'Eigen EazyMatch-thema: strak en koel, met duidelijke focus op het actieve veld.' );
 define( 'EMOL_AVG_NAME', "Verantwoordelijke" );
 define( 'EMOL_AVG_EMAIL', "E-mail" );
 define( 'EMOL_AVG_PHONE', "Telefoonnummer" );

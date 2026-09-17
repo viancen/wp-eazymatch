@@ -33,6 +33,7 @@ function eazymatch_plugin_options() {
 		'emol_account_url'         => get_option( 'emol_account_url' ),
 		'emol_logout_url'          => get_option( 'emol_logout_url', '/' ),
 		'emol_jquery_ui_skin'      => get_option( 'emol_jquery_ui_skin' ),
+		'emol_form_theme'          => emol_form_theme::id(),
 		'emol_company_account_url' => get_option( 'emol_company_account_url' ),
 		'emol_base_address' => get_option( 'emol_base_address' ),
 		'emol_base_city' => get_option( 'emol_base_city' ),
@@ -65,6 +66,12 @@ function eazymatch_plugin_options() {
 			update_option( $option, $value );
 
 			$eazymatchOptions[ $option ] = $value;
+		}
+
+		if ( isset( $_POST['emol_form_theme'] ) ) {
+			$form_theme = emol_form_theme::sanitize( wp_unslash( $_POST['emol_form_theme'] ) );
+			update_option( 'emol_form_theme', $form_theme );
+			$eazymatchOptions['emol_form_theme'] = $form_theme;
 		}
 		//always reset the session hash
 
@@ -236,10 +243,31 @@ function eazymatch_plugin_options() {
 
                 <tr>
                     <td colspan="3" class="cTdh"><br>
-
-                        <h2>JQuery</h2></td>
+                        <h2><?php echo EMOL_ADMIN_FORM_THEME; ?></h2>
+                    </td>
                 </tr>
                 <tr>
+                    <td><?php echo EMOL_ADMIN_FORM_THEME; ?></td>
+                    <td colspan="2">
+                        <div class="emol-form-theme-picker">
+							<?php
+							$current_form_theme = emol_form_theme::sanitize( $eazymatchOptions['emol_form_theme'] );
+							foreach ( emol_form_theme::definitions() as $theme_id => $theme_meta ) :
+								?>
+                                <label class="emol-form-theme-card emol-form-theme-card--<?php echo esc_attr( $theme_id ); ?>">
+                                    <input type="radio" name="emol_form_theme" value="<?php echo esc_attr( $theme_id ); ?>"
+										<?php checked( $current_form_theme, $theme_id ); ?> />
+                                    <span class="emol-form-theme-card__preview" aria-hidden="true"></span>
+                                    <span class="emol-form-theme-card__body">
+                                        <strong><?php echo esc_html( $theme_meta['label'] ); ?></strong>
+                                        <span><?php echo esc_html( $theme_meta['hint'] ); ?></span>
+                                    </span>
+                                </label>
+							<?php endforeach; ?>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="emol-jquery-ui-skin-row"<?php echo $current_form_theme !== emol_form_theme::JQUERY ? ' style="display:none;"' : ''; ?>>
                     <td><?php _e( "Jquery UI insluiten?: ", 'Emol-3.0-identifier' ); ?> </td>
                     <td><?php
 						$listThemes = scandir( dirname( dirname( __FILE__ ) ) . '/assets/jquery-ui/themes/' );

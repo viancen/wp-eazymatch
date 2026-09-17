@@ -1,0 +1,41 @@
+/**
+ * Native form theme.
+ *
+ * Tailwind-like spacing and controls, but no own palette or typeface:
+ * font, color and accent come from the WordPress theme / EazyTheme.
+ */
+
+body.emol-form-theme-native {
+	--emol-form-font: inherit;
+	--emol-form-text: inherit;
+	--emol-form-label: inherit;
+	--emol-form-label-font: inherit;
+	--emol-form-label-size: 0.9375rem;
+	--emol-form-label-weight: 600;
+	--emol-form-surface: transparent;
+	--emol-form-field-bg: color-mix(in srgb, currentColor 6%, Canvas);
+	--emol-form-border: color-mix(in srgb, currentColor 16%, transparent);
+	--emol-form-accent: var(--wp--preset--color--primary, var(--emol-theme-brand, var(--emr-brand, color-mix(in srgb, currentColor 88%, Canvas))));
+	--emol-form-on-accent: var(--wp--preset--color--contrast, #fff);
+	--emol-form-radius: 0.6rem;
+	--emol-form-btn-radius: 0.6rem;
+	--emol-form-space: 1.15rem;
+	--emol-form-gap: 1rem;
+	--emol-form-pad: 0;
+	--emol-form-shadow: none;
+}
+
+body.emol-form-theme-native .emol-form-div,
+body.emol-form-theme-native #emol-form-apply,
+body.emol-form-theme-native #emol-form-react {
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+	padding: 0;
+}
+
+body.emol-form-theme-native .emol-button,
+body.emol-form-theme-native .emol-form-submit,
+body.emol-form-theme-native .emol-account-button {
+	border-radius: var(--emol-form-btn-radius);
+}

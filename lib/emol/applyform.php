@@ -876,7 +876,7 @@ $applyHtml .= '
 		&nbsp;
 		</div>
 		<div class="emol-input-wrapper">
-			<input type="button" class="emol-button emol-form-submit" disabled id="emol-apply-submit-button" value="' . EMOL_APPLY_SEND . '" />
+			<input type="submit" class="emol-button emol-form-submit" disabled id="emol-apply-submit-button" value="' . EMOL_APPLY_SEND . '" />
 			<input type="button" class="emol-button" id="emol-apply-back-button" value="' . EMOL_BACK . '" onclick="history.go(-1)" />
 		</div>
     </div>';

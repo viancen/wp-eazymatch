@@ -91,78 +91,6 @@ var EazyWP = {
                 resizable: false
             });
             jQuery(".ui-dialog-titlebar").hide();
-
-            //$("#emolAvgStatement").css({height:"400px", overflow:"auto"});
-
-        }).on('keyup change', '#emol-form-wrapper .required', function () {
-
-            if (jQuery(this).val()) {
-                jQuery('#eazymatch-error-' + jQuery(this).attr('id')).remove();
-            }
-
-        }).on('click', '.emol-form-submit', function () {
-
-            function validateEmail(email) {
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                return re.test(String(email).toLowerCase());
-            }
-
-            var hasError = false;
-
-            jQuery('#emol-form-wrapper .required').each(function (a, b) {
-
-                if (jQuery(b).attr('id') == 'emol-email') {
-                    var theEmail = jQuery('#emol-email').val();
-                    if (!validateEmail(theEmail)) {
-                        var $errEl = '<div class="emol-error-label" id="eazymatch-error-emol-email">Dit is een ongeldig e-mailadres</div>';
-                        jQuery(b).parent().append($errEl);
-                        hasError = true;
-                    }
-                } else if (jQuery(b).attr('id') == 'emol-avg-check') {
-                    if (!jQuery(b).is(':checked')) {
-                        var $errEl = '<div class="emol-error-label" id="eazymatch-error-' + jQuery(b).attr('id') + '">Dit veld is niet of incorrect ingevuld</div>';
-                        jQuery(b).parent().append($errEl);
-                        hasError = true;
-                    }
-                } else {
-                    if (!jQuery(b).val()) {
-                        var $errEl = '<div class="emol-error-label" id="eazymatch-error-' + jQuery(b).attr('id') + '">Dit veld is niet of incorrect ingevuld</div>';
-                        jQuery(b).parent().append($errEl);
-                        hasError = true;
-                    }
-                }
-            }).promise().done(function () {
-
-                if (hasError) {
-                    return false;
-                } else {
-
-                    jQuery('.emol-form-submit').attr('disabled', 'disabled');
-                    jQuery('.emol-form-submit').val('Een moment geduld');
-
-                    try {
-                        jQuery('#eazymatch-wait-modal').dialog({
-                            show: {
-                                effect: "blind",
-                                duration: 500
-                            },
-                            hide: {
-                                effect: "blind",
-                                duration: 100
-                            },
-                            buttons: [],
-                            closeOnEscape: false,
-                            draggable: false,
-                            modal: true,
-                            width: 500
-                        });
-                    } catch (error) {
-                        console.error(error);
-                    }
-
-                    jQuery('#emol-apply-form').submit();
-                }
-            });
         });
 
         // grid initialize
@@ -282,6 +210,250 @@ var EazyWP = {
         });
     },
 
+    form: {
+        bound: false,
+
+        messages: function () {
+            var i18n = (typeof window !== 'undefined' && window.EmolForm) ? window.EmolForm : {};
+            return {
+                required: i18n.required || 'Dit veld is niet of incorrect ingevuld',
+                email: i18n.email || 'Dit is een ongeldig e-mailadres',
+                wait: i18n.wait || 'Een moment geduld'
+            };
+        },
+
+        isEmailField: function (field) {
+            if (!field) {
+                return false;
+            }
+            var className = ' ' + (field.className || '') + ' ';
+            return field.id === 'emol-email' || field.type === 'email' || className.indexOf(' email ') !== -1;
+        },
+
+        isValidEmail: function (email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').toLowerCase());
+        },
+
+        isFilled: function (field) {
+            if (!field) {
+                return false;
+            }
+            if (field.type === 'checkbox') {
+                return !!field.checked;
+            }
+            if (field.type === 'radio') {
+                var form = field.form;
+                if (!form || !field.name) {
+                    return !!field.checked;
+                }
+                var selected = form.querySelector('input[type="radio"][name="' + field.name.replace(/"/g, '\\"') + '"]:checked');
+                return !!(selected && String(selected.value || '').trim() !== '');
+            }
+            if (field.type === 'file') {
+                return !!(field.files && field.files.length > 0);
+            }
+            return String(field.value || '').trim() !== '';
+        },
+
+        fields: function (form) {
+            var nodes = form.querySelectorAll('.required, [required]');
+            var list = [];
+            for (var i = 0; i < nodes.length; i++) {
+                var field = nodes[i];
+                if (!field || field.disabled || field.type === 'hidden') {
+                    continue;
+                }
+                if (list.indexOf(field) === -1) {
+                    list.push(field);
+                }
+            }
+            return list;
+        },
+
+        errorId: function (field) {
+            return 'eazymatch-error-' + (field.id || field.name || 'field');
+        },
+
+        clearField: function (field) {
+            if (!field) {
+                return;
+            }
+            field.removeAttribute('aria-invalid');
+            field.classList.remove('error');
+            var id = this.errorId(field);
+            var existing = document.getElementById(id);
+            if (existing && existing.parentNode) {
+                existing.parentNode.removeChild(existing);
+            }
+            var described = field.getAttribute('aria-describedby');
+            if (described) {
+                var parts = described.split(/\s+/).filter(function (part) {
+                    return part && part !== id;
+                });
+                if (parts.length) {
+                    field.setAttribute('aria-describedby', parts.join(' '));
+                } else {
+                    field.removeAttribute('aria-describedby');
+                }
+            }
+        },
+
+        showError: function (field, message) {
+            this.clearField(field);
+            field.setAttribute('aria-invalid', 'true');
+            field.classList.add('error');
+            var id = this.errorId(field);
+            var el = document.createElement('div');
+            el.className = 'emol-error-label';
+            el.id = id;
+            el.setAttribute('role', 'alert');
+            el.textContent = message;
+            if (field.parentNode) {
+                field.parentNode.appendChild(el);
+            }
+            var described = field.getAttribute('aria-describedby');
+            field.setAttribute('aria-describedby', described ? described + ' ' + id : id);
+        },
+
+        validateField: function (field) {
+            var messages = this.messages();
+            this.clearField(field);
+            if (!this.isFilled(field)) {
+                this.showError(field, messages.required);
+                return false;
+            }
+            if (this.isEmailField(field) && !this.isValidEmail(field.value)) {
+                this.showError(field, messages.email);
+                return false;
+            }
+            return true;
+        },
+
+        validate: function (form) {
+            var fields = this.fields(form);
+            var firstInvalid = null;
+            var valid = true;
+            for (var i = 0; i < fields.length; i++) {
+                if (!this.validateField(fields[i])) {
+                    valid = false;
+                    if (!firstInvalid) {
+                        firstInvalid = fields[i];
+                    }
+                }
+            }
+            if (firstInvalid) {
+                if (typeof firstInvalid.focus === 'function') {
+                    firstInvalid.focus();
+                }
+                if (typeof firstInvalid.scrollIntoView === 'function') {
+                    firstInvalid.scrollIntoView({ block: 'center' });
+                }
+            }
+            return valid;
+        },
+
+        lockSubmit: function (form) {
+            var buttons = form.querySelectorAll('.emol-form-submit, .emol-button-submit, [type="submit"]');
+            var wait = this.messages().wait;
+            for (var i = 0; i < buttons.length; i++) {
+                var button = buttons[i];
+                if (button.id === 'emol-apply-back-button') {
+                    continue;
+                }
+                button.setAttribute('disabled', 'disabled');
+                if (button.tagName === 'INPUT' && button.type !== 'checkbox' && button.type !== 'radio') {
+                    if (!button.getAttribute('data-emol-label')) {
+                        button.setAttribute('data-emol-label', button.value);
+                    }
+                    button.value = wait;
+                }
+            }
+        },
+
+        showWait: function () {
+            var modal = document.getElementById('eazymatch-wait-modal');
+            if (!modal || typeof jQuery === 'undefined' || !jQuery.fn || typeof jQuery.fn.dialog !== 'function') {
+                return;
+            }
+            try {
+                jQuery(modal).dialog({
+                    show: { effect: 'blind', duration: 500 },
+                    hide: { effect: 'blind', duration: 100 },
+                    buttons: [],
+                    closeOnEscape: false,
+                    draggable: false,
+                    modal: true,
+                    width: 500
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        bind: function (form) {
+            var self = this;
+            if (form.getAttribute('data-emol-form-bound') === '1') {
+                return;
+            }
+            form.setAttribute('data-emol-form-bound', '1');
+            form.setAttribute('novalidate', 'novalidate');
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                if (!self.validate(form)) {
+                    return;
+                }
+                self.lockSubmit(form);
+                self.showWait();
+                HTMLFormElement.prototype.submit.call(form);
+            });
+
+            form.addEventListener('input', function (event) {
+                if (event.target && event.target.matches && event.target.matches('.required, [required]')) {
+                    self.clearField(event.target);
+                }
+            });
+
+            form.addEventListener('change', function (event) {
+                if (event.target && event.target.matches && event.target.matches('.required, [required]')) {
+                    self.clearField(event.target);
+                }
+            });
+        },
+
+        init: function () {
+            if (typeof document === 'undefined') {
+                return;
+            }
+            var forms = document.querySelectorAll('#emol-apply-form, #emol-react-form');
+            for (var i = 0; i < forms.length; i++) {
+                this.bind(forms[i]);
+            }
+            if (!this.bound) {
+                document.addEventListener('click', function (event) {
+                    var target = event.target;
+                    var button = target && target.closest ? target.closest('.emol-form-submit') : null;
+                    if (!button || button.disabled || button.type !== 'button') {
+                        return;
+                    }
+                    var form = button.form || (button.closest ? button.closest('form') : null);
+                    if (!form) {
+                        return;
+                    }
+                    event.preventDefault();
+                    if (typeof form.requestSubmit === 'function') {
+                        form.requestSubmit();
+                    } else {
+                        var submitEvent = document.createEvent('Event');
+                        submitEvent.initEvent('submit', true, true);
+                        form.dispatchEvent(submitEvent);
+                    }
+                });
+            }
+            this.bound = true;
+        }
+    },
+
     search: {
         general: function (baseUrl) {
 
@@ -351,10 +523,22 @@ var EazyWP = {
     }
 };
 
-// initialize EazyMatch on page ready
-jQuery(function () {
-    EazyWP.init(jQuery);
-});
+function emolBindFront() {
+    if (typeof jQuery !== 'undefined') {
+        EazyWP.init(jQuery);
+    }
+    EazyWP.form.init();
+}
+
+if (typeof jQuery !== 'undefined') {
+    jQuery(emolBindFront);
+} else if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', emolBindFront);
+    } else {
+        emolBindFront();
+    }
+}
 
 /**
  * legacy functionnames support
@@ -411,10 +595,12 @@ function emolBindAltcha() {
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', emolBindAltcha);
-} else {
-    emolBindAltcha();
+if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', emolBindAltcha);
+    } else {
+        emolBindAltcha();
+    }
 }
 
 function emol_connect_linkedin(url, instance) {

@@ -183,6 +183,7 @@ define( 'EMOL_ERR_REQUIRED', 'required' );
 define( 'EMOL_ERR_VALID_EMAIL', 'enter a valid e-mail address' );
 define( 'EMOL_ERR_MIN_CHAR_ZIPCODE', 'Enter at least 6 chars' );
 define( 'EMOL_ERR_MIN_CHAR_PASSWORD', 'Enter at least 5 chars' );
+define( 'EMOL_FORM_WAIT', 'Please wait' );
 
 /**global things**/
 define( 'EMOL_ACCOUNT_EMPTY', '<i>no description</i>' );
@@ -319,6 +320,15 @@ define( 'EMOL_AVG_READ_CONFIRM', "Ik heb de privacy statement gelezen en ga hier
 define( 'EMOL_AVG_TITLE', "Privacyverklaring / Wet AVG" );
 define( 'EMOL_AVG', "Privacystatement:" );
 define( 'EMOL_ADMIN_FORM_AVG', "Privacy" );
+define( 'EMOL_ADMIN_FORM_THEME', 'Form appearance' );
+define( 'EMOL_ADMIN_FORM_THEME_JQUERY', 'jQuery UI' );
+define( 'EMOL_ADMIN_FORM_THEME_JQUERY_HINT', 'Current implementation. Forms keep using the selected jQuery UI theme.' );
+define( 'EMOL_ADMIN_FORM_THEME_NATIVE', 'Native' );
+define( 'EMOL_ADMIN_FORM_THEME_NATIVE_HINT', 'Modern layout that inherits type, colour and buttons from your WordPress theme.' );
+define( 'EMOL_ADMIN_FORM_THEME_ATELIER', 'Atelier' );
+define( 'EMOL_ADMIN_FORM_THEME_ATELIER_HINT', 'EazyMatch theme: a warm application dossier, independent of the site theme.' );
+define( 'EMOL_ADMIN_FORM_THEME_HARBOR', 'Harbor' );
+define( 'EMOL_ADMIN_FORM_THEME_HARBOR_HINT', 'EazyMatch theme: cool and precise, with a clear focus state on the active row.' );
 define( 'EMOL_AVG_NAME', "Name" );
 define( 'EMOL_AVG_EMAIL', "E-mail" );
 define( 'EMOL_AVG_PHONE', "Phonenumber" );
