@@ -4,7 +4,7 @@ Deze handleiding is bedoeld voor websitebeheerders die de EazyMatch-plugin in ee
 WordPress-website willen installeren en de vacatureonderdelen via het CMS willen
 plaatsen.
 
-De voorbeelden gaan uit van EazyMatch 7.0.1. De plugin ondersteunt WordPress 7.1
+De voorbeelden gaan uit van EazyMatch 7.0.2. De plugin ondersteunt WordPress 7.1
 en PHP 7.4 tot en met 8.5.
 
 ## 1. Benodigdheden

@@ -17,12 +17,14 @@ class emol_form_theme {
 	const NATIVE  = 'native';
 	const ATELIER = 'atelier';
 	const HARBOR  = 'harbor';
+	const QUARTZ  = 'quartz';
+	const SIGNAL  = 'signal';
 
 	/**
 	 * @return string[]
 	 */
 	public static function ids() {
-		return array( self::JQUERY, self::NATIVE, self::ATELIER, self::HARBOR );
+		return array( self::JQUERY, self::NATIVE, self::ATELIER, self::HARBOR, self::QUARTZ, self::SIGNAL );
 	}
 
 	/**
@@ -31,7 +33,7 @@ class emol_form_theme {
 	 * @return string[]
 	 */
 	public static function pluginIds() {
-		return array( self::NATIVE, self::ATELIER, self::HARBOR );
+		return array( self::NATIVE, self::ATELIER, self::HARBOR, self::QUARTZ, self::SIGNAL );
 	}
 
 	/**
@@ -85,6 +87,14 @@ class emol_form_theme {
 			self::HARBOR  => array(
 				'label' => defined( 'EMOL_ADMIN_FORM_THEME_HARBOR' ) ? EMOL_ADMIN_FORM_THEME_HARBOR : 'Harbor',
 				'hint'  => defined( 'EMOL_ADMIN_FORM_THEME_HARBOR_HINT' ) ? EMOL_ADMIN_FORM_THEME_HARBOR_HINT : '',
+			),
+			self::QUARTZ  => array(
+				'label' => defined( 'EMOL_ADMIN_FORM_THEME_QUARTZ' ) ? EMOL_ADMIN_FORM_THEME_QUARTZ : 'Quartz',
+				'hint'  => defined( 'EMOL_ADMIN_FORM_THEME_QUARTZ_HINT' ) ? EMOL_ADMIN_FORM_THEME_QUARTZ_HINT : '',
+			),
+			self::SIGNAL  => array(
+				'label' => defined( 'EMOL_ADMIN_FORM_THEME_SIGNAL' ) ? EMOL_ADMIN_FORM_THEME_SIGNAL : 'Signal',
+				'hint'  => defined( 'EMOL_ADMIN_FORM_THEME_SIGNAL_HINT' ) ? EMOL_ADMIN_FORM_THEME_SIGNAL_HINT : '',
 			),
 		);
 	}

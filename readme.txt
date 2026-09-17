@@ -8,11 +8,15 @@ Tags: eazymatch, job, jobboard, recruitment
 Requires at least: 4.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 7.0.1
+Stable tag: 7.0.2
 
 Plugin to enable an EazyMatch frontend on your website.
 
 == Changelog ==
+
+= 7.0.2 =
+* Optional form appearance: keep jQuery UI, or switch to Native, Atelier, Harbor, Quartz or Signal.
+* Vanilla JS form validation and submit handling for apply and react forms.
 
 = 7.0.1 =
 * Consistent, restyled admin screens for all EazyMatch menu items.

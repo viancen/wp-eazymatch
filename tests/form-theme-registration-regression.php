@@ -49,6 +49,14 @@ if ( emol_form_theme::sanitize( 'harbor' ) !== 'harbor' ) {
 	throw new RuntimeException( 'Valid form themes must be kept.' );
 }
 
+if ( emol_form_theme::sanitize( 'quartz' ) !== 'quartz' || emol_form_theme::sanitize( 'signal' ) !== 'signal' ) {
+	throw new RuntimeException( 'Quartz and Signal must be accepted as form themes.' );
+}
+
+if ( ! emol_form_theme::isPluginTheme( 'quartz' ) || ! emol_form_theme::isPluginTheme( 'signal' ) ) {
+	throw new RuntimeException( 'Quartz and Signal must be treated as plugin form themes.' );
+}
+
 if ( emol_form_theme::sanitize( '../smoothness' ) !== emol_form_theme::JQUERY ) {
 	throw new RuntimeException( 'Unknown form themes must fall back to jQuery UI.' );
 }

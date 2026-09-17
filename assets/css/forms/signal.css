@@ -1,0 +1,107 @@
+/**
+ * Signal — plugin-owned form theme.
+ *
+ * Industrial dispatch sheet: concrete surface, asphalt type, amber markings.
+ * Independent of the customer WordPress theme.
+ */
+
+body.emol-form-theme-signal {
+	--emol-form-font: ui-sans-serif, "DIN Alternate", "Segoe UI", system-ui, sans-serif;
+	--emol-form-text: #1c1b16;
+	--emol-form-muted: #6a675c;
+	--emol-form-label: #1c1b16;
+	--emol-form-label-font: ui-sans-serif, "DIN Alternate", "Segoe UI", system-ui, sans-serif;
+	--emol-form-label-size: 0.72rem;
+	--emol-form-label-weight: 800;
+	--emol-form-label-track: 0.12em;
+	--emol-form-label-transform: uppercase;
+	--emol-form-surface: #eceae4;
+	--emol-form-field-bg: #f7f6f1;
+	--emol-form-border: #b8b4a6;
+	--emol-form-accent: #c45c12;
+	--emol-form-on-accent: #fff7ed;
+	--emol-form-danger: #9f1d1d;
+	--emol-form-danger-bg: #f8dede;
+	--emol-form-radius: 0;
+	--emol-form-btn-radius: 0;
+	--emol-form-space: 1.15rem;
+	--emol-form-gap: 0.85rem;
+	--emol-form-pad: 1.2rem 1.25rem 1.35rem;
+	--emol-form-shell-border: 2px solid #1c1b16;
+	--emol-form-shell-radius: 0;
+	--emol-form-shadow: none;
+	--emol-form-ring: none;
+	--emol-form-field-shadow: inset 0 -2px 0 #1c1b16;
+}
+
+body.emol-form-theme-signal .emol-form-div,
+body.emol-form-theme-signal #emol-form-apply,
+body.emol-form-theme-signal #emol-form-react {
+	background-image: repeating-linear-gradient(
+		90deg,
+		#c45c12 0 10px,
+		#1c1b16 10px 14px,
+		transparent 14px 28px
+	);
+	background-repeat: no-repeat;
+	background-size: 100% 6px;
+	background-position: 0 0;
+}
+
+body.emol-form-theme-signal .emol-text-input:focus,
+body.emol-form-theme-signal .emol-select-input:focus,
+body.emol-form-theme-signal .emol-textarea:focus,
+body.emol-form-theme-signal .emol-account-input:focus,
+body.emol-form-theme-signal .emol-form-div input:focus,
+body.emol-form-theme-signal .emol-form-div select:focus,
+body.emol-form-theme-signal .emol-form-div textarea:focus,
+body.emol-form-theme-signal .emol_widget input:focus,
+body.emol-form-theme-signal .emol_widget select:focus {
+	border-color: #c45c12;
+	box-shadow: inset 0 -3px 0 #c45c12;
+}
+
+body.emol-form-theme-signal .emol-button,
+body.emol-form-theme-signal .emol-form-submit,
+body.emol-form-theme-signal .emol-account-button,
+body.emol-form-theme-signal .ui-dialog .ui-button,
+body.emol-form-theme-signal input.emol-button,
+body.emol-form-theme-signal input.emol-form-submit {
+	background: #c45c12;
+	border: 2px solid #1c1b16;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	font-size: 0.82rem;
+}
+
+body.emol-form-theme-signal .emol-button:hover,
+body.emol-form-theme-signal .emol-form-submit:hover,
+body.emol-form-theme-signal input.emol-button:hover,
+body.emol-form-theme-signal input.emol-form-submit:hover {
+	background: #a64c0e;
+	filter: none;
+}
+
+body.emol-form-theme-signal #emol-apply-back-button,
+body.emol-form-theme-signal input#emol-apply-back-button {
+	background: transparent;
+	border: 2px solid #1c1b16;
+	color: #1c1b16;
+}
+
+body.emol-form-theme-signal .ui-datepicker {
+	background: #f7f6f1;
+	border: 2px solid #1c1b16;
+	border-radius: 0;
+}
+
+body.emol-form-theme-signal .ui-datepicker td a,
+body.emol-form-theme-signal .ui-datepicker td span {
+	border-radius: 0;
+}
+
+body.emol-form-theme-signal .ui-datepicker td a:hover,
+body.emol-form-theme-signal .ui-datepicker .ui-state-active {
+	background: #c45c12;
+	color: #fff7ed;
+}

@@ -1,0 +1,83 @@
+/**
+ * Quartz — plugin-owned form theme.
+ *
+ * Crystalline career portal: pale iris desk, generous radius, luminous focus.
+ * Independent of the customer WordPress theme.
+ */
+
+body.emol-form-theme-quartz {
+	--emol-form-font: ui-sans-serif, "Avenir Next", "Segoe UI", system-ui, sans-serif;
+	--emol-form-text: #2a2140;
+	--emol-form-muted: #6d6482;
+	--emol-form-label: #3d3358;
+	--emol-form-label-font: ui-sans-serif, "Avenir Next", "Segoe UI", system-ui, sans-serif;
+	--emol-form-label-size: 0.9rem;
+	--emol-form-label-weight: 650;
+	--emol-form-surface: #f4f1fb;
+	--emol-form-field-bg: #ffffff;
+	--emol-form-border: #d6cfe8;
+	--emol-form-accent: #5b3cc4;
+	--emol-form-on-accent: #f7f4ff;
+	--emol-form-danger: #a12d5a;
+	--emol-form-danger-bg: #fbe6ee;
+	--emol-form-radius: 1.1rem;
+	--emol-form-btn-radius: 999px;
+	--emol-form-space: 1.3rem;
+	--emol-form-gap: 1.05rem;
+	--emol-form-pad: 1.5rem 1.55rem 1.65rem;
+	--emol-form-shell-border: 1px solid #e4def2;
+	--emol-form-shell-radius: 1.35rem;
+	--emol-form-shadow: 0 18px 40px rgba(91, 60, 196, 0.08);
+	--emol-form-ring: 0 0 0 4px rgba(91, 60, 196, 0.16);
+}
+
+body.emol-form-theme-quartz .emol-text-input,
+body.emol-form-theme-quartz .emol-select-input,
+body.emol-form-theme-quartz .emol-textarea,
+body.emol-form-theme-quartz .emol-account-input,
+body.emol-form-theme-quartz .emol-form-div select,
+body.emol-form-theme-quartz .emol-form-div textarea,
+body.emol-form-theme-quartz .emol-form-div input[type="text"],
+body.emol-form-theme-quartz .emol_widget input[type="text"],
+body.emol-form-theme-quartz .emol_widget select {
+	padding: 0.8rem 1rem;
+	box-shadow: inset 0 1px 0 #fff;
+}
+
+body.emol-form-theme-quartz .emol-button,
+body.emol-form-theme-quartz .emol-form-submit,
+body.emol-form-theme-quartz .emol-account-button,
+body.emol-form-theme-quartz .ui-dialog .ui-button,
+body.emol-form-theme-quartz input.emol-button,
+body.emol-form-theme-quartz input.emol-form-submit {
+	padding: 0.85rem 1.6rem;
+	box-shadow: 0 10px 22px rgba(91, 60, 196, 0.22);
+}
+
+body.emol-form-theme-quartz .emol-button:hover,
+body.emol-form-theme-quartz .emol-form-submit:hover,
+body.emol-form-theme-quartz input.emol-button:hover,
+body.emol-form-theme-quartz input.emol-form-submit:hover {
+	background: #4a2fa8;
+	filter: none;
+}
+
+body.emol-form-theme-quartz #emol-apply-back-button,
+body.emol-form-theme-quartz input#emol-apply-back-button {
+	background: #fff;
+	border: 1px solid #d6cfe8;
+	color: #3d3358;
+	box-shadow: none;
+}
+
+body.emol-form-theme-quartz .ui-datepicker {
+	background: #fff;
+	border-color: #d6cfe8;
+	border-radius: 1.1rem;
+}
+
+body.emol-form-theme-quartz .ui-datepicker td a:hover,
+body.emol-form-theme-quartz .ui-datepicker .ui-state-active {
+	background: #5b3cc4;
+	color: #f7f4ff;
+}
